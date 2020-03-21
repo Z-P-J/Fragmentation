@@ -11,7 +11,7 @@
         android:layout_marginBottom="@dimen/bottombar_height"
         android:layout_height="match_parent"/>
 
-    <me.yokeyword.sample.demo_zhihu.ui.view.BottomBar
+    <com.zpj.fragmentation.demo.demo_zhihu.ui.view.BottomBar
         android:id="@+id/bottomBar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/bottombar_height"

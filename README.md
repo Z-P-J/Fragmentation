@@ -3,106 +3,99 @@
 [![Download](https://api.bintray.com/packages/yokeyword/maven/Fragmentation/images/download.svg) ](https://bintray.com/yokeyword/maven/Fragmentation/_latestVersion)
 [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
-# PLEASE NOTE, THIS PROJECT IS NO LONGER BEING MAINTAINED
-
-### [中文版 README.md](https://github.com/YoKeyword/Fragmentation/blob/master/README_CN.md)
-
 # Fragmentation
+A powerful library that manage Fragment for Android!
+
+### [English README.md](https://github.com/Z-P-J/Fragmentation/blob/master/README_EN.md)
+
+为"单Activity ＋ 多Fragment","多模块Activity + 多Fragment"架构而生，简化开发，轻松解决动画、嵌套、事务相关等问题。
 
 ![](/gif/logo.png)
 
-Fragmentation is a powerful library managing Fragment for Android.
 
-It is designed for "Single Activity + Multi-Fragments" and "Multi-FragmentActivities + Multi-Fragments" architecture to simplify development process.
+为了更好的使用和了解该库，推荐阅读下面的文章:
 
-## Demo
-The first demo shows the basic usage of the library. The second one shows the way to implement an app which is similar to Instagram. Complicated nested fragments' usage demo are also showed.
+[Fragment全解析系列（一）：那些年踩过的坑](http://www.jianshu.com/p/d9143a92ad94)
 
-## [Download APK](https://www.pgyer.com/fragmentation)
+[Fragment全解析系列（二）：正确的使用姿势](http://www.jianshu.com/p/fd71d65f0ec6)
+
+
+## Demo演示：
+均为单Activity + 多Fragment，第一个为简单流式demo，第二个为仿微信交互的demo(全页面支持滑动退出)，第三个为仿知乎交互的复杂嵌套demo
+
+### [下载APK](https://www.pgyer.com/fragmentation)
+
 
 <img src="/gif/demo1.gif" width="280px"/> <img src="/gif/demo2.gif" width="280px"/>
  <img src="/gif/demo3.gif" width="280px"/>
 
-## Feature
+## 特性
 
-**1. Develop complicated nested fragment app rapidly**
+1、**悬浮球／摇一摇实时查看Fragment的栈视图，降低开发难度**
 
-**2. Use fragment's stack view dialog to debug easily**
+2、**内部队列机制 解决Fragment多点触控、事务高频次提交异常等问题**
 
-**3. Add launch mode, startForResult etc. to provide similar behavior of Activity**
+3、**增加启动模式、startForResult等类Activity方法**
 
-**4. Add onBackPressedSupport() method to support back button press monitoring in Fragment**
+4、**类Android事件分发机制的Fragment BACK键机制：onBackPressedSupport()**
 
-**5. Add onSupportVisible(), onLazyInitView() to simplify dev**
+5、**提供onSupportVisible()、懒加载onLazyInitView()等生命周期方法，简化嵌套Fragment的开发过程**
 
-**6. Easily manage Fragment transition animations**
+6、**提供 Fragment转场动画 系列解决方案，动态改变动画**
 
-**7. To simplify the communication between Fragment([EventBusActivityScope module](https://github.com/YoKeyword/Fragmentation/blob/master/eventbus_activity_scope/README.md))**
+7、**提供Activity作用域的EventBus辅助类，Fragment通信更简单、独立**
 
-**8. Support SwipeBack to pop(Fragmentation_SwipeBack module [README](https://github.com/YoKeyword/Fragmentation/blob/master/fragmentation_swipeback/README.md))**
+8、**支持SwipeBack滑动边缘退出**
 
-<img src="/gif/stack.png" width="150px"/> <img src="/gif/log.png" width="300px"/>       <img src="/gif/SwipeBack.png" width="150px"/>
+<img src="/gif/stack.png" width="150px"/> <img src="/gif/log.png" width="300px"/>     <img src="/gif/SwipeBack.png" width="150px"/>
 
-## How do I use Fragmentation?
+## 如何使用
 
-**1、build.gradle**
+**1. 项目下app的build.gradle中依赖：**
 ````gradle
-// appcompat-v7 is required
-compile 'me.yokeyword:fragmentation:1.3.8'
-
-// If you don't want to extends SupportActivity/Fragment and would like to customize your own support, just rely on fragmentation-core
-// compile 'me.yokeyword:fragmentation-core:1.3.8'
-
-// To get SwipeBack feature, rely on both fragmentation & fragmentation-swipeback
-compile 'me.yokeyword:fragmentation:1.3.8'
-// Swipeback is based on fragmentation. Refer to SwipeBackActivity/Fragment for your Customized SupportActivity/Fragment
-compile 'me.yokeyword:fragmentation-swipeback:1.3.8'
-
-// To simplify the communication between Fragments.
-compile 'me.yokeyword:eventbus-activity-scope:1.1.0'
-// Your EventBus's version
-compile 'org.greenrobot:eventbus:{version}'
+// appcompat-v7包是必须的
+compile 'com.zpj.widget:Fragmentation:1.0.0'
 ````
 
-**2. Activity `extends` SupportActivity or `implements` ISupportActivity：(refer to [MySupportActivity](https://github.com/YoKeyword/Fragmentation/blob/master/demo/src/main/java/me/yokeyword/sample/demo_flow/base/MySupportActivity.java))**
+**2. Activity `extends` SupportActivity或者 `implements` ISupportActivity：(实现方式可参考[MySupportActivity](https://github.com/Z-P-J/Fragmentation/blob/master/demo/src/main/java/com/zpj/fragmentation/demo/demo_flow/base/MySupportActivity.java))**
 ````java
-// since v1.0.0, forced extends of SupportActivity is not required, you can use interface + delegate to implement your own SupportActivity 
+// v1.0.0开始，不强制继承SupportActivity，可使用接口＋委托形式来实现自己的SupportActivity
 public class MainActivity extends SupportActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(...);
-      	// Fragmentation is recommended to initialize in the Application
+        // 建议在Application里初始化
         Fragmentation.builder()
-          	 // show stack view. Mode: BUBBLE, SHAKE, NONE
+             // 显示悬浮球 ; 其他Mode:SHAKE: 摇一摇唤出   NONE：隐藏
              .stackViewMode(Fragmentation.BUBBLE)
              .debug(BuildConfig.DEBUG)
-             ...
+             ... // 更多查看wiki或demo
              .install();
 
         if (findFragment(HomeFragment.class) == null) {
-            loadRootFragment(R.id.fl_container, HomeFragment.newInstance());  //load root Fragment
+            loadRootFragment(R.id.fl_container, HomeFragment.newInstance());  // 加载根Fragment
         }
     }
 ````
 
-**3. Fragment `extends` SupportFragment or `implements` ISupportFragment：(refer to [MySupportFragment](https://github.com/YoKeyword/Fragmentation/blob/master/demo/src/main/java/me/yokeyword/sample/demo_flow/base/MySupportFragment.java))：**
+**3. Fragment `extends` SupportFragment或者 `implements` ISupportFragment：(实现方式可参考[MySupportFragment](https://github.com/Z-P-J/Fragmentation/blob/master/demo/src/main/java/com/zpj/fragmentation/demo/demo_flow/base/MySupportFragment.java))：**
 ````java
-// since v1.0.0, forced extends of SupportActivity is not required, you can use interface + delegate to implement your own SupportActivity
+// v1.0.0开始，不强制继承SupportFragment，可使用接口＋委托形式来实现自己的SupportFragment
 public class HomeFragment extends SupportFragment {
 
     private void xxx() {
-      	// launch a new Fragment, other methods: start(fragment,SINGTASK)、startForResult、startWithPop etc.
+        // 启动新的Fragment, 另有start(fragment,SINGTASK)、startForResult、startWithPop等启动方法
         start(DetailFragment.newInstance(HomeBean));
-      	// check wiki for other pop, find and animation setting related API
+        // ... 其他pop, find, 设置动画等等API, 请自行查看WIKI
     }
 }
 ````
 
-## [WIKI](https://github.com/YoKeyword/Fragmentation/wiki) , [CHANGELOG](https://github.com/YoKeyword/Fragmentation/blob/master/CHANGELOG.md)
+### [进一步使用、ChangeLog，查看wiki](https://github.com/Z-P-J/Fragmentation/wiki)
 
-## LICENSE
+### LICENSE
 ````
 Copyright 2016 YoKey
 

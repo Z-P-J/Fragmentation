@@ -1,17 +1,31 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
 
 android {
-    compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion rootProject.buildToolsVersion
-
+    compileSdkVersion 28
 
     defaultConfig {
-        minSdkVersion rootProject.minSdkVersion
-        targetSdkVersion rootProject.targetSdkVersion
+        minSdkVersion 19
+        targetSdkVersion 28
+
+        consumerProguardFiles 'proguard-rules.pro'
     }
+
+    publish {
+        artifactId = 'Fragmentation'
+        userOrg = 'z-p-j'
+        groupId = 'com.zpj.widget'
+        publishVersion = '1.0.0'
+        desc = 'A powerful library that manage Fragment for Android.'
+        website = 'https://github.com/Z-P-J/Fragmentation'
+        licences = ['Apache-2.0']
+    }
+
 }
 
 dependencies {
-    compileOnly "com.android.support:appcompat-v7:$rootProject.v4Version"
-    api project(':fragmentation_core')
+    implementation "com.android.support:appcompat-v7:28.0.0"
+    implementation "com.android.support:recyclerview-v7:28.0.0"
+    implementation 'com.zpj.widget:ZToolBar:1.0.0'
+    implementation 'com.zpj.utils:ZUtils:1.0.0'
 }

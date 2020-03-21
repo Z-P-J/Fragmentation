@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
 
-    <include layout="@layout/toolbar"/>
+    <include layout="@layout/toolbar" />
 
     <TextView
         android:id="@+id/tv_name"
@@ -13,22 +14,22 @@
         android:layout_marginTop="16dp"
         android:gravity="center_horizontal"
         android:text="CyclerFragment1"
-        android:textSize="30sp"/>
+        android:textSize="30sp" />
 
     <Button
         android:id="@+id/btn_next_with_finish"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAllCaps="false"
         android:layout_marginTop="48dp"
-        android:text="@string/start_with_pop"/>
+        android:text="@string/start_with_pop"
+        android:textAllCaps="false" />
 
     <Button
         android:id="@+id/btn_next"
         android:layout_width="match_parent"
-        android:textAllCaps="false"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
-        android:text="@string/start_cycler"/>
+        android:text="@string/start_cycler"
+        android:textAllCaps="false" />
 
 </LinearLayout>
