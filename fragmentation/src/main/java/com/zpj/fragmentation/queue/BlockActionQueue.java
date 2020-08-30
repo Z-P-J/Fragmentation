@@ -3,11 +3,12 @@ package com.zpj.fragmentation.queue;
 import android.os.Handler;
 import android.os.Looper;
 
-import java.util.LinkedList;
-import java.util.Queue;
-
 import com.zpj.fragmentation.ISupportFragment;
 import com.zpj.fragmentation.SupportHelper;
+
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * The queue of perform action.
@@ -15,18 +16,59 @@ import com.zpj.fragmentation.SupportHelper;
  * Created by YoKey on 17/12/29.
  * Modified by Z-P-J
  */
-public class ActionQueue {
+public class BlockActionQueue {
     private final Queue<Action> mQueue = new LinkedList<>();
     private final Handler mMainHandler;
 
-    public ActionQueue(Handler mainHandler) {
+//    private boolean start;
+    private final AtomicBoolean start = new AtomicBoolean(false);
+
+    public BlockActionQueue(Handler mainHandler) {
         this.mMainHandler = mainHandler;
+    }
+
+    public boolean isStart() {
+        return start.get();
+    }
+
+    public void start() {
+        start.set(true);
+        handleAction();
+    }
+
+    public void stop() {
+        start.set(false);
+    }
+
+    public void onDestroy() {
+        start.set(false);
+        this.mQueue.clear();
+    }
+
+    public void post(final Runnable runnable) {
+        enqueue(new Action() {
+            @Override
+            public void run() {
+                runnable.run();
+            }
+        });
+    }
+
+    public void postDelayed(final Runnable runnable, long delay) {
+        Action action = new Action() {
+            @Override
+            public void run() {
+                runnable.run();
+            }
+        };
+        action.delay = delay;
+        enqueue(action);
     }
 
     public void enqueue(final Action action) {
         if (isThrottleBACK(action)) return;
 
-        if (action.action == Action.ACTION_LOAD && mQueue.isEmpty()
+        if (start.get() && action.action == Action.ACTION_LOAD && mQueue.isEmpty()
                 && Thread.currentThread() == Looper.getMainLooper().getThread()) {
             action.run();
             return;
@@ -48,7 +90,7 @@ public class ActionQueue {
     }
 
     private void handleAction() {
-        if (mQueue.isEmpty()) return;
+        if (!start.get() || mQueue.isEmpty()) return;
 
         final Action action = mQueue.peek();
         mMainHandler.postDelayed(new Runnable() {

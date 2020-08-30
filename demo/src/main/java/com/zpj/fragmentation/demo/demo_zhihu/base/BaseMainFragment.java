@@ -2,6 +2,7 @@ package com.zpj.fragmentation.demo.demo_zhihu.base;
 
 import android.content.Context;
 
+import com.zpj.fragmentation.BaseFragment;
 import com.zpj.fragmentation.SupportFragment;
 import com.zpj.fragmentation.demo.demo_zhihu.ui.fragment.first.ZhihuFirstFragment;
 
@@ -9,7 +10,7 @@ import com.zpj.fragmentation.demo.demo_zhihu.ui.fragment.first.ZhihuFirstFragmen
  * 懒加载
  * Created by YoKeyword on 16/6/5.
  */
-public abstract class BaseMainFragment extends SupportFragment {
+public abstract class BaseMainFragment extends BaseFragment {
     protected OnBackToFirstListener _mBackToFirstListener;
 
     @Override

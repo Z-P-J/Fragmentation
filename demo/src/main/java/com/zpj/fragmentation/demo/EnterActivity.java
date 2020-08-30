@@ -46,5 +46,12 @@ public class EnterActivity extends AppCompatActivity {
                 startActivity(new Intent(EnterActivity.this, com.zpj.fragmentation.demo.demo_zhihu.MainActivity.class));
             }
         });
+
+//        findViewById(R.id.btn_test).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(EnterActivity.this, com.zpj.fragmentation.demo.demo_zhihu.MainActivity.class));
+//            }
+//        });
     }
 }

@@ -49,6 +49,8 @@ public interface ISupportFragment {
 
     boolean isSupportVisible();
 
+    boolean isLazyInit();
+
     FragmentAnimator onCreateFragmentAnimator();
 
     FragmentAnimator getFragmentAnimator();

@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -15,6 +16,7 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.zpj.fragmentation.BaseFragment;
 import com.zpj.fragmentation.SupportFragment;
 import com.zpj.fragmentation.demo.R;
 import com.zpj.fragmentation.demo.demo_zhihu.MainActivity;
@@ -27,7 +29,7 @@ import com.zpj.fragmentation.demo.demo_zhihu.ui.fragment.second.child.DetailFrag
 /**
  * Created by YoKeyword on 16/6/3.
  */
-public class FirstPagerFragment extends SupportFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class FirstPagerFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
     private RecyclerView mRecy;
     private SwipeRefreshLayout mRefreshLayout;
     private HomeAdapter mAdapter;
@@ -45,18 +47,16 @@ public class FirstPagerFragment extends SupportFragment implements SwipeRefreshL
         return fragment;
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.zhihu_fragment_second_pager_first, container, false);
-        EventBus.getDefault().register(this);
-        initView(view);
-        return view;
+    protected int getLayoutId() {
+        return R.layout.zhihu_fragment_second_pager_first;
     }
 
-    private void initView(View view) {
-        mRecy = (RecyclerView) view.findViewById(R.id.recy);
-        mRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
+    @Override
+    protected void initView(View view, @Nullable Bundle savedInstanceState) {
+        EventBus.getDefault().register(this);
+        mRecy = findViewById(R.id.recy);
+        mRefreshLayout = findViewById(R.id.refresh_layout);
 
         mTitles = getResources().getStringArray(R.array.array_title);
         mContents = getResources().getStringArray(R.array.array_content);
@@ -92,13 +92,38 @@ public class FirstPagerFragment extends SupportFragment implements SwipeRefreshL
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 mScrollTotal += dy;
-                if (mScrollTotal <= 0) {
-                    mAtTop = true;
-                } else {
-                    mAtTop = false;
-                }
+                mAtTop = mScrollTotal <= 0;
             }
         });
+
+        postOnEnterAnimationEnd(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, "OnEnterAnimationEnd", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        postOnEnterAnimationEndDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, "OnEnterAnimationEndDelayed-----5000", Toast.LENGTH_SHORT).show();
+            }
+        }, 5000);
+
+        postOnSupportVisible(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, "OnSupportVisible", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        postOnSupportVisibleDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, "OnSupportVisibleDelayed-----10000", Toast.LENGTH_SHORT).show();
+            }
+        }, 10000);
+
     }
 
     @Override

@@ -306,6 +306,10 @@ public class SupportFragmentDelegate {
         return getVisibleDelegate().isSupportVisible();
     }
 
+    final public boolean isLazyInit() {
+        return getVisibleDelegate().isLazyInit();
+    }
+
     /**
      * Set fragment animation with a higher priority than the ISupportActivity
      * 设定当前Fragmemt动画,优先级比在ISupportActivity里高

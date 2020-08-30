@@ -43,19 +43,17 @@ public class FirstDetailFragment extends BaseBackFragment {
         mArticle = getArguments().getParcelable(ARG_ITEM);
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.zhihu_fragment_first_detail, container, false);
-        initView(view);
-        return view;
+    protected int getLayoutId() {
+        return R.layout.zhihu_fragment_first_detail;
     }
 
-    private void initView(View view) {
-        mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        mImgDetail = (ImageView) view.findViewById(R.id.img_detail);
-        mTvTitle = (TextView) view.findViewById(R.id.tv_content);
-        mFab = (FloatingActionButton) view.findViewById(R.id.fab);
+    @Override
+    protected void initView(View view, @Nullable Bundle savedInstanceState) {
+        mToolbar = findViewById(R.id.toolbar);
+        mImgDetail = findViewById(R.id.img_detail);
+        mTvTitle = findViewById(R.id.tv_content);
+        mFab = findViewById(R.id.fab);
 
         mToolbar.setTitle("");
         initToolbarNav(mToolbar);
@@ -69,4 +67,5 @@ public class FirstDetailFragment extends BaseBackFragment {
             }
         });
     }
+
 }

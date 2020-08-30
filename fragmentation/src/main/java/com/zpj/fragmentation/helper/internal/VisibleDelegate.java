@@ -26,6 +26,7 @@ public class VisibleDelegate {
     private boolean mNeedDispatch = true;
     private boolean mInvisibleWhenLeave;
     private boolean mIsFirstVisible = true;
+    private boolean  mIsLazyInit;
     private boolean mFirstCreateViewCompatReplace = true;
 
     private Handler mHandler;
@@ -105,6 +106,7 @@ public class VisibleDelegate {
 
     public void onDestroyView() {
         mIsFirstVisible = true;
+        mIsLazyInit = false;
     }
 
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -152,6 +154,7 @@ public class VisibleDelegate {
             if (mIsFirstVisible) {
                 mIsFirstVisible = false;
                 mSupportF.onLazyInitView(mSaveInstanceState);
+                mIsLazyInit = true;
             }
             dispatchChild(true);
         } else {
@@ -201,6 +204,10 @@ public class VisibleDelegate {
 
     public boolean isSupportVisible() {
         return mIsSupportVisible;
+    }
+
+    public boolean isLazyInit() {
+        return mIsLazyInit;
     }
 
     private Handler getHandler() {

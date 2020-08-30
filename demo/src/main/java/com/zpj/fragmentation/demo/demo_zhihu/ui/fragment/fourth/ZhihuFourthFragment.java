@@ -16,8 +16,8 @@ import com.zpj.fragmentation.demo.demo_zhihu.ui.fragment.fourth.child.MeFragment
  * Created by YoKeyword on 16/6/3.
  */
 public class ZhihuFourthFragment extends BaseMainFragment {
+
     private Toolbar mToolbar;
-    private View mView;
 
     public static ZhihuFourthFragment newInstance() {
 
@@ -28,11 +28,14 @@ public class ZhihuFourthFragment extends BaseMainFragment {
         return fragment;
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.zhihu_fragment_fourth, container, false);
-        return mView;
+    protected int getLayoutId() {
+        return R.layout.zhihu_fragment_fourth;
+    }
+
+    @Override
+    protected void initView(View view, @Nullable Bundle savedInstanceState) {
+
     }
 
     @Override
@@ -42,7 +45,7 @@ public class ZhihuFourthFragment extends BaseMainFragment {
             loadFragment();
         }
 
-        mToolbar = (Toolbar) mView.findViewById(R.id.toolbar);
+        mToolbar = findViewById(R.id.toolbar);
         mToolbar.setTitle(R.string.me);
     }
 

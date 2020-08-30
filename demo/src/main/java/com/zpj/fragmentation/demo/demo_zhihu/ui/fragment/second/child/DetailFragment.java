@@ -46,25 +46,6 @@ public class DetailFragment extends BaseBackFragment {
         }
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_detail, container, false);
-        initView(view);
-
-        return view;
-    }
-
-    private void initView(View view) {
-        mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        mFab = (FloatingActionButton) view.findViewById(R.id.fab);
-        mTvContent = (TextView) view.findViewById(R.id.tv_content);
-
-        mToolbar.setTitle(mTitle);
-
-        initToolbarNav(mToolbar);
-    }
-
     /**
      * 这里演示:
      * 比较复杂的Fragment页面会在第一次start时,导致动画卡顿
@@ -76,6 +57,28 @@ public class DetailFragment extends BaseBackFragment {
     public void onEnterAnimationEnd(Bundle savedInstanceState) {
         super.onEnterAnimationEnd(savedInstanceState);
         initDelayView();
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.fragment_detail;
+    }
+
+    @Override
+    protected void initView(View view, @Nullable Bundle savedInstanceState) {
+        mToolbar = view.findViewById(R.id.toolbar);
+        mFab = view.findViewById(R.id.fab);
+        mTvContent = view.findViewById(R.id.tv_content);
+
+        mToolbar.setTitle(mTitle);
+
+        initToolbarNav(mToolbar);
+        postOnEnterAnimationEnd(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, "DetailFragment mTitle=" + mTitle, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void initDelayView() {

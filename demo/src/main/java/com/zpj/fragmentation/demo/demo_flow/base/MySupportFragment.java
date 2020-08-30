@@ -184,6 +184,11 @@ public class MySupportFragment extends Fragment implements ISupportFragment {
         return mDelegate.isSupportVisible();
     }
 
+    @Override
+    public boolean isLazyInit() {
+        return mDelegate.isLazyInit();
+    }
+
     /**
      * Set fragment animation with a higher priority than the ISupportActivity
      * 设定当前Fragmemt动画,优先级比在SupportActivity里高

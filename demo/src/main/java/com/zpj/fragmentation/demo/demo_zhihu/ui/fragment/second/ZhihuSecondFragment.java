@@ -24,11 +24,14 @@ public class ZhihuSecondFragment extends BaseMainFragment {
         return fragment;
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.zhihu_fragment_second, container, false);
-        return view;
+    protected int getLayoutId() {
+        return R.layout.zhihu_fragment_second;
+    }
+
+    @Override
+    protected void initView(View view, @Nullable Bundle savedInstanceState) {
+
     }
 
     @Override

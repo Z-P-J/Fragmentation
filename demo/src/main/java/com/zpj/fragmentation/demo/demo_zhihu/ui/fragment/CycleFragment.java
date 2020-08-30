@@ -41,20 +41,17 @@ public class CycleFragment extends BaseBackFragment {
         }
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_cycle, container, false);
-        initView(view);
-        return view;
+    protected int getLayoutId() {
+        return R.layout.fragment_cycle;
     }
 
-
-    private void initView(View view) {
-        mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        mTvName = (TextView) view.findViewById(R.id.tv_name);
-        mBtnNext = (Button) view.findViewById(R.id.btn_next);
-        mBtnNextWithFinish = (Button) view.findViewById(R.id.btn_next_with_finish);
+    @Override
+    protected void initView(View view, @Nullable Bundle savedInstanceState) {
+        mToolbar = findViewById(R.id.toolbar);
+        mTvName = findViewById(R.id.tv_name);
+        mBtnNext = findViewById(R.id.btn_next);
+        mBtnNextWithFinish = findViewById(R.id.btn_next_with_finish);
 
         String title = "CyclerFragment " + mNumber;
 
@@ -75,4 +72,6 @@ public class CycleFragment extends BaseBackFragment {
             }
         });
     }
+
+
 }
