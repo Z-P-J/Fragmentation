@@ -226,6 +226,11 @@ public class MySupportFragment extends Fragment implements ISupportFragment {
         return mDelegate.onBackPressedSupport();
     }
 
+    @Override
+    public int getLaunchMode() {
+        return ISupportFragment.STANDARD;
+    }
+
     /**
      * 类似 {@link Activity#setResult(int, Intent)}
      * <p>

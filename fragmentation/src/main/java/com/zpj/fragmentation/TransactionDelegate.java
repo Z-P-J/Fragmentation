@@ -8,22 +8,21 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentationMagician;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-import android.support.v4.app.FragmentationMagician;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import com.zpj.fragmentation.exception.AfterSaveStateTransactionWarning;
 import com.zpj.fragmentation.helper.internal.ResultRecord;
 import com.zpj.fragmentation.helper.internal.TransactionRecord;
 import com.zpj.fragmentation.queue.Action;
 import com.zpj.fragmentation.queue.ActionQueue;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -256,6 +255,27 @@ class TransactionDelegate {
                 handleAfterSaveInStateTransactionException(fm, "pop()");
                 FragmentationMagician.popBackStackAllowingStateLoss(fm);
                 removeTopFragment(fm);
+            }
+        });
+    }
+
+    void pop(final Fragment fragment) {
+        final FragmentManager fm = fragment.getFragmentManager();
+        enqueue(fm, new Action(Action.ACTION_POP, fm) {
+            @Override
+            public void run() {
+                handleAfterSaveInStateTransactionException(fm, "pop()");
+                FragmentationMagician.popBackStackAllowingStateLoss(fm);
+                try {
+                    if (fm != null) {
+                        fm.beginTransaction()
+                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+                                .remove(fragment)
+                                .commitAllowingStateLoss();
+                    }
+                } catch (Exception ignored) {
+
+                }
             }
         });
     }

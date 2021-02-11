@@ -2,6 +2,8 @@ package com.zpj.fragmentation.demo;
 
 import android.app.Application;
 
+import com.bumptech.glide.request.target.ViewTarget;
+import com.maning.librarycrashmonitor.MCrashMonitor;
 import com.zpj.fragmentation.Fragmentation;
 import com.zpj.fragmentation.helper.ExceptionHandler;
 
@@ -13,6 +15,12 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        MCrashMonitor.init(this, true, file -> {
+//                MCrashMonitor.startCrashShowPage(getContext());
+        });
+
+        ViewTarget.setTagId(R.id.glide_custom_view_target_tag);
 
         Fragmentation.builder()
                 // 设置 栈视图 模式为 （默认）悬浮球模式   SHAKE: 摇一摇唤出  NONE：隐藏， 仅在Debug环境生效

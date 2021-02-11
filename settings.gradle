@@ -1,2 +1,3 @@
 include ':demo',
-        ':fragmentation'
+        ':fragmentation',
+        ':fragmentation-dialog'

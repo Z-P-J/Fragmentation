@@ -2,6 +2,8 @@
 <manifest package="com.zpj.fragmentation.demo"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".App"
         android:icon="@drawable/ic_launcher"
@@ -25,6 +27,10 @@
 
         <activity
             android:name=".demo_zhihu.MainActivity"
+            android:launchMode="singleTask"/>
+
+        <activity
+            android:name=".demo_test.MainActivity"
             android:launchMode="singleTask"/>
 
         <activity

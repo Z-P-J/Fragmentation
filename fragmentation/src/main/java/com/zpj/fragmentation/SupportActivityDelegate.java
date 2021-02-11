@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentationMagician;
 import com.zpj.fragmentation.anim.DefaultVerticalAnimator;
 import com.zpj.fragmentation.anim.FragmentAnimator;
 import com.zpj.fragmentation.debug.DebugStackDelegate;
+import com.zpj.fragmentation.dialog.AbstractDialogFragment;
 import com.zpj.fragmentation.queue.Action;
 
 /*
@@ -240,13 +241,25 @@ public class SupportActivityDelegate {
      * @param launchMode Similar to Activity's LaunchMode.
      */
     public void start(ISupportFragment toFragment, @ISupportFragment.LaunchMode int launchMode) {
-        mTransactionDelegate.dispatchStartTransaction(getSupportFragmentManager(), getTopFragment(), toFragment, 0, launchMode, TransactionDelegate.TYPE_ADD);
+        int type;
+        if (toFragment instanceof AbstractDialogFragment) {
+            type = TransactionDelegate.TYPE_ADD_WITHOUT_HIDE;
+        } else {
+            type = TransactionDelegate.TYPE_ADD;
+        }
+        mTransactionDelegate.dispatchStartTransaction(getSupportFragmentManager(), getTopFragment(), toFragment, 0, launchMode, type);
     }
 
     /**
      * Launch an fragment for which you would like a result when it poped.
      */
     public void startForResult(ISupportFragment toFragment, int requestCode) {
+        int type;
+        if (toFragment instanceof AbstractDialogFragment) {
+            type = TransactionDelegate.TYPE_ADD_RESULT_WITHOUT_HIDE;
+        } else {
+            type = TransactionDelegate.TYPE_ADD_RESULT;
+        }
         mTransactionDelegate.dispatchStartTransaction(getSupportFragmentManager(), getTopFragment(), toFragment, requestCode, ISupportFragment.STANDARD, TransactionDelegate.TYPE_ADD_RESULT);
     }
 

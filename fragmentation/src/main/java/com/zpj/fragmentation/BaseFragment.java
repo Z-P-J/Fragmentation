@@ -32,25 +32,25 @@ import com.zpj.fragmentation.R;
 public abstract class BaseFragment extends SwipeBackFragment {
 
 
-    private final BlockActionQueue mSupportVisibleActionQueue;
-    private final BlockActionQueue mEnterAnimationEndActionQueue;
+//    private final BlockActionQueue mSupportVisibleActionQueue;
+//    private final BlockActionQueue mEnterAnimationEndActionQueue;
 
-    private View view;
 
-    protected Context context;
     protected ZToolBar toolbar;
 
-    public BaseFragment() {
-        Handler handler = new Handler(Looper.getMainLooper());
-        mSupportVisibleActionQueue = new BlockActionQueue(handler);
-        mEnterAnimationEndActionQueue = new BlockActionQueue(handler);
-    }
+//    public BaseFragment() {
+//        Handler handler = new Handler(Looper.getMainLooper());
+//        mSupportVisibleActionQueue = new BlockActionQueue(handler);
+//        mEnterAnimationEndActionQueue = new BlockActionQueue(handler);
+//    }
 
     @SuppressLint("ResourceType")
     @Nullable
     @Override
     public final View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        context = getContext();
+        if (context == null) {
+            context = getContext();
+        }
         if (getLayoutId() > 0) {
             view = inflater.inflate(getLayoutId(), container, false);
             toolbar = view.findViewById(R.id.tool_bar);
@@ -155,52 +155,30 @@ public abstract class BaseFragment extends SwipeBackFragment {
 
     protected abstract void initView(View view, @Nullable Bundle savedInstanceState);
 
-    @Override
-    public void onEnterAnimationEnd(Bundle savedInstanceState) {
-        super.onEnterAnimationEnd(savedInstanceState);
-        mEnterAnimationEndActionQueue.start();
-    }
-
-    @Override
-    public void onSupportVisible() {
-        super.onSupportVisible();
-        mSupportVisibleActionQueue.start();
-    }
-
-    @Override
-    public void onSupportInvisible() {
-        super.onSupportInvisible();
-        mSupportVisibleActionQueue.stop();
-    }
-
-    @Override
-    public void onDestroy() {
-        mEnterAnimationEndActionQueue.onDestroy();
-        mSupportVisibleActionQueue.onDestroy();
-        super.onDestroy();
-    }
-
-    public final <T extends View> T findViewById(@IdRes int id) {
-        if (view == null) {
-            throw new IllegalArgumentException("view is null!");
-        }
-        return view.findViewById(id);
-    }
-
-    public final <T extends View> T findViewWithTag(Object tag) {
-        if (view == null) {
-            return null;
-        }
-        return view.findViewWithTag(tag);
-    }
-
-    public final <T extends View> T requireViewById(@IdRes int id) {
-        T view = findViewById(id);
-        if (view == null) {
-            throw new IllegalArgumentException("ID does not reference a View inside this View");
-        }
-        return view;
-    }
+//    @Override
+//    public void onEnterAnimationEnd(Bundle savedInstanceState) {
+//        super.onEnterAnimationEnd(savedInstanceState);
+//        mEnterAnimationEndActionQueue.start();
+//    }
+//
+//    @Override
+//    public void onSupportVisible() {
+//        super.onSupportVisible();
+//        mSupportVisibleActionQueue.start();
+//    }
+//
+//    @Override
+//    public void onSupportInvisible() {
+//        super.onSupportInvisible();
+//        mSupportVisibleActionQueue.stop();
+//    }
+//
+//    @Override
+//    public void onDestroy() {
+//        mEnterAnimationEndActionQueue.onDestroy();
+//        mSupportVisibleActionQueue.onDestroy();
+//        super.onDestroy();
+//    }
 
     public void setToolbarTitle(@StringRes int titleRes) {
         if (toolbar != null && toolbar.getCenterTextView() != null) {
@@ -226,35 +204,23 @@ public abstract class BaseFragment extends SwipeBackFragment {
         }
     }
 
-    protected synchronized void postOnEnterAnimationEnd(final Runnable runnable) {
-        mEnterAnimationEndActionQueue.post(runnable);
-    }
+//    protected synchronized void postOnEnterAnimationEnd(final Runnable runnable) {
+//        mEnterAnimationEndActionQueue.post(runnable);
+//    }
+//
+//    protected synchronized void postOnEnterAnimationEndDelayed(final Runnable runnable, long delay) {
+//        mEnterAnimationEndActionQueue.postDelayed(runnable, delay);
+//    }
+//
+//    protected synchronized void postOnSupportVisible(final Runnable runnable) {
+//        mSupportVisibleActionQueue.post(runnable);
+//    }
+//
+//    protected synchronized void postOnSupportVisibleDelayed(final Runnable runnable, long delay) {
+//        mSupportVisibleActionQueue.postDelayed(runnable, delay);
+//    }
 
-    protected synchronized void postOnEnterAnimationEndDelayed(final Runnable runnable, long delay) {
-        mEnterAnimationEndActionQueue.postDelayed(runnable, delay);
-    }
 
-    protected synchronized void postOnSupportVisible(final Runnable runnable) {
-        mSupportVisibleActionQueue.post(runnable);
-    }
-
-    protected synchronized void postOnSupportVisibleDelayed(final Runnable runnable, long delay) {
-        mSupportVisibleActionQueue.postDelayed(runnable, delay);
-    }
-
-    public void darkStatusBar() {
-        if (_mActivity == null) {
-            return;
-        }
-        StatusBarUtils.setDarkMode(_mActivity.getWindow());
-    }
-
-    public void lightStatusBar() {
-        if (_mActivity == null) {
-            return;
-        }
-        StatusBarUtils.setLightMode(_mActivity.getWindow());
-    }
 
 
 }

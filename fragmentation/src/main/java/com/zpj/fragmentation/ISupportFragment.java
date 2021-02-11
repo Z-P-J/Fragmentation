@@ -66,4 +66,9 @@ public interface ISupportFragment {
     void putNewBundle(Bundle newBundle);
 
     boolean onBackPressedSupport();
+
+    @LaunchMode int getLaunchMode();
+
+
+
 }

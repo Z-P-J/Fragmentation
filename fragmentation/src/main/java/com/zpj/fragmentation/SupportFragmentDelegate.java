@@ -16,6 +16,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 import com.zpj.fragmentation.anim.FragmentAnimator;
+import com.zpj.fragmentation.dialog.AbstractDialogFragment;
 import com.zpj.fragmentation.helper.internal.AnimatorHelper;
 import com.zpj.fragmentation.helper.internal.ResultRecord;
 import com.zpj.fragmentation.helper.internal.TransactionRecord;
@@ -470,14 +471,26 @@ public class SupportFragmentDelegate {
      * @param launchMode Similar to Activity's LaunchMode.
      */
     public void start(final ISupportFragment toFragment, @ISupportFragment.LaunchMode int launchMode) {
-        mTransactionDelegate.dispatchStartTransaction(mFragment.getFragmentManager(), mSupportF, toFragment, 0, launchMode, TransactionDelegate.TYPE_ADD);
+        int type;
+        if (toFragment instanceof AbstractDialogFragment) {
+            type = TransactionDelegate.TYPE_ADD_WITHOUT_HIDE;
+        } else {
+            type = TransactionDelegate.TYPE_ADD;
+        }
+        mTransactionDelegate.dispatchStartTransaction(mFragment.getFragmentManager(), mSupportF, toFragment, 0, launchMode, type);
     }
 
     /**
      * Launch an fragment for which you would like a result when it poped.
      */
     public void startForResult(ISupportFragment toFragment, int requestCode) {
-        mTransactionDelegate.dispatchStartTransaction(mFragment.getFragmentManager(), mSupportF, toFragment, requestCode, ISupportFragment.STANDARD, TransactionDelegate.TYPE_ADD_RESULT);
+        int type;
+        if (toFragment instanceof AbstractDialogFragment) {
+            type = TransactionDelegate.TYPE_ADD_RESULT_WITHOUT_HIDE;
+        } else {
+            type = TransactionDelegate.TYPE_ADD_RESULT;
+        }
+        mTransactionDelegate.dispatchStartTransaction(mFragment.getFragmentManager(), mSupportF, toFragment, requestCode, ISupportFragment.STANDARD, type);
     }
 
     /**
@@ -517,6 +530,10 @@ public class SupportFragmentDelegate {
 
     public void pop() {
         mTransactionDelegate.pop(mFragment.getFragmentManager());
+    }
+
+    public void pop(Fragment fragment) {
+        mTransactionDelegate.pop(fragment);
     }
 
     /**

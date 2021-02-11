@@ -1,14 +1,20 @@
 package com.zpj.fragmentation;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.animation.Animation;
 
 import com.zpj.fragmentation.anim.FragmentAnimator;
+import com.zpj.fragmentation.queue.BlockActionQueue;
+import com.zpj.utils.StatusBarUtils;
 
 /**
  * Base class for activities that use the support-based
@@ -18,8 +24,23 @@ import com.zpj.fragmentation.anim.FragmentAnimator;
  * Modified b Z-P-J
  */
 public class SupportFragment extends Fragment implements ISupportFragment {
-    final SupportFragmentDelegate mDelegate = new SupportFragmentDelegate(this);
+
+    protected final SupportFragmentDelegate mDelegate = new SupportFragmentDelegate(this);
+
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    protected final BlockActionQueue mSupportVisibleActionQueue = new BlockActionQueue(handler);
+    protected final BlockActionQueue mEnterAnimationEndActionQueue = new BlockActionQueue(handler);
+
+    protected Context context;
     protected SupportActivity _mActivity;
+
+    protected View view;
+
+//    public SupportFragment() {
+//
+//        mSupportVisibleActionQueue = new BlockActionQueue(handler);
+//        mEnterAnimationEndActionQueue = new BlockActionQueue(handler);
+//    }
 
     @Override
     public SupportFragmentDelegate getSupportDelegate() {
@@ -33,6 +54,12 @@ public class SupportFragment extends Fragment implements ISupportFragment {
     @Override
     public ExtraTransaction extraTransaction() {
         return mDelegate.extraTransaction();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
     }
 
     @Override
@@ -85,6 +112,8 @@ public class SupportFragment extends Fragment implements ISupportFragment {
 
     @Override
     public void onDestroy() {
+        mEnterAnimationEndActionQueue.onDestroy();
+        mSupportVisibleActionQueue.onDestroy();
         mDelegate.onDestroy();
         super.onDestroy();
     }
@@ -139,6 +168,7 @@ public class SupportFragment extends Fragment implements ISupportFragment {
      */
     @Override
     public void onEnterAnimationEnd(Bundle savedInstanceState) {
+        mEnterAnimationEndActionQueue.start();
         mDelegate.onEnterAnimationEnd(savedInstanceState);
     }
 
@@ -161,6 +191,7 @@ public class SupportFragment extends Fragment implements ISupportFragment {
      */
     @Override
     public void onSupportVisible() {
+        mSupportVisibleActionQueue.start();
         mDelegate.onSupportVisible();
     }
 
@@ -171,6 +202,7 @@ public class SupportFragment extends Fragment implements ISupportFragment {
      */
     @Override
     public void onSupportInvisible() {
+        mSupportVisibleActionQueue.stop();
         mDelegate.onSupportInvisible();
     }
 
@@ -224,6 +256,12 @@ public class SupportFragment extends Fragment implements ISupportFragment {
         return mDelegate.onBackPressedSupport();
     }
 
+    @Override
+    @LaunchMode
+    public int getLaunchMode() {
+        return ISupportFragment.STANDARD;
+    }
+
     /**
      * 类似 {@link Activity#setResult(int, Intent)}
      * <p>
@@ -274,6 +312,29 @@ public class SupportFragment extends Fragment implements ISupportFragment {
 
 
     /****************************************以下为可选方法(Optional methods)******************************************************/
+
+
+    public final <T extends View> T findViewById(@IdRes int id) {
+        if (view == null) {
+            throw new IllegalArgumentException("view is null!");
+        }
+        return view.findViewById(id);
+    }
+
+    public final <T extends View> T findViewWithTag(Object tag) {
+        if (view == null) {
+            return null;
+        }
+        return view.findViewWithTag(tag);
+    }
+
+    public final <T extends View> T requireViewById(@IdRes int id) {
+        T view = findViewById(id);
+        if (view == null) {
+            throw new IllegalArgumentException("ID does not reference a View inside this View");
+        }
+        return view;
+    }
 
     /**
      * 隐藏软键盘
@@ -330,7 +391,7 @@ public class SupportFragment extends Fragment implements ISupportFragment {
     }
 
     public void start(ISupportFragment toFragment) {
-        mDelegate.start(toFragment);
+        mDelegate.start(toFragment, toFragment.getLaunchMode());
     }
 
     /**
@@ -370,6 +431,10 @@ public class SupportFragment extends Fragment implements ISupportFragment {
 
     public void pop() {
         mDelegate.pop();
+    }
+
+    public void popThis() {
+        mDelegate.pop(this);
     }
 
     /**
@@ -447,4 +512,35 @@ public class SupportFragment extends Fragment implements ISupportFragment {
     public <T extends ISupportFragment> T findChildFragment(Class<T> fragmentClass) {
         return SupportHelper.findFragment(getChildFragmentManager(), fragmentClass);
     }
+
+    public void darkStatusBar() {
+        if (_mActivity == null) {
+            return;
+        }
+        StatusBarUtils.setDarkMode(_mActivity.getWindow());
+    }
+
+    public void lightStatusBar() {
+        if (_mActivity == null) {
+            return;
+        }
+        StatusBarUtils.setLightMode(_mActivity.getWindow());
+    }
+
+    protected synchronized void postOnEnterAnimationEnd(final Runnable runnable) {
+        mEnterAnimationEndActionQueue.post(runnable);
+    }
+
+    protected synchronized void postOnEnterAnimationEndDelayed(final Runnable runnable, long delay) {
+        mEnterAnimationEndActionQueue.postDelayed(runnable, delay);
+    }
+
+    protected synchronized void postOnSupportVisible(final Runnable runnable) {
+        mSupportVisibleActionQueue.post(runnable);
+    }
+
+    protected synchronized void postOnSupportVisibleDelayed(final Runnable runnable, long delay) {
+        mSupportVisibleActionQueue.postDelayed(runnable, delay);
+    }
+
 }

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#cccccc"
+    android:orientation="vertical">
+
+    <!--    <Button-->
+    <!--        android:id="@+id/btn_test1"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="测试1"-->
+    <!--        android:textColor="#000"-->
+    <!--        />-->
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btn_test_part_shadow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="测试PartShadowDialogFragment"
+                android:textColor="#000" />
+
+            <Button
+                android:id="@+id/btn_test_attach_list_bottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="测试AttachListDialogFragment Bottom"
+                android:textColor="#000" />
+
+            <Button
+                android:id="@+id/btn_test_arrow_menu_bottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="测试ArrowMenuDialogFragment Bottom"
+                android:textColor="#000" />
+
+            <Button
+                android:id="@+id/btn_test_center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="测试CenterDialogFragment"
+                android:textColor="#000" />
+
+            <Button
+                android:id="@+id/btn_test_center_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="测试CenterListDialogFragment"
+                android:textColor="#000" />
+
+            <Button
+                android:id="@+id/btn_test_bottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="测试BottomDialogFragment"
+                android:textColor="#000" />
+
+            <Button
+                android:id="@+id/btn_test_bottom_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="测试BottomListDialogFragment"
+                android:textColor="#000" />
+
+            <Button
+                android:id="@+id/btn_test_full_screen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="测试FullScreenDialogFragment"
+                android:textColor="#000" />
+
+            <Button
+                android:id="@+id/btn_test_loading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="测试LoadingDialogFragment"
+                android:textColor="#000" />
+
+            <Button
+                android:id="@+id/btn_test_input"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="测试InputDialogFragment"
+                android:textColor="#000" />
+
+            <Button
+                android:id="@+id/btn_test_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="测试CheckDialogFragment"
+                android:textColor="#000" />
+
+            <Button
+                android:id="@+id/btn_test_arrow_menu_top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="测试ArrowMenuDialogFragment Bottom"
+                android:textColor="#000" />
+
+            <Button
+                android:id="@+id/btn_test_attach_list_top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="测试AttachListDialogFragment Top"
+                android:textColor="#000" />
+
+            <Button
+                android:id="@+id/btn_test_part_shadow2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="测试PartShadowDialogFragment2"
+                android:textColor="#000" />
+
+            <ImageView
+                android:id="@+id/iv_test_image_viewer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:scaleType="centerCrop"
+                />
+
+            <ImageView
+                android:id="@+id/iv_test_image_viewer2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:scaleType="centerCrop"
+                />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+</FrameLayout>
