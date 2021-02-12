@@ -4,19 +4,17 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 
+import com.zpj.fragmentation.dialog.R;
 import com.zpj.fragmentation.dialog.animator.PopupAnimator;
 import com.zpj.fragmentation.dialog.animator.ScaleAlphaAnimator;
 import com.zpj.fragmentation.dialog.enums.PopupPosition;
-import com.zpj.fragmentation.dialog.R;
 import com.zpj.fragmentation.dialog.model.OptionMenu;
 import com.zpj.fragmentation.dialog.widget.PopLayout;
 import com.zpj.utils.ScreenUtils;
@@ -76,6 +74,10 @@ public abstract class ArrowDialogFragment extends BaseDialogFragment {
         if (getContentLayoutId() > 0) {
             contentView = (ViewGroup) LayoutInflater.from(context).inflate(getContentLayoutId(), mPopLayout, false);
             mPopLayout.addView(contentView);
+        }
+
+        if (bgDrawable != null) {
+            mPopLayout.setBackground(bgDrawable);
         }
 
     }

@@ -12,12 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
+import com.zpj.fragmentation.dialog.R;
 import com.zpj.fragmentation.dialog.animator.PopupAnimator;
 import com.zpj.fragmentation.dialog.animator.ScrollScaleAnimator;
 import com.zpj.fragmentation.dialog.enums.PopupAnimation;
 import com.zpj.fragmentation.dialog.enums.PopupPosition;
 import com.zpj.fragmentation.dialog.widget.PartShadowContainer;
-import com.zpj.fragmentation.dialog.R;
 import com.zpj.utils.ScreenUtils;
 
 
@@ -37,7 +37,13 @@ public abstract class AttachDialogFragment extends BaseDialogFragment {
 
     protected PopupPosition popupPosition = null;
 
+    protected AtViewGravity atViewGravity = AtViewGravity.TOP;
+
     protected View contentView;
+
+    public enum AtViewGravity {
+        TOP, BOTTOM
+    }
 
     @Override
     protected final int getImplLayoutId() {
@@ -66,6 +72,9 @@ public abstract class AttachDialogFragment extends BaseDialogFragment {
 
         contentView = LayoutInflater.from(getContext()).inflate(getContentLayoutId(), attachPopupContainer, false);
         attachPopupContainer.addView(contentView);
+        if (bgDrawable != null) {
+            contentView.setBackground(bgDrawable);
+        }
 
     }
 
@@ -239,9 +248,17 @@ public abstract class AttachDialogFragment extends BaseDialogFragment {
                     if (isShowUpToTarget()) {
                         //说明上面的空间比较大，应显示在atView上方
                         // translationX: 在左边就和atView左边对齐，在右边就和其右边对齐
-                        translationY = rect.top + rect.height() - height - defaultOffsetY;
+//                        translationY = rect.top + rect.height() - height - defaultOffsetY;
+                        translationY = rect.top - height - defaultOffsetY;
+                        if (atViewGravity == AtViewGravity.TOP) {
+                            translationY += rect.height();
+                        }
                     } else {
-                        translationY = rect.bottom - rect.height() + defaultOffsetY;
+//                        translationY = rect.bottom - rect.height() + defaultOffsetY;
+                        translationY = rect.bottom + defaultOffsetY;
+                        if (atViewGravity == AtViewGravity.TOP) {
+                            translationY -= rect.height();
+                        }
                     }
 
                     translationY -= offset;
@@ -310,6 +327,13 @@ public abstract class AttachDialogFragment extends BaseDialogFragment {
         return this;
     }
 
+    public AttachDialogFragment attachViewCenter(View attachView) {
+        int[] locations = new int[2];
+        attachView.getLocationOnScreen(locations);
+        return setTouchPoint(locations[0] + attachView.getMeasuredWidth() / 2f,
+                locations[1] + attachView.getMeasuredHeight() / 2f);
+    }
+
     public AttachDialogFragment setTouchPoint(PointF touchPoint) {
         this.touchPoint = touchPoint;
         return this;
@@ -339,4 +363,10 @@ public abstract class AttachDialogFragment extends BaseDialogFragment {
         this.defaultOffsetY = defaultOffsetY;
         return this;
     }
+
+    public AttachDialogFragment setAtViewGravity(AtViewGravity atViewGravity) {
+        this.atViewGravity = atViewGravity;
+        return this;
+    }
+
 }

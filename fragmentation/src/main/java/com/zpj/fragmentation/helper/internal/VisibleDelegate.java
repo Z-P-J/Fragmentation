@@ -6,12 +6,11 @@ import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-
 import android.support.v4.app.FragmentationMagician;
 
-import java.util.List;
-
 import com.zpj.fragmentation.ISupportFragment;
+
+import java.util.List;
 
 /**
  * Created by YoKey on 17/4/4.
@@ -129,12 +128,10 @@ public class VisibleDelegate {
     }
 
     private void enqueueDispatchVisible() {
-        getHandler().post(new Runnable() {
-            @Override
-            public void run() {
-                dispatchSupportVisible(true);
-            }
-        });
+        getHandler().post(() -> dispatchSupportVisible(true));
+//        RxHandler.post(() -> {
+//            dispatchSupportVisible(true);
+//        });
     }
 
     private void dispatchSupportVisible(boolean visible) {

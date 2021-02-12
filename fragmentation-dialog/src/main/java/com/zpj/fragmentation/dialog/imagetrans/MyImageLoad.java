@@ -1,23 +1,10 @@
 package com.zpj.fragmentation.dialog.imagetrans;
 
 import android.content.ContentResolver;
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
-import com.zpj.http.core.IHttp;
-import com.zpj.http.core.ObservableTask;
-import com.zpj.utils.ContextUtils;
-import com.zpj.utils.FileUtils;
-
-import java.io.File;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
@@ -33,19 +20,16 @@ public class MyImageLoad<T> implements ImageLoad<T> {
     private static final HashMap<String, OkHttpImageLoad.ImageDownLoadListener> imageDownLoadListenerMap = new HashMap<>();
 
     @Override
-    public void loadImage(final T url, final LoadCallback callback, final ImageView imageView, final String unique) {
+    public void loadImage(final T url, final LoadCallback callback, final TransImageView imageView, final String unique) {
         addLoadCallback(unique, callback);
         String link = url.toString();
         Uri uri = Uri.parse(link);
         if (isLocalUri(uri.getScheme())) {
             if (isAssetUri(uri)) {
                 //是asset资源文件
-
-                return;
             } else {
                 //是本地文件
                 loadImageFromLocal(uri.getPath(), unique, imageView);
-                return;
             }
         } else {
             if (isNetUri(link)) {
@@ -59,7 +43,7 @@ public class MyImageLoad<T> implements ImageLoad<T> {
     /**
      * 从网络加载图片
      */
-    private void loadImageFromNet(final String url, final String unique, final ImageView imageView) {
+    private void loadImageFromNet(final String url, final String unique, final TransImageView imageView) {
         OkHttpImageLoad.ImageDownLoadListener loadListener = new OkHttpImageLoad.ImageDownLoadListener() {
             @Override
             public void inProgress(float progress, long total) {
@@ -89,8 +73,8 @@ public class MyImageLoad<T> implements ImageLoad<T> {
     /**
      * 从本地加载图片
      */
-    protected void loadImageFromLocal(String url, final String unique, final ImageView imageView) {
-        TileBitmapDrawable.attachTileBitmapDrawable(imageView, url, new TileBitmapDrawable.OnLoadListener() {
+    protected void loadImageFromLocal(String path, final String unique, final TransImageView imageView) {
+        TileBitmapDrawable.attachTileBitmapDrawable(imageView, path, new TileBitmapDrawable.OnLoadListener() {
             @Override
             public void onLoadFinish(Drawable drawable) {
                 onFinishLoad(unique, drawable);
@@ -134,6 +118,7 @@ public class MyImageLoad<T> implements ImageLoad<T> {
             return true;
         }
         return OkHttpImageLoad.getInstance().checkImageExists(link);
+//        return false;
     }
 
     @Override

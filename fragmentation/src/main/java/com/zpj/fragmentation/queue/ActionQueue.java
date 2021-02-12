@@ -3,11 +3,11 @@ package com.zpj.fragmentation.queue;
 import android.os.Handler;
 import android.os.Looper;
 
-import java.util.LinkedList;
-import java.util.Queue;
-
 import com.zpj.fragmentation.ISupportFragment;
 import com.zpj.fragmentation.SupportHelper;
+
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * The queue of perform action.
@@ -26,18 +26,21 @@ public class ActionQueue {
     public void enqueue(final Action action) {
         if (isThrottleBACK(action)) return;
 
+//        if (action.action == Action.ACTION_LOAD && mQueue.isEmpty()) { // && Thread.currentThread() == Looper.getMainLooper().getThread()
+//            RxHandler.post(action::run);
+//            return;
+//        }
+
         if (action.action == Action.ACTION_LOAD && mQueue.isEmpty()
                 && Thread.currentThread() == Looper.getMainLooper().getThread()) {
             action.run();
             return;
         }
 
-        mMainHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                enqueueAction(action);
-            }
-        });
+        mMainHandler.post(() -> enqueueAction(action));
+
+//        RxHandler.post(() -> enqueueAction(action));
+
     }
 
     private void enqueueAction(Action action) {
@@ -51,13 +54,14 @@ public class ActionQueue {
         if (mQueue.isEmpty()) return;
 
         final Action action = mQueue.peek();
-        mMainHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                action.run();
-                executeNextAction(action);
-            }
+        mMainHandler.postDelayed(() -> {
+            action.run();
+            executeNextAction(action);
         }, action.delay);
+//        RxHandler.post(() -> {
+//            action.run();
+//            executeNextAction(action);
+//        }, action.delay);
     }
 
     private void executeNextAction(Action action) {
@@ -66,13 +70,14 @@ public class ActionQueue {
             action.duration = top == null ? Action.DEFAULT_POP_TIME : top.getSupportDelegate().getExitAnimDuration();
         }
 
-        mMainHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mQueue.poll();
-                handleAction();
-            }
+        mMainHandler.postDelayed(() -> {
+            mQueue.poll();
+            handleAction();
         }, action.duration);
+//        RxHandler.post(() -> {
+//            mQueue.poll();
+//            handleAction();
+//        }, action.duration);
     }
 
     private boolean isThrottleBACK(Action action) {

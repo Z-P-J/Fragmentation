@@ -9,6 +9,7 @@ import android.os.Looper;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 
@@ -28,6 +29,8 @@ public class SupportFragment extends Fragment implements ISupportFragment {
     protected final SupportFragmentDelegate mDelegate = new SupportFragmentDelegate(this);
 
     private final Handler handler = new Handler(Looper.getMainLooper());
+    //    protected final BlockActionQueue mSupportVisibleActionQueue = new BlockActionQueue(handler);
+//    protected final BlockActionQueue mEnterAnimationEndActionQueue = new BlockActionQueue(handler);
     protected final BlockActionQueue mSupportVisibleActionQueue = new BlockActionQueue(handler);
     protected final BlockActionQueue mEnterAnimationEndActionQueue = new BlockActionQueue(handler);
 
@@ -77,6 +80,7 @@ public class SupportFragment extends Fragment implements ISupportFragment {
 
     @Override
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+        Log.d("SupportFragment", "onCreateAnimation transit=" + transit + " enter=" + enter + " fragment=" + this);
         return mDelegate.onCreateAnimation(transit, enter, nextAnim);
     }
 
@@ -130,20 +134,20 @@ public class SupportFragment extends Fragment implements ISupportFragment {
         mDelegate.setUserVisibleHint(isVisibleToUser);
     }
 
-    /**
-     * Causes the Runnable r to be added to the action queue.
-     * <p>
-     * The runnable will be run after all the previous action has been run.
-     * <p>
-     * 前面的事务全部执行后 执行该Action
-     *
-     * @deprecated Use {@link #post(Runnable)} instead.
-     */
-    @Deprecated
-    @Override
-    public void enqueueAction(Runnable runnable) {
-        mDelegate.enqueueAction(runnable);
-    }
+//    /**
+//     * Causes the Runnable r to be added to the action queue.
+//     * <p>
+//     * The runnable will be run after all the previous action has been run.
+//     * <p>
+//     * 前面的事务全部执行后 执行该Action
+//     *
+//     * @deprecated Use {@link #post(Runnable)} instead.
+//     */
+//    @Deprecated
+//    @Override
+//    public void enqueueAction(Runnable runnable) {
+//        mDelegate.enqueueAction(runnable);
+//    }
 
     /**
      * Causes the Runnable r to be added to the action queue.
@@ -485,6 +489,9 @@ public class SupportFragment extends Fragment implements ISupportFragment {
      * 得到位于栈顶Fragment
      */
     public ISupportFragment getTopFragment() {
+        if (getFragmentManager() == null) {
+            return null;
+        }
         return SupportHelper.getTopFragment(getFragmentManager());
     }
 

@@ -7,9 +7,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.view.MotionEvent;
-
 import android.support.v4.app.FragmentationMagician;
+import android.view.MotionEvent;
 
 import com.zpj.fragmentation.anim.DefaultVerticalAnimator;
 import com.zpj.fragmentation.anim.FragmentAnimator;
@@ -188,6 +187,7 @@ public class SupportActivityDelegate {
 
     public boolean dispatchTouchEvent(MotionEvent ev) {
         // 防抖动(防止点击速度过快)
+//        return true;
         return !mFragmentClickable;
     }
 

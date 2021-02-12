@@ -26,7 +26,8 @@ public class TestFullScreenDialogFragment extends FullScreenDialogFragment {
 //                startWithPop(new MainFragment());
                 Toast.makeText(context, "TestFullScreenDialogFragment", Toast.LENGTH_SHORT).show();
 //                start(new MainFragment());
-                dismissWithStart(new MainFragment());
+                start(new MainFragment());
+                dismiss();
             }
         });
     }

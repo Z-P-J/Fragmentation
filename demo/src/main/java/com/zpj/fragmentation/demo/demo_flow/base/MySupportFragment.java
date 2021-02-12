@@ -109,21 +109,6 @@ public class MySupportFragment extends Fragment implements ISupportFragment {
      * The runnable will be run after all the previous action has been run.
      * <p>
      * 前面的事务全部执行后 执行该Action
-     *
-     * @deprecated Use {@link #post(Runnable)} instead.
-     */
-    @Deprecated
-    @Override
-    public void enqueueAction(Runnable runnable) {
-        mDelegate.enqueueAction(runnable);
-    }
-
-    /**
-     * Causes the Runnable r to be added to the action queue.
-     * <p>
-     * The runnable will be run after all the previous action has been run.
-     * <p>
-     * 前面的事务全部执行后 执行该Action
      */
     @Override
     public void post(Runnable runnable) {

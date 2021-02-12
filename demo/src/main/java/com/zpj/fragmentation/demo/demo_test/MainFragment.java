@@ -83,7 +83,7 @@ public class MainFragment extends BaseFragment {
                         .setTitle("Test")
                         .setContent("ttttttttttttttttttttttttttttttttttttttttttttttttt")
 //                        .setAutoDismiss(false)
-                        .setPositiveButton(new AlertDialogFragment.OnPositiveButtonClickListener() {
+                        .setPositiveButton(new AlertDialogFragment.OnButtonClickListener() {
                             @Override
                             public void onClick(AlertDialogFragment fragment) {
                                 fragment.start(new TestDialogFragment());
@@ -201,8 +201,9 @@ public class MainFragment extends BaseFragment {
                 new AttachListDialogFragment<String>()
                         .setOnSelectListener(new AttachListDialogFragment.OnSelectListener<String>() {
                             @Override
-                            public void onSelect(int position, String text) {
+                            public void onSelect(AttachListDialogFragment<String> fragment, int position, String text) {
                                 Toast.makeText(context, "position=" + position + " text=" + text, Toast.LENGTH_SHORT).show();
+                                fragment.dismiss();
                             }
                         })
                         .setItems(list)
@@ -221,8 +222,9 @@ public class MainFragment extends BaseFragment {
                 new AttachListDialogFragment<String>()
                         .setOnSelectListener(new AttachListDialogFragment.OnSelectListener<String>() {
                             @Override
-                            public void onSelect(int position, String text) {
+                            public void onSelect(AttachListDialogFragment<String> fragment, int position, String text) {
                                 Toast.makeText(context, "position=" + position + " text=" + text, Toast.LENGTH_SHORT).show();
+                                fragment.dismiss();
                             }
                         })
                         .setItems(list)

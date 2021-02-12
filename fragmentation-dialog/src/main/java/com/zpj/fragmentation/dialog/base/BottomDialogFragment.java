@@ -9,10 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.zpj.fragmentation.anim.DefaultNoAnimator;
+import com.zpj.fragmentation.dialog.R;
+import com.zpj.fragmentation.dialog.animator.EmptyAnimator;
 import com.zpj.fragmentation.dialog.animator.PopupAnimator;
+import com.zpj.fragmentation.dialog.utils.DialogThemeUtils;
 import com.zpj.fragmentation.dialog.utils.Utility;
 import com.zpj.fragmentation.dialog.widget.SmartDragLayout;
-import com.zpj.fragmentation.dialog.R;
 import com.zpj.utils.ScreenUtils;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
@@ -24,7 +27,7 @@ public abstract class BottomDialogFragment extends BaseDialogFragment {
 
     private View contentView;
 
-    protected Boolean enableDrag = true;;
+    protected Boolean enableDrag = true;
 
     @Override
     protected final int getImplLayoutId() {
@@ -61,6 +64,12 @@ public abstract class BottomDialogFragment extends BaseDialogFragment {
         contentView = LayoutInflater.from(context).inflate(getContentLayoutId(), null, false);
         bottomPopupContainer.addView(contentView);
 
+        if (bgDrawable != null) {
+            contentView.setBackground(bgDrawable);
+        } else {
+            contentView.setBackground(DialogThemeUtils.getBottomDialogBackground(context));
+        }
+
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) contentView.getLayoutParams();
         int maxHeight = getMaxHeight();
         if (maxHeight > 0) {
@@ -85,7 +94,12 @@ public abstract class BottomDialogFragment extends BaseDialogFragment {
         bottomPopupContainer.setOnCloseListener(new SmartDragLayout.OnCloseListener() {
             @Override
             public void onClose() {
-                dismiss();
+                setFragmentAnimator(new DefaultNoAnimator());
+                postOnEnterAnimationEnd(() -> {
+                    BottomDialogFragment.super.doDismissAnimation();
+                    popThis();
+                    onDismiss();
+                });
             }
             @Override
             public void onOpen() {
@@ -100,7 +114,7 @@ public abstract class BottomDialogFragment extends BaseDialogFragment {
             }
         });
 
-        Utility.applyPopupSize((ViewGroup) getImplView(), getMaxWidth(), 0);
+        Utility.applyPopupSize(getImplView(), getMaxWidth(), 0);
 
     }
 

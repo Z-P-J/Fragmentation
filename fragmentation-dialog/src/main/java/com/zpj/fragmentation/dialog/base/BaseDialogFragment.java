@@ -2,6 +2,7 @@ package com.zpj.fragmentation.dialog.base;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -44,6 +45,8 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
 
     private ISupportFragment preFragment;
 
+    protected Drawable bgDrawable;
+
     @Override
     protected final int getLayoutId() {
         return R.layout._dialog_layout_dialog_view;
@@ -75,7 +78,7 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
                 if (!cancelable || !cancelableInTouchOutside) {
                     return;
                 }
-                pop();
+                dismiss();
             }
         });
 
@@ -175,11 +178,13 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
     }
 
     public BaseDialogFragment show(SupportFragment fragment) {
+        onBeforeShow();
         fragment.start(this);
         return this;
     }
 
     public BaseDialogFragment show(Context context) {
+        onBeforeShow();
         Activity activity = ContextUtils.getActivity(context);
         if (activity instanceof SupportActivity) {
             ((SupportActivity) activity).start(this);
@@ -195,6 +200,7 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
     }
 
     public BaseDialogFragment show(SupportActivity activity) {
+        onBeforeShow();
         activity.start(this);
         return this;
     }
@@ -231,33 +237,53 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
 //    }
 
     public void dismiss() {
-        if (!isDismissing) {
-            isDismissing = true;
-            doDismissAnimation();
-            super.pop();
-            onDismiss();
-//            postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    onDismiss();
-//                }
-//            }, 250);
+        postOnEnterAnimationEnd(() -> {
+            if (!isDismissing) {
+                isDismissing = true;
+                doDismissAnimation();
+                BaseDialogFragment.super.popThis();
+                onDismiss();
+            }
+        });
 
-//            postDelayed(() -> {
-//                BaseDialogFragment.super.popThis();
-//                onDismiss();
-//            }, XPopup.getAnimationDuration());
-        }
+//        if (!isDismissing) {
+//            isDismissing = true;
+//            doDismissAnimation();
+//            super.popThis();
+//            onDismiss();
+////            postDelayed(new Runnable() {
+////                @Override
+////                public void run() {
+////                    onDismiss();
+////                }
+////            }, 250);
+//
+////            postDelayed(() -> {
+////                BaseDialogFragment.super.popThis();
+////                onDismiss();
+////            }, XPopup.getAnimationDuration());
+//        }
     }
 
-    public void dismissWithStart(ISupportFragment fragment) {
-        if (!isDismissing) {
-            isDismissing = true;
-            doDismissAnimation();
-            super.startWithPop(fragment);
-            onDismiss();
-        }
-    }
+//    public void dismissWithStart(ISupportFragment fragment) {
+//        if (!isDismissing) {
+//            isDismissing = true;
+////            doDismissAnimation();
+//            if (implView != null) {
+//
+//                implView.animate()
+//                        .alpha(0)
+//                        .setDuration(90)
+//                        .setInterpolator(new DecelerateInterpolator(2f))
+//                        .start();
+//            }
+//            if (shadowBgAnimator != null) {
+//                shadowBgAnimator.animateDismiss();
+//            }
+//            super.startWithPop(fragment);
+//            onDismiss();
+//        }
+//    }
 
 //    public void showFromHide() {
 //
@@ -284,6 +310,10 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
         if (onDismissListener != null) {
             onDismissListener.onDismiss();
         }
+    }
+
+    protected void onBeforeShow() {
+        isDismissing = false;
     }
 
     protected void onHide() {
@@ -314,4 +344,10 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
         this.onDismissListener = onDismissListener;
         return this;
     }
+
+    public BaseDialogFragment setBackgroundDrawable(Drawable drawable) {
+        this.bgDrawable = drawable;
+        return this;
+    }
+
 }

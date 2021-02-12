@@ -56,10 +56,10 @@ class TransactionDelegate {
     static final int TYPE_REPLACE = 10;
     static final int TYPE_REPLACE_DONT_BACK = 11;
 
-    private ISupportActivity mSupport;
-    private FragmentActivity mActivity;
+    private final ISupportActivity mSupport;
+    private final FragmentActivity mActivity;
 
-    private Handler mHandler;
+    private final Handler mHandler;
 
     ActionQueue mActionQueue;
 
@@ -265,7 +265,8 @@ class TransactionDelegate {
             @Override
             public void run() {
                 handleAfterSaveInStateTransactionException(fm, "pop()");
-                FragmentationMagician.popBackStackAllowingStateLoss(fm);
+                FragmentationMagician.popBackStackAllowingStateLoss(fm, fragment.getTag());
+//                fm.getBackStackEntryAt()
                 try {
                     if (fm != null) {
                         fm.beginTransaction()
@@ -283,6 +284,7 @@ class TransactionDelegate {
     private void removeTopFragment(FragmentManager fm) {
         try { // Safe popBackStack()
             ISupportFragment top = SupportHelper.getBackStackTopFragment(fm);
+            Log.d(TAG, "removeTopFragment top=" + top);
             if (top != null) {
                 fm.beginTransaction()
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
@@ -434,6 +436,7 @@ class TransactionDelegate {
         Fragment toF = (Fragment) to;
         Bundle args = getArguments(toF);
         args.putBoolean(FRAGMENTATION_ARG_REPLACE, !addMode);
+//        toFragmentTag = to.toString();
         Log.d(TAG, "start from=" + from + " to=" + to + " toFragmentTag=" + toFragmentTag
                 + " dontAddToBackStack=" + dontAddToBackStack + " sharedElementList=" + sharedElementList
                 + " allowRootFragmentAnim=" + allowRootFragmentAnim + " type=" + type + " addMode=" + addMode);
@@ -535,12 +538,8 @@ class TransactionDelegate {
             }
         } else if (launchMode == ISupportFragment.SINGLETASK) {
             doPopTo(toFragmentTag, false, fm, DEFAULT_POPTO_ANIM);
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    handleNewBundle(to, stackToFragment);
-                }
-            });
+            mHandler.post(() -> handleNewBundle(to, stackToFragment));
+//            RxHandler.post(() -> handleNewBundle(to, stackToFragment));
             return true;
         }
 
@@ -643,16 +642,20 @@ class TransactionDelegate {
         }
 
         fromView.startAnimation(animation);
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    mock.removeViewInLayout(fromView);
-                    container.removeViewInLayout(mock);
-                } catch (Exception ignored) {
-                }
+        mHandler.postDelayed(() -> {
+            try {
+                mock.removeViewInLayout(fromView);
+                container.removeViewInLayout(mock);
+            } catch (Exception ignored) {
             }
         }, animation.getDuration());
+//        RxHandler.post(new io.reactivex.functions.Action() {
+//            @Override
+//            public void run() throws Exception {
+//                mock.removeViewInLayout(fromView);
+//                container.removeViewInLayout(mock);
+//            }
+//        }, animation.getDuration());
     }
 
 
@@ -672,14 +675,11 @@ class TransactionDelegate {
             public void onEnterAnimStart() {
                 fromView.startAnimation(exitAnim);
 
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            mock.removeViewInLayout(fromView);
-                            container.removeViewInLayout(mock);
-                        } catch (Exception ignored) {
-                        }
+                mHandler.postDelayed(() -> {
+                    try {
+                        mock.removeViewInLayout(fromView);
+                        container.removeViewInLayout(mock);
+                    } catch (Exception ignored) {
                     }
                 }, exitAnim.getDuration());
             }
