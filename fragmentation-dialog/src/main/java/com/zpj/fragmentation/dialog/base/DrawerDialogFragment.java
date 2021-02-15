@@ -39,7 +39,7 @@ public abstract class DrawerDialogFragment extends BaseDialogFragment {
         super.initView(view, savedInstanceState);
         drawerLayout = findViewById(R.id.drawerLayout);
         drawerContentContainer = findViewById(R.id.drawerContentContainer);
-        View contentView = LayoutInflater.from(getContext()).inflate(getContentLayoutId(), drawerContentContainer, false);
+        View contentView = getLayoutInflater().inflate(getContentLayoutId(), drawerContentContainer, false);
         drawerContentContainer.addView(contentView);
 
         if (bgDrawable != null) {

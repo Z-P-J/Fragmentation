@@ -15,7 +15,7 @@ import com.zpj.fragmentation.dialog.config.DialogConfig;
  */
 public class ShadowBgAnimator extends PopupAnimator {
 
-    private static int shadowBgColor = Color.parseColor("#9F000000");
+    private static final int shadowBgColor = Color.parseColor("#60000000");
 
     public ArgbEvaluator argbEvaluator = new ArgbEvaluator();
     public int startColor = Color.TRANSPARENT;

@@ -43,8 +43,6 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
 
     protected IDialog.OnDismissListener onDismissListener;
 
-    private ISupportFragment preFragment;
-
     protected Drawable bgDrawable;
 
     @Override
@@ -64,7 +62,6 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
 
     @Override
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
-        preFragment = getPreFragment();
         FrameLayout flContainer = findViewById(R.id._dialog_fl_container);
 //        flContainer.setClickable(true);
 //        flContainer.setFocusable(true);
@@ -89,7 +86,7 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
             }
         });
 
-        implView = (ViewGroup) LayoutInflater.from(context).inflate(getImplLayoutId(), null, false);
+        implView = (ViewGroup) getLayoutInflater().inflate(getImplLayoutId(), null, false);
         implView.setFocusableInTouchMode(true);
         implView.setFocusable(true);
         implView.setClickable(true);
@@ -141,6 +138,7 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
     @Override
     public void onSupportVisible() {
         super.onSupportVisible();
+        ISupportFragment preFragment = getPreFragment();
         if (preFragment != null) {
             preFragment.onSupportVisible();
         }
@@ -149,16 +147,42 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
     @Override
     public void onSupportInvisible() {
         super.onSupportInvisible();
+        ISupportFragment preFragment = getPreFragment();
         if (preFragment != null) {
             preFragment.onSupportInvisible();
         }
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
+
+    @Override
     public void onDestroy() {
+        ISupportFragment preFragment = getPreFragment();
         if (preFragment != null) {
             preFragment.onSupportVisible();
-            preFragment = null;
         }
         this.isDismissing = false;
         super.onDestroy();

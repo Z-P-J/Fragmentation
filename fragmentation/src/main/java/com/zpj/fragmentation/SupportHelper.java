@@ -93,7 +93,6 @@ public class SupportHelper {
         if (fragmentManager == null) return null;
 
         List<Fragment> fragmentList = FragmentationMagician.getActiveFragments(fragmentManager);
-        if (fragmentList == null) return null;
 
         int index = fragmentList.indexOf(fragment);
         for (int i = index - 1; i >= 0; i--) {

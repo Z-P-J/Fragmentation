@@ -15,6 +15,7 @@ import com.zpj.utils.ScreenUtils;
  * Create by dance, at 2018/12/18
  */
 public class LoadingView extends View {
+
     private Paint paint;
     private float radius;
     private float radiusOffset;
@@ -92,4 +93,5 @@ public class LoadingView extends View {
         super.onDetachedFromWindow();
         removeCallbacks(increaseTask);
     }
+
 }

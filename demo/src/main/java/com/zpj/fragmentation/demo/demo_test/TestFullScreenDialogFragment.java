@@ -1,5 +1,6 @@
 package com.zpj.fragmentation.demo.demo_test;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -19,6 +20,7 @@ public class TestFullScreenDialogFragment extends FullScreenDialogFragment {
     @Override
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
         super.initView(view, savedInstanceState);
+        getContentView().setBackgroundColor(Color.GRAY);
         findViewById(R.id.btn_test).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

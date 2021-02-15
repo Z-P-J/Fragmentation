@@ -72,7 +72,7 @@ public abstract class ArrowDialogFragment extends BaseDialogFragment {
         mPopLayout = findViewById(R.id.arrowPopupContainer);
 
         if (getContentLayoutId() > 0) {
-            contentView = (ViewGroup) LayoutInflater.from(context).inflate(getContentLayoutId(), mPopLayout, false);
+            contentView = (ViewGroup) getLayoutInflater().inflate(getContentLayoutId(), mPopLayout, false);
             mPopLayout.addView(contentView);
         }
 

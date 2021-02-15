@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.zpj.fragmentation.dialog.interfaces.OnDragChangeListener;
-import com.zpj.fragmentation.dialog.photoview.PhotoView;
 
 /**
  * wrap ViewPager, process drag event.
@@ -89,9 +88,9 @@ public class PhotoViewContainer extends FrameLayout {
 //        return photoView!=null && (photoView.attacher.isTopEnd || photoView.attacher.isBottomEnd);
     }
 
-    private PhotoView getCurrentPhotoView(){
-        return  (PhotoView) viewPager.getChildAt(viewPager.getCurrentItem());
-    }
+//    private PhotoView getCurrentPhotoView(){
+//        return  (PhotoView) viewPager.getChildAt(viewPager.getCurrentItem());
+//    }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {

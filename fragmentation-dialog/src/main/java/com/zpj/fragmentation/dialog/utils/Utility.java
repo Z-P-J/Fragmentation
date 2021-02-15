@@ -1,6 +1,5 @@
 package com.zpj.fragmentation.dialog.utils;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -9,32 +8,22 @@ import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
-import android.media.MediaScannerConnection;
-import android.net.Uri;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.zpj.fragmentation.dialog.enums.ImageType;
-import com.zpj.fragmentation.dialog.interfaces.IImageLoader;
 import com.zpj.utils.ScreenUtils;
 import com.zpj.utils.StatusBarUtils;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 
 /**
@@ -116,114 +105,114 @@ public class Utility {
         return stateListDrawable;
     }
 
-    public static <T> void saveBmpToAlbum(final Context context, final IImageLoader<T> imageLoader, final T uri) {
-        final Handler mainHandler = new Handler(Looper.getMainLooper());
-        final ExecutorService executor = Executors.newSingleThreadExecutor();
-        final Context mContext = context;
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                File source = imageLoader.getImageFile(mContext, uri);
-                if (source == null) {
-                    mainHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(mContext, "图片不存在！", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    return;
-                }
-                //1. create path
-                String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + Environment.DIRECTORY_PICTURES;
-                File dirFile = new File(dirPath);
-                if (!dirFile.exists()) dirFile.mkdirs();
-                try {
-                    ImageType type = ImageHeaderParser.getImageType(new FileInputStream(source));
-                    String ext = getFileExt(type);
-                    final File target = new File(dirPath, System.currentTimeMillis() + "." + ext);
-                    if (target.exists()) target.delete();
-                    target.createNewFile();
-                    //2. save
-                    writeFileFromIS(target, new FileInputStream(source));
-                    //3. notify
-                    MediaScannerConnection.scanFile(mContext, new String[]{target.getAbsolutePath()},
-                            new String[]{"image/" + ext}, new MediaScannerConnection.OnScanCompletedListener() {
-                                @Override
-                                public void onScanCompleted(final String path, Uri uri) {
-                                    mainHandler.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Toast.makeText(mContext, "已保存到相册！", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                }
-                            });
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    mainHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(mContext, "没有保存权限，保存功能无法使用！", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            }
-        });
-    }
+//    public static <T> void saveBmpToAlbum(final Context context, final IImageLoader<T> imageLoader, final T uri) {
+//        final Handler mainHandler = new Handler(Looper.getMainLooper());
+//        final ExecutorService executor = Executors.newSingleThreadExecutor();
+//        final Context mContext = context;
+//        executor.execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                File source = imageLoader.getImageFile(mContext, uri);
+//                if (source == null) {
+//                    mainHandler.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            Toast.makeText(mContext, "图片不存在！", Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
+//                    return;
+//                }
+//                //1. create path
+//                String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + Environment.DIRECTORY_PICTURES;
+//                File dirFile = new File(dirPath);
+//                if (!dirFile.exists()) dirFile.mkdirs();
+//                try {
+//                    ImageType type = ImageHeaderParser.getImageType(new FileInputStream(source));
+//                    String ext = getFileExt(type);
+//                    final File target = new File(dirPath, System.currentTimeMillis() + "." + ext);
+//                    if (target.exists()) target.delete();
+//                    target.createNewFile();
+//                    //2. save
+//                    writeFileFromIS(target, new FileInputStream(source));
+//                    //3. notify
+//                    MediaScannerConnection.scanFile(mContext, new String[]{target.getAbsolutePath()},
+//                            new String[]{"image/" + ext}, new MediaScannerConnection.OnScanCompletedListener() {
+//                                @Override
+//                                public void onScanCompleted(final String path, Uri uri) {
+//                                    mainHandler.post(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            Toast.makeText(mContext, "已保存到相册！", Toast.LENGTH_SHORT).show();
+//                                        }
+//                                    });
+//                                }
+//                            });
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                    mainHandler.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            Toast.makeText(mContext, "没有保存权限，保存功能无法使用！", Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
+//                }
+//            }
+//        });
+//    }
 
-    public static <T> void saveBmpToAlbum(final Context context, final File file) {
-        final Handler mainHandler = new Handler(Looper.getMainLooper());
-        final ExecutorService executor = Executors.newSingleThreadExecutor();
-        final Context mContext = context;
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                if (file == null) {
-                    mainHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(mContext, "图片不存在！", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    return;
-                }
-                //1. create path
-                String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + Environment.DIRECTORY_PICTURES;
-                File dirFile = new File(dirPath);
-                if (!dirFile.exists()) dirFile.mkdirs();
-                try {
-                    ImageType type = ImageHeaderParser.getImageType(new FileInputStream(file));
-                    String ext = getFileExt(type);
-                    final File target = new File(dirPath, System.currentTimeMillis() + "." + ext);
-                    if (target.exists()) target.delete();
-                    target.createNewFile();
-                    //2. save
-                    writeFileFromIS(target, new FileInputStream(file));
-                    //3. notify
-                    MediaScannerConnection.scanFile(mContext, new String[]{target.getAbsolutePath()},
-                            new String[]{"image/" + ext}, new MediaScannerConnection.OnScanCompletedListener() {
-                                @Override
-                                public void onScanCompleted(final String path, Uri uri) {
-                                    mainHandler.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Toast.makeText(mContext, "已保存到相册！", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                }
-                            });
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    mainHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(mContext, "没有保存权限，保存功能无法使用！", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            }
-        });
-    }
+//    public static <T> void saveBmpToAlbum(final Context context, final File file) {
+//        final Handler mainHandler = new Handler(Looper.getMainLooper());
+//        final ExecutorService executor = Executors.newSingleThreadExecutor();
+//        final Context mContext = context;
+//        executor.execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (file == null) {
+//                    mainHandler.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            Toast.makeText(mContext, "图片不存在！", Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
+//                    return;
+//                }
+//                //1. create path
+//                String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + Environment.DIRECTORY_PICTURES;
+//                File dirFile = new File(dirPath);
+//                if (!dirFile.exists()) dirFile.mkdirs();
+//                try {
+//                    ImageType type = ImageHeaderParser.getImageType(new FileInputStream(file));
+//                    String ext = getFileExt(type);
+//                    final File target = new File(dirPath, System.currentTimeMillis() + "." + ext);
+//                    if (target.exists()) target.delete();
+//                    target.createNewFile();
+//                    //2. save
+//                    writeFileFromIS(target, new FileInputStream(file));
+//                    //3. notify
+//                    MediaScannerConnection.scanFile(mContext, new String[]{target.getAbsolutePath()},
+//                            new String[]{"image/" + ext}, new MediaScannerConnection.OnScanCompletedListener() {
+//                                @Override
+//                                public void onScanCompleted(final String path, Uri uri) {
+//                                    mainHandler.post(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            Toast.makeText(mContext, "已保存到相册！", Toast.LENGTH_SHORT).show();
+//                                        }
+//                                    });
+//                                }
+//                            });
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                    mainHandler.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            Toast.makeText(mContext, "没有保存权限，保存功能无法使用！", Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
+//                }
+//            }
+//        });
+//    }
 
     private static String getFileExt(ImageType type) {
         switch (type) {

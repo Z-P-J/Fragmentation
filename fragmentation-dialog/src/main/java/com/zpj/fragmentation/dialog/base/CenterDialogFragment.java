@@ -1,5 +1,6 @@
 package com.zpj.fragmentation.dialog.base;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.lihang.ShadowLayout;
 import com.zpj.fragmentation.dialog.R;
 import com.zpj.fragmentation.dialog.animator.PopupAnimator;
 import com.zpj.fragmentation.dialog.animator.ScaleAlphaAnimator;
@@ -44,20 +46,36 @@ public abstract class CenterDialogFragment extends BaseDialogFragment {
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
         super.initView(view, savedInstanceState);
 
-        FrameLayout centerPopupContainer = findViewById(R.id.centerPopupContainer);
+        ShadowLayout centerPopupContainer = findViewById(R.id.centerPopupContainer);
         if (getContentLayoutId() > 0) {
-            contentView = LayoutInflater.from(context).inflate(getContentLayoutId(), null, false);
+            contentView = getLayoutInflater().inflate(getContentLayoutId(), null, false);
             centerPopupContainer.addView(contentView);
         }
 
-        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) centerPopupContainer.getLayoutParams();
+
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams)  centerPopupContainer.getLayoutParams();
+
         if (this instanceof FullScreenDialogFragment) {
             params.height = MATCH_PARENT;
             params.width = MATCH_PARENT;
+            centerPopupContainer.setmShadowLimit(0);
+            centerPopupContainer.setmCornerRadius(0);
+            centerPopupContainer.setmShadowColor(Color.TRANSPARENT);
         } else {
+            if (contentView != null) {
+                if (bgDrawable != null) {
+                    contentView.setBackground(bgDrawable);
+                } else {
+                    contentView.setBackground(DialogThemeUtils.getCenterDialogBackground(context));
+                }
+            }
+            float dp16 = ScreenUtils.dp2px(context, 16);
             int maxHeight = getMaxHeight();
             if (maxHeight == WRAP_CONTENT || maxHeight == MATCH_PARENT) {
-                int margin = (int) (ScreenUtils.getScreenHeight(context) * 0.07f);
+                int screenHeight = ScreenUtils.getScreenHeight(context);
+                int screenWidth = ScreenUtils.getScreenWidth(context);
+//                int margin = (int) (screenHeight * 0.07f - dp16);
+                int margin = (int) (screenHeight * dp16 * 2 / screenWidth - dp16);
                 params.topMargin = margin;
                 params.bottomMargin = margin;
             }
@@ -65,28 +83,17 @@ public abstract class CenterDialogFragment extends BaseDialogFragment {
 
             int maxWidth = getMaxWidth();
             if (maxWidth == WRAP_CONTENT || maxWidth == MATCH_PARENT) {
-                int margin = (int) (ScreenUtils.getScreenWidth(context) * 0.07f);
+//                int screenWidth = ScreenUtils.getScreenWidth(context);
+//                int margin = (int) (screenWidth * 0.07f - dp16);
+                int margin = (int) (dp16);
                 params.leftMargin = margin;
                 params.rightMargin = margin;
             }
-            params.width = getMaxWidth();
+            params.width = maxWidth;
 
         }
 
         params.gravity = Gravity.CENTER;
-
-
-        if (contentView != null) {
-            if (bgDrawable != null) {
-                contentView.setBackground(bgDrawable);
-            } else {
-                contentView.setBackground(DialogThemeUtils.getCenterDialogBackground(context));
-            }
-            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) contentView.getLayoutParams();
-            layoutParams.height = WRAP_CONTENT;
-            layoutParams.width = MATCH_PARENT;
-            layoutParams.gravity = Gravity.CENTER;
-        }
 
     }
 

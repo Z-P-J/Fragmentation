@@ -161,10 +161,11 @@ public class AlertDialogFragment extends CenterDialogFragment
             public void onGlobalLayout() {
                 textView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 int padding = ScreenUtils.dp2pxInt(context, 24);
-                textView.setPadding(padding, padding, padding, padding);
+                textView.setPadding(padding, padding / 2, padding, 0);
             }
         });
-        textView.setMinHeight(ScreenUtils.dp2pxInt(context, 80));
+//        textView.setMinHeight(ScreenUtils.dp2pxInt(context, 80));
+        textView.setMinLines(3);
         textView.setLineSpacing(6, 1);
         return textView;
     }

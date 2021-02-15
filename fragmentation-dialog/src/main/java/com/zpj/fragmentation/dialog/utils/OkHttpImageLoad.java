@@ -1,6 +1,8 @@
-package com.zpj.fragmentation.dialog.imagetrans;
+package com.zpj.fragmentation.dialog.utils;
 
 import android.graphics.BitmapFactory;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 
 import com.bumptech.glide.Glide;
@@ -16,14 +18,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
-
 
 /**
  * Created by liuting on 16/8/26.
@@ -36,7 +30,8 @@ public class OkHttpImageLoad {
     private static String IMAGE_CACHE_PATH;
 
     private volatile static OkHttpImageLoad mInstance;
-    private HashMap<String, Builder> map = new LinkedHashMap<>();
+    private final HashMap<String, Builder> map = new LinkedHashMap<>();
+    private final Handler handler;
 
     private OkHttpImageLoad() {
         IMAGE_CACHE_PATH = ContextUtils.getApplicationContext().getExternalCacheDir().getAbsolutePath() + "/thumbnail_cache";
@@ -44,11 +39,16 @@ public class OkHttpImageLoad {
         if (!file.exists()) {
             file.mkdirs();
         }
+        handler = new Handler(Looper.getMainLooper());
     }
 
     public static OkHttpImageLoad getInstance() {
         if (mInstance == null) {
-            mInstance = new OkHttpImageLoad();
+            synchronized (OkHttpImageLoad.class) {
+                if (mInstance == null) {
+                    mInstance = new OkHttpImageLoad();
+                }
+            }
         }
         return mInstance;
     }
@@ -73,7 +73,7 @@ public class OkHttpImageLoad {
             return;
         }
         if (builder == null) {
-            builder = new Builder(url);
+            builder = new Builder(url, handler);
             map.put(url, builder);
         }
         builder.listener(listener);
@@ -87,8 +87,7 @@ public class OkHttpImageLoad {
 
     public static String getCachedPath(String url) {
         String key = generate(url);
-        String destUrl = getImageCachePath() + "/" + key;
-        return destUrl;
+        return getImageCachePath() + "/" + key;
     }
 
     /**
@@ -173,21 +172,23 @@ public class OkHttpImageLoad {
     }
 
     public static class Builder {
+        private final Handler handler;
         protected String url;
-        private Disposable disposable;
-        private List<ImageDownLoadListener> imageDownLoadListener = new ArrayList<>();
+        private final List<ImageDownLoadListener> imageDownLoadListener = new ArrayList<>();
         private boolean isSuccess = false;
         private boolean isStarted = false;
         private float currentProgress = 0f;
         private long total = 0L;
         private State currentState = State.DOWNLOADING;
+        private Thread thread;
 
         private enum State {
             DOWNLOADING, DOWNLOADERROR, DOWNLOADFINISH
         }
 
-        public Builder(String url) {
+        public Builder(String url, Handler handler) {
             this.url = url;
+            this.handler = handler;
         }
 
         public Builder listener(ImageDownLoadListener listener) {
@@ -197,12 +198,11 @@ public class OkHttpImageLoad {
         }
 
         public void cancel() {
-            if (null == disposable) {
-                return;
-            }
             if (!isSuccess) {
                 //切换到非UI线程，进行网络的取消工作
-                disposable.dispose();
+                if (thread != null) {
+                    thread.interrupt();
+                }
                 downloadCancel();
             }
         }
@@ -211,106 +211,26 @@ public class OkHttpImageLoad {
             isStarted = true;
             currentState = State.DOWNLOADING;
 
-            disposable = Observable.create(
-                    new ObservableOnSubscribe<File>() {
-                        @Override
-                        public void subscribe(@NonNull ObservableEmitter<File> emitter) throws Exception {
-                            File file = Glide.with(ContextUtils.getApplicationContext())
-                                    .asFile()
+            thread = new Thread(() -> {
+                try {
+                    File file = Glide.with(ContextUtils.getApplicationContext())
+                            .asFile()
 //                                .downloadOnly()
-                                    .load(url)
-                                    .submit()
-                                    .get();
-                            String key = generate(url);
-                            String destUrl = getImageCachePath() + "/" + key;
-                            File newFile = new File(destUrl);
-                            FileUtils.copyFileFast(file, newFile);
-                            emitter.onNext(newFile);
-                            emitter.onComplete();
-                        }
-                    })
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(file -> {
-                        if (disposable.isDisposed()) {
-                            downloadFail(new Exception("Canceled!"));
-                            return;
-                        }
-                        downloadSuccess();
-                    }, this::downloadFail);
-
-//            disposable = new ObservableTask<File>(
-//                    emitter -> {
-//                        File file = Glide.with(ContextUtils.getApplicationContext())
-//                                .asFile()
-////                                .downloadOnly()
-//                                .load(url)
-//                                .submit()
-//                                .get();
-//                        String key = generate(url);
-//                        String destUrl = getImageCachePath() + "/" + key;
-//                        File newFile = new File(destUrl);
-//                        FileUtils.copyFileFast(file, newFile);
-//                        emitter.onNext(newFile);
-//                        emitter.onComplete();
-//                    })
-//                    .onSuccess(data -> {
-//                        if (disposable.isDisposed()) {
-//                            downloadFail(new Exception("Canceled!"));
-//                            return;
-//                        }
-//                        downloadSuccess();
-//                    })
-//                    .onError(new IHttp.OnErrorListener() {
-//                        @Override
-//                        public void onError(Throwable throwable) {
-//                            downloadFail(throwable);
-//                        }
-//                    })
-//                    .subscribe();
+                            .load(url)
+                            .submit()
+                            .get();
+                    String key = generate(url);
+                    String destUrl = getImageCachePath() + "/" + key;
+                    File newFile = new File(destUrl);
+                    FileUtils.copyFileFast(file, newFile);
+                    downloadSuccess();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    downloadFail(e);
+                }
+            });
+            thread.start();
         }
-
-//        private void saveFile(Connection.Response response) throws IOException {
-//            Log.d("OkHttpImageLoad", "saveFile");
-//            InputStream is = null;
-//            byte[] buf = new byte[2048];
-//            int len;
-//            FileOutputStream fos = null;
-//            try {
-//                long total = 0;
-//                String contentLength = response.header("Content-Length");
-//                if (contentLength != null) {
-//                    total = Long.parseLong(contentLength);
-//                }
-//
-//                is = response.bodyStream();
-//
-//                if (total <= 0) {
-//                    total = is.available();
-//                }
-//
-//                long sum = 0;
-//
-//                File dir = new File(getImageCachePath());
-//                if (!dir.exists()) {
-//                    dir.mkdirs();
-//                }
-//                String key = generate(url);
-//                String destUrl = getImageCachePath() + "/" + key;
-//                File file = new File(destUrl);
-//                fos = new FileOutputStream(file);
-//                while ((len = is.read(buf)) != -1) {
-//                    sum += len;
-//                    fos.write(buf, 0, len);
-//                    final long finalSum = sum;
-//                    refreshProgress(finalSum * 1.0f / total, total);
-//                }
-//                fos.flush();
-//            } finally {
-//                if (is != null) is.close();
-//                if (fos != null) fos.close();
-//            }
-//        }
 
         /**
          * 如果已经开启就不再执行网络加载操作
@@ -333,15 +253,19 @@ public class OkHttpImageLoad {
         }
 
         private void downloadCancel() {
-            for (ImageDownLoadListener listener : imageDownLoadListener)
-                listener.onCancel();
+            handler.post(() -> {
+                for (ImageDownLoadListener listener : imageDownLoadListener)
+                    listener.onCancel();
+            });
         }
 
         private void refreshProgress(final float progress, final long total) {
             this.currentProgress = progress;
             this.total = total;
-            for (ImageDownLoadListener listener : imageDownLoadListener)
-                listener.inProgress(progress, total);
+            handler.post(() -> {
+                for (ImageDownLoadListener listener : imageDownLoadListener)
+                    listener.inProgress(progress, total);
+            });
         }
 
         private void downloadFail(final Throwable e) {
@@ -356,8 +280,10 @@ public class OkHttpImageLoad {
                 mInstance.map.remove(url);
                 return;
             }
-            for (ImageDownLoadListener listener : imageDownLoadListener)
-                listener.onError(e);
+            handler.post(() -> {
+                for (ImageDownLoadListener listener : imageDownLoadListener)
+                    listener.onError(e);
+            });
         }
 
         private void downloadSuccess() {
@@ -368,8 +294,10 @@ public class OkHttpImageLoad {
                 mInstance.map.remove(url);
                 return;
             }
-            for (ImageDownLoadListener listener : imageDownLoadListener)
-                listener.onSuccess();
+            handler.post(() -> {
+                for (ImageDownLoadListener listener : imageDownLoadListener)
+                    listener.onSuccess();
+            });
         }
 
         public void removeListener(ImageDownLoadListener listener) {

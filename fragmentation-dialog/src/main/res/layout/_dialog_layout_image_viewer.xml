@@ -4,12 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.zpj.fragmentation.dialog.widget.BlankView
-        android:id="@+id/placeholderView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="invisible" />
-
     <com.zpj.fragmentation.dialog.widget.PhotoViewContainer
         android:id="@+id/photoViewContainer"
         android:layout_width="match_parent"
@@ -21,27 +15,5 @@
             android:layout_height="wrap_content" />
 
     </com.zpj.fragmentation.dialog.widget.PhotoViewContainer>
-
-    <TextView
-        android:id="@+id/tv_pager_indicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginLeft="25dp"
-        android:layout_marginBottom="20dp"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"/>
-
-    <TextView
-        android:id="@+id/tv_save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_marginRight="25dp"
-        android:layout_marginBottom="20dp"
-        android:text="@string/save"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"
-        android:visibility="invisible" />
 
 </FrameLayout>

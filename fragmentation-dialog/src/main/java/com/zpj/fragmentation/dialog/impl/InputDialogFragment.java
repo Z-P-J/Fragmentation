@@ -22,6 +22,9 @@ public class InputDialogFragment extends AlertDialogFragment implements View.OnC
     private boolean emptyable = false;
     private int selectionStart = 0;
     private int selectionEnd = -1;
+    private int minLines = 0;
+    private int maxLines = Integer.MAX_VALUE;
+    private boolean singleLine = true;
 
     private AppCompatEditText et_input;
     public String inputContent;
@@ -33,12 +36,26 @@ public class InputDialogFragment extends AlertDialogFragment implements View.OnC
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (minLines < 0) {
+            minLines = 0;
+        }
+        if (maxLines < minLines) {
+            maxLines = minLines;
+        }
+    }
+
+    @Override
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
         super.initView(view, savedInstanceState);
         et_input = findViewById(R.id.et_input);
         et_input.setVisibility(View.VISIBLE);
+        et_input.setSingleLine(singleLine);
+        et_input.setMinLines(minLines);
+        et_input.setMaxLines(maxLines);
         int dp16 = ScreenUtils.dp2pxInt(context, 16);
-        FrameLayout centerPopupContainer = findViewById(R.id.centerPopupContainer);
+        View centerPopupContainer = getImplView();
         KeyboardObserver.registerSoftInputChangedListener(_mActivity, centerPopupContainer, height -> {
             if (height > 0 && isSupportVisible()) {
                 Rect rect = new Rect();
@@ -59,7 +76,10 @@ public class InputDialogFragment extends AlertDialogFragment implements View.OnC
             if (selectionStart < 0) {
                 selectionStart = 0;
             }
-            if (selectionEnd < selectionStart) {
+            if (selectionStart > inputContent.length()) {
+                selectionStart = inputContent.length();
+            }
+            if (selectionEnd < selectionStart || selectionEnd > inputContent.length()) {
                 selectionEnd = inputContent.length();
             }
             if (selectionStart <= selectionEnd) {
@@ -125,6 +145,21 @@ public class InputDialogFragment extends AlertDialogFragment implements View.OnC
                 dismiss();
             }
         }
+    }
+
+    public InputDialogFragment setMinLines(int minLines) {
+        this.minLines = minLines;
+        return this;
+    }
+
+    public InputDialogFragment setMaxLines(int maxLines) {
+        this.maxLines = maxLines;
+        return this;
+    }
+
+    public InputDialogFragment setSingleLine(boolean singleLine) {
+        this.singleLine = singleLine;
+        return this;
     }
 
     public InputDialogFragment setEditText(String inputContent) {

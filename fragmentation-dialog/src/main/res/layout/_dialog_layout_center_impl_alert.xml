@@ -5,8 +5,6 @@
     android:background="@drawable/_dialog_round_bg"
     android:orientation="vertical">
 
-    <!--    android:background="@drawable/_dialog_round_bg"-->
-
     <TextView
         android:id="@+id/tv_title"
         style="@style/XPopupTitle"
@@ -14,9 +12,10 @@
         android:layout_height="wrap_content"
         android:paddingStart="24dp"
         android:paddingEnd="24dp"
-        android:paddingTop="24dp"
+        android:paddingTop="18dp"
         android:paddingBottom="0dp"
         android:textSize="18sp"
+        android:textStyle="bold"
         android:text="Title" />
 
     <FrameLayout
@@ -27,7 +26,7 @@
             android:id="@+id/scroll_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="64dp"
+            android:layout_marginBottom="56dp"
             android:scrollbars="none"
             >
 
@@ -56,7 +55,7 @@
                 android:id="@+id/tv_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="32dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:padding="8dp"
                 android:text="@string/btn_cancel"

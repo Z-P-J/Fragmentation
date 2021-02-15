@@ -22,8 +22,8 @@ public class TestPartShadowDialogFragment extends PartShadowDialogFragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, "TestPartShadowDialogFragment", Toast.LENGTH_SHORT).show();
-                dismiss();
                 start(new MainFragment());
+                dismiss();
             }
         });
     }

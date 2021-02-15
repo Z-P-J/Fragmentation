@@ -70,7 +70,7 @@ public abstract class AttachDialogFragment extends BaseDialogFragment {
 
         attachPopupContainer = findViewById(R.id.attachPopupContainer);
 
-        contentView = LayoutInflater.from(getContext()).inflate(getContentLayoutId(), attachPopupContainer, false);
+        contentView = getLayoutInflater().inflate(getContentLayoutId(), attachPopupContainer, false);
         attachPopupContainer.addView(contentView);
         if (bgDrawable != null) {
             contentView.setBackground(bgDrawable);

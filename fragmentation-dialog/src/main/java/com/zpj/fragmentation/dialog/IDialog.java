@@ -4,15 +4,15 @@ import com.zpj.fragmentation.dialog.impl.AlertDialogFragment;
 
 public interface IDialog {
 
-    public interface OnCancelListener  {
+    interface OnCancelListener {
         void onCancel(AlertDialogFragment fragment);
     }
 
-    public interface OnConfirmListener {
+    interface OnConfirmListener {
         void onConfirm(AlertDialogFragment fragment);
     }
 
-    public interface OnDismissListener {
+    interface OnDismissListener {
         void onDismiss();
     }
 
