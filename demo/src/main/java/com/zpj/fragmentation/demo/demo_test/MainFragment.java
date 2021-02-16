@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,6 +27,7 @@ import com.zpj.fragmentation.dialog.impl.ImageViewerDialogFragment;
 import com.zpj.fragmentation.dialog.impl.InputDialogFragment;
 import com.zpj.fragmentation.dialog.impl.LoadingDialogFragment;
 import com.zpj.fragmentation.dialog.model.OptionMenu;
+import com.zpj.fragmentation.dialog.utils.DialogThemeUtils;
 import com.zpj.recyclerview.EasyViewHolder;
 import com.zpj.recyclerview.IEasy;
 import com.zpj.widget.checkbox.SmoothCheckBox;
@@ -34,16 +36,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainFragment extends BaseFragment {
-
-    private static final List<OptionMenu> optionMenus = new ArrayList<>();
-
-    static {
-//        optionMenus.add(new OptionMenu("忽略更新"));
-        optionMenus.add(new OptionMenu("详细信息"));
-        optionMenus.add(new OptionMenu("分享"));
-        optionMenus.add(new OptionMenu("卸载"));
-        optionMenus.add(new OptionMenu("打开"));
-    }
 
     @Override
     protected int getLayoutId() {
@@ -74,10 +66,9 @@ public class MainFragment extends BaseFragment {
         findViewById(R.id.btn_test_center).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                start(new TestDialogFragment());
                 new AlertDialogFragment()
                         .setTitle("内存使用情况")
-                        .setContent("要显示有关应用程序内存使用情况的更多详细信息，您需要在系统设置中获取特殊权限。\n为此，请点击“请求”按钮，然后在应用程序列表中选择Skit并允许访问。")
+                        .setContent(R.string.sign_in_success)
 //                        .setAutoDismiss(false)
                         .setPositiveButton(new AlertDialogFragment.OnButtonClickListener() {
                             @Override
@@ -88,6 +79,37 @@ public class MainFragment extends BaseFragment {
                         .show(MainFragment.this);
             }
         });
+
+        findViewById(R.id.btn_test_center_custom).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialogFragment()
+                        .setTitle("内存使用情况")
+                        .setContent(R.string.sign_in_success)
+//                        .setAutoDismiss(false)
+                        .setPositiveButton(new AlertDialogFragment.OnButtonClickListener() {
+                            @Override
+                            public void onClick(AlertDialogFragment fragment) {
+                                fragment.start(new TestDialogFragment());
+                            }
+                        })
+                        .setGravity(Gravity.BOTTOM)
+                        .setMarginHorizontal(getResources().getDimensionPixelSize(R.dimen.bottombar_height))
+                        .show(MainFragment.this);
+            }
+        });
+
+        findViewById(R.id.btn_test_center_long)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+//                start(new TestDialogFragment());
+                        new AlertDialogFragment()
+                                .setTitle("内存使用情况")
+                                .setContent(R.string.large_text)
+                                .show(MainFragment.this);
+                    }
+                });
 
         findViewById(R.id.btn_test_center_list).setOnClickListener(v -> {
             List<String> list = new ArrayList<>();
@@ -128,6 +150,17 @@ public class MainFragment extends BaseFragment {
             }
         });
 
+        findViewById(R.id.btn_test_bottom_margin).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new TestBottomDialogFragment()
+                        .setDialogBackground(DialogThemeUtils.getCenterDialogBackground(context))
+                        .setMarginHorizontal(getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin))
+                        .setMarginBottom(getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin))
+                        .show(context);
+            }
+        });
+
         findViewById(R.id.btn_test_bottom_list).setOnClickListener(v -> {
             List<String> list = new ArrayList<>();
             for (int i = 0; i < 50; i++) {
@@ -162,13 +195,25 @@ public class MainFragment extends BaseFragment {
             public void onClick(View v) {
                 new InputDialogFragment()
                         .setHint("This is hint!")
-//                        .setMinLines(3)
-                        .setSingleLine(false)
-                        .setMinLines(2)
-                        .setMaxLines(5)
                         .setEditText("This is content")
+                        .setSingleLine(false)
                         .setSelection(2, 7)
                         .setTitle("This is Title")
+                        .setContent("This is info")
+                        .show(MainFragment.this);
+            }
+        });
+
+        findViewById(R.id.btn_test_input_long).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new InputDialogFragment()
+                        .setHint("This is hint!")
+                        .setEditText(R.string.large_text)
+                        .setSingleLine(false)
+                        .setSelection(2, 7)
+                        .setTitle("This is Title")
+                        .setContent("This is info")
                         .show(MainFragment.this);
             }
         });
@@ -186,6 +231,24 @@ public class MainFragment extends BaseFragment {
                             }
                         })
                         .setContent("This is content")
+                        .setTitle("This is Title")
+                        .show(MainFragment.this);
+            }
+        });
+
+        findViewById(R.id.btn_test_check_long).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new CheckDialogFragment()
+                        .setChecked(false)
+                        .setCheckTitle("This is checkTitle")
+                        .setOnCheckedChangeListener(new SmoothCheckBox.OnCheckedChangeListener() {
+                            @Override
+                            public void onCheckedChanged(SmoothCheckBox checkBox, boolean isChecked) {
+                                Toast.makeText(context, "isChecked=" + isChecked, Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setContent(R.string.large_text)
                         .setTitle("This is Title")
                         .show(MainFragment.this);
             }
@@ -256,8 +319,6 @@ public class MainFragment extends BaseFragment {
                 });
 
 
-
-
 //        ImageView imageView2 = findViewById(R.id.iv_test_image_viewer2);
 //        imageView2.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -282,7 +343,6 @@ public class MainFragment extends BaseFragment {
 //                .into(imageView2);
 
 
-
         findViewById(R.id.btn_test_arrow_menu_bottom).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -303,7 +363,7 @@ public class MainFragment extends BaseFragment {
 
     private void showArrowMenuDialogFragment(View view) {
         new ArrowMenuDialogFragment()
-                .setOptionMenus(optionMenus)
+                .setOptionMenus("详细信息", "分享", "卸载", "打开")
                 .setOrientation(LinearLayout.HORIZONTAL)
                 .setOnItemClickListener((position, menu) -> {
                     Toast.makeText(context, menu.getTitle(), Toast.LENGTH_SHORT).show();
@@ -311,7 +371,6 @@ public class MainFragment extends BaseFragment {
                 .setAttachView(view)
                 .show(context);
     }
-
 
 
 }

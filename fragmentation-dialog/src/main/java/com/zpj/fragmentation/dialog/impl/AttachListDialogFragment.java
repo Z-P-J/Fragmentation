@@ -91,7 +91,7 @@ public class AttachListDialogFragment<T> extends AttachDialogFragment {
 
                     ImageView ivImage = holder.getView(R.id.iv_image);
 
-                    holder.getView(R.id._dialog_view_divider).setVisibility(View.GONE);
+//                    holder.getView(R.id._dialog_view_divider).setVisibility(View.GONE);
 
 
                     if (iconCallback == null) {

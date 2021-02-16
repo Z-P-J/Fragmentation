@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     app:hl_shadowLimit="8dp"
     app:hl_cornerRadius="8dp"
-    app:hl_shadowColor="#cccccc"
+    app:hl_shadowColor="#20000000"
     app:hl_isShowShadow="true"
     >
 

@@ -57,7 +57,7 @@ public class CenterListDialogFragment<T> extends CenterDialogFragment
             tvTitle.setTextColor(DialogThemeUtils.getMajorTextColor(context));
             if (TextUtils.isEmpty(title)) {
                 tvTitle.setVisibility(View.GONE);
-                findViewById(R.id._dialog_view_divider).setVisibility(View.GONE);
+                findViewById(R.id.view_shadow_bottom).setVisibility(View.GONE);
             } else {
                 tvTitle.setText(title);
             }

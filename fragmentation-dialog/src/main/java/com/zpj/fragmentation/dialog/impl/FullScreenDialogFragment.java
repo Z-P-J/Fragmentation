@@ -9,12 +9,15 @@ import android.widget.FrameLayout;
 
 import com.zpj.fragmentation.dialog.animator.PopupAnimator;
 import com.zpj.fragmentation.dialog.animator.TranslateAnimator;
+import com.zpj.fragmentation.dialog.base.BaseDialogFragment;
 import com.zpj.fragmentation.dialog.base.CenterDialogFragment;
 import com.zpj.fragmentation.dialog.enums.PopupAnimation;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
-public abstract class FullScreenDialogFragment extends CenterDialogFragment {
+public abstract class FullScreenDialogFragment extends BaseDialogFragment {
+
+//    protected abstract int getContentLayoutId();
 
     @Override
     protected PopupAnimator getDialogAnimator(ViewGroup contentView) {
@@ -30,20 +33,12 @@ public abstract class FullScreenDialogFragment extends CenterDialogFragment {
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
         super.initView(view, savedInstanceState);
 
-//        CardView centerPopupContainer = findViewById(R.id.centerPopupContainer);
-//        centerPopupContainer.setRadius(0);
+    }
 
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) getImplView().getLayoutParams();
+    @Override
+    protected void initLayoutParams(ViewGroup view) {
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) view.getLayoutParams();
         layoutParams.height = MATCH_PARENT;
         layoutParams.width = MATCH_PARENT;
-
-        if (getContentView() != null) {
-            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) getContentView().getLayoutParams();
-            params.height = MATCH_PARENT;
-            params.width = MATCH_PARENT;
-            params.gravity = Gravity.CENTER;
-            getContentView().setBackground(null);
-        }
-
     }
 }

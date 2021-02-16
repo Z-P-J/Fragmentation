@@ -3,6 +3,7 @@ package com.zpj.fragmentation.dialog.impl;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -95,24 +96,6 @@ public class AlertDialogFragment extends CenterDialogFragment
 
         if (isHideCancel) tv_cancel.setVisibility(View.GONE);
 
-
-//        MaxHeightScrollView scrollView = findViewById(R.id.scroll_view);
-//        contentView
-//                .getViewTreeObserver()
-//                .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//                    @Override
-//                    public void onGlobalLayout() {
-//                        contentView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-//                        Log.d("contentView.contentV", "tv_title.getMeasuredHeight()=" + tv_title.getHeight() + " llButtons.getMeasuredHeight()=" + llButtons.getHeight());
-//                        int max = getMaxHeight() - tv_title.getHeight() - ScreenUtils.dp2pxInt(context, 60);
-//                        if (contentView.getMeasuredHeight() < max) {
-//                            max = contentView.getMeasuredHeight();
-//                        }
-//                        scrollView.setMaxHeight(max);
-////                        scrollView.setMaxHeight(contentView.getHeight());
-//                    }
-//                });
-
     }
 
     @Override
@@ -156,15 +139,8 @@ public class AlertDialogFragment extends CenterDialogFragment
         textView.setText(content);
         textView.setTextColor(DialogThemeUtils.getNormalTextColor(context));
         textView.setTextSize(14);
-        textView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                textView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                int padding = ScreenUtils.dp2pxInt(context, 24);
-                textView.setPadding(padding, padding / 2, padding, 0);
-            }
-        });
-//        textView.setMinHeight(ScreenUtils.dp2pxInt(context, 80));
+        int padding = ScreenUtils.dp2pxInt(context, 24);
+        textView.setPadding(padding, padding / 3, padding, padding / 3);
         textView.setMinLines(3);
         textView.setLineSpacing(6, 1);
         return textView;
@@ -251,8 +227,13 @@ public class AlertDialogFragment extends CenterDialogFragment
         return this;
     }
 
-    public AlertDialogFragment setContent(@LayoutRes int resId) {
+    public AlertDialogFragment setContent(@StringRes int resId) {
+        return setContent(ContextUtils.getApplicationContext().getResources().getString(resId));
+    }
+
+    public AlertDialogFragment setContent(@LayoutRes int resId, OnViewCreateListener listener) {
         this.contentView = LayoutInflater.from(ContextUtils.getApplicationContext()).inflate(resId, null, false);
+        this.onViewCreateListener = listener;
         return this;
     }
 
@@ -291,7 +272,7 @@ public class AlertDialogFragment extends CenterDialogFragment
         return this;
     }
 
-    public AlertDialogFragment setPositionButtonnColor(int positionBtnColor) {
+    public AlertDialogFragment setPositionButtonColor(int positionBtnColor) {
         this.positionBtnColor = positionBtnColor;
         return this;
     }

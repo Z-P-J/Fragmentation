@@ -1,5 +1,7 @@
 package com.zpj.fragmentation.dialog;
 
+import android.view.View;
+
 import com.zpj.fragmentation.dialog.impl.AlertDialogFragment;
 
 public interface IDialog {

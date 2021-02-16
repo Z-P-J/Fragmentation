@@ -3,6 +3,7 @@ package com.zpj.fragmentation.dialog.impl;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.TextUtils;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import com.zpj.fragmentation.dialog.R;
 import com.zpj.fragmentation.dialog.utils.DialogThemeUtils;
+import com.zpj.utils.ContextUtils;
 import com.zpj.utils.KeyboardObserver;
 import com.zpj.utils.ScreenUtils;
 
@@ -27,8 +29,8 @@ public class InputDialogFragment extends AlertDialogFragment implements View.OnC
     private boolean singleLine = true;
 
     private AppCompatEditText et_input;
-    public String inputContent;
-    private String hint;
+    public CharSequence inputContent;
+    private CharSequence hint;
 
     @Override
     protected int getContentLayoutId() {
@@ -106,14 +108,8 @@ public class InputDialogFragment extends AlertDialogFragment implements View.OnC
         textView.setText(content);
         textView.setTextColor(DialogThemeUtils.getNormalTextColor(context));
         textView.setTextSize(14);
-        textView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                textView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                int padding = ScreenUtils.dp2pxInt(context, 24);
-                textView.setPadding(padding, padding, padding, 0);
-            }
-        });
+        int padding = ScreenUtils.dp2pxInt(context, 24);
+        textView.setPadding(padding, padding / 3, padding, padding / 3);
         textView.setLineSpacing(6, 1);
         return textView;
     }
@@ -162,14 +158,22 @@ public class InputDialogFragment extends AlertDialogFragment implements View.OnC
         return this;
     }
 
-    public InputDialogFragment setEditText(String inputContent) {
+    public InputDialogFragment setEditText(CharSequence inputContent) {
         this.inputContent = inputContent;
         return this;
     }
 
-    public InputDialogFragment setHint(String hint) {
+    public InputDialogFragment setEditText(@StringRes int resId) {
+        return setEditText(ContextUtils.getApplicationContext().getResources().getString(resId));
+    }
+
+    public InputDialogFragment setHint(CharSequence hint) {
         this.hint = hint;
         return this;
+    }
+
+    public InputDialogFragment setHint(@StringRes int resId) {
+        return setHint(ContextUtils.getApplicationContext().getResources().getString(resId));
     }
 
     public InputDialogFragment setEmptyable(boolean emptyable) {

@@ -52,7 +52,7 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
 
 //    private final BlockActionQueue actionQueue = new BlockActionQueue();
 
-    protected FrameLayout container;
+//    protected FrameLayout container;
     protected PhotoViewContainer photoViewContainer;
     protected HackyViewPager pager;
     protected ArgbEvaluator argbEvaluator = new ArgbEvaluator();
@@ -104,31 +104,13 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
     @Override
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
         super.initView(view, savedInstanceState);
-
-//        if (srcView != null) {
-//            int[] locations = new int[2];
-//            this.srcView.getLocationInWindow(locations);
-////            int offset;
-////            if (getActivity() != null && (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-////                    & getActivity().getWindow().getAttributes().flags)
-////                    == WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS) {
-////                offset = 0;
-////            } else {
-////                offset = ScreenUtils.getStatusBarHeight(context);
-////            }
-////            locations[1] = locations[1] - offset;
-//            rect = new Rect(locations[0], locations[1], locations[0] + srcView.getWidth(), locations[1] + srcView.getHeight());
-//        }
-
-        container = findViewById(R.id.container);
+        photoViewContainer = findViewById(R.id.photoViewContainer);
         if (getCustomLayoutId() > 0) {
-            customView = getLayoutInflater().inflate(getCustomLayoutId(), container, false);
+            customView = getLayoutInflater().inflate(getCustomLayoutId(), null, false);
             customView.setVisibility(View.INVISIBLE);
             customView.setAlpha(0);
-            container.addView(customView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            photoViewContainer.addView(customView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         }
-
-        photoViewContainer = findViewById(R.id.photoViewContainer);
         photoViewContainer.setOnDragChangeListener(this);
         photoViewContainer.setFocusableInTouchMode(true);
         photoViewContainer.setFocusable(true);
@@ -139,8 +121,6 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
             public void onPageSelected(int i) {
                 position = i;
                 //更新srcView
-
-
                 if (isAnimationEnd) {
                     if (srcViewUpdateListener != null) {
                         srcViewUpdateListener.onSrcViewUpdate(ImageViewerDialogFragment.this, i);
@@ -170,21 +150,6 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
 
     @Override
     public void doShowAnimation() {
-
-//        if (callback != null) {
-//            srcView = callback.getImageView(position);
-//            int[] locations = new int[2];
-//            srcView.getLocationInWindow(locations);
-//            rect = new Rect(locations[0], locations[1], locations[0] + srcView.getWidth(), locations[1] + srcView.getHeight());
-//            int offset = ScreenUtils.getScreenHeight(getContext()) - getRootView().getMeasuredHeight();
-//            snapshotView.setTranslationX(rect.left);
-//            snapshotView.setTranslationY(rect.top - offset);
-//            snapshotView.setScaleType(srcView.getScaleType());
-//            setWidthHeight(snapshotView, rect.width(), rect.height());
-////            Log.d(TAG, "onCreate rect.width=" + rect.width() + " rect.height=" + rect.height());
-//            snapshotView.setImageDrawable(srcView.getDrawable());
-//        }
-
         if (srcViewUpdateListener != null) {
             srcViewUpdateListener.onSrcViewUpdate(ImageViewerDialogFragment.this, position);
         } else {

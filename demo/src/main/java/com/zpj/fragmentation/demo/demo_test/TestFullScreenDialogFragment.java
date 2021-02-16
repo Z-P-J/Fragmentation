@@ -13,14 +13,14 @@ import com.zpj.fragmentation.dialog.impl.FullScreenDialogFragment;
 public class TestFullScreenDialogFragment extends FullScreenDialogFragment {
 
     @Override
-    protected int getContentLayoutId() {
+    protected int getImplLayoutId() {
         return R.layout.test_fragment_bottom_dialog;
     }
 
     @Override
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
         super.initView(view, savedInstanceState);
-        getContentView().setBackgroundColor(Color.GRAY);
+//        getContentView().setBackgroundColor(Color.GRAY);
         findViewById(R.id.btn_test).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

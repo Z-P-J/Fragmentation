@@ -9,7 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.LayoutInflater;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -25,7 +25,9 @@ import com.zpj.fragmentation.dialog.R;
 import com.zpj.fragmentation.dialog.animator.PopupAnimator;
 import com.zpj.fragmentation.dialog.animator.ShadowBgAnimator;
 import com.zpj.utils.ContextUtils;
+import com.zpj.utils.ScreenUtils;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public abstract class BaseDialogFragment extends AbstractDialogFragment {
@@ -41,6 +43,12 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
     protected boolean cancelable = true;
     protected boolean cancelableInTouchOutside = true;
 
+    private int gravity = Gravity.CENTER;
+
+    private int maxWidth = WRAP_CONTENT;
+    private int maxHeight = WRAP_CONTENT;
+    private int marginStart, marginTop, marginEnd, marginBottom;
+
     protected IDialog.OnDismissListener onDismissListener;
 
     protected Drawable bgDrawable;
@@ -52,8 +60,6 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
 
     protected abstract int getImplLayoutId();
 
-    protected abstract int getGravity();
-
     protected abstract PopupAnimator getDialogAnimator(ViewGroup contentView);
 
     protected PopupAnimator getShadowAnimator(FrameLayout flContainer) {
@@ -63,10 +69,6 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
     @Override
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
         FrameLayout flContainer = findViewById(R.id._dialog_fl_container);
-//        flContainer.setClickable(true);
-//        flContainer.setFocusable(true);
-//        flContainer.setFocusableInTouchMode(true);
-//        flContainer.requestFocus();
         this.rootView = flContainer;
 
         rootView.setOnClickListener(new View.OnClickListener() {
@@ -87,18 +89,26 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
         });
 
         implView = (ViewGroup) getLayoutInflater().inflate(getImplLayoutId(), null, false);
-        implView.setFocusableInTouchMode(true);
-        implView.setFocusable(true);
-        implView.setClickable(true);
         flContainer.addView(implView);
 
-        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) implView.getLayoutParams();
-        params.gravity = getGravity();
-        params.height = WRAP_CONTENT;
-        params.width = WRAP_CONTENT;
+        initLayoutParams(implView);
 
         shadowBgAnimator = getShadowAnimator(flContainer);
 
+    }
+
+    protected void initLayoutParams(ViewGroup view) {
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
+        params.gravity = getGravity();
+        params.leftMargin = marginStart;
+        params.topMargin = marginTop;
+        params.rightMargin = marginEnd;
+        params.bottomMargin = marginBottom;
+        params.height = maxHeight;
+        params.width = maxWidth;
+        view.setFocusableInTouchMode(true);
+        view.setFocusable(true);
+        view.setClickable(true);
     }
 
 //    @Override
@@ -344,6 +354,33 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
 
     }
 
+    protected int getGravity() {
+        return gravity;
+    }
+
+    protected int getMaxWidth() {
+        return maxWidth;
+    }
+
+    protected int getMaxHeight() {
+        return maxHeight;
+    }
+
+    public int getMarginStart() {
+        return marginStart;
+    }
+
+    public int getMarginTop() {
+        return marginTop;
+    }
+
+    public int getMarginEnd() {
+        return marginEnd;
+    }
+
+    public int getMarginBottom() {
+        return marginBottom;
+    }
 
     protected FrameLayout getRootView() {
         return rootView;
@@ -353,6 +390,75 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
         return implView;
     }
 
+    public BaseDialogFragment setDialogBackground(Drawable bgDrawable) {
+        this.bgDrawable = bgDrawable;
+        return this;
+    }
+
+    public BaseDialogFragment setGravity(int gravity) {
+        this.gravity = gravity;
+        return this;
+    }
+
+    public BaseDialogFragment setMaxWidth(int maxWidth) {
+        if (maxWidth == WRAP_CONTENT || maxWidth == MATCH_PARENT) {
+            this.maxWidth = maxWidth;
+        } else if (maxWidth >= 0) {
+            this.maxWidth = maxWidth;
+            int margin = ScreenUtils.getScreenWidth() - maxWidth;
+            if (margin > 0) {
+                setMarginStart(margin);
+                setMarginEnd(margin);
+            }
+        }
+        return this;
+    }
+
+    public BaseDialogFragment setMaxHeight(int maxHeight) {
+        if (maxHeight == WRAP_CONTENT || maxHeight == MATCH_PARENT) {
+            this.maxHeight = maxHeight;
+        } else if (maxHeight >= 0) {
+            this.maxHeight = maxHeight;
+            int margin = ScreenUtils.getScreenHeight() - maxHeight;
+            if (margin > 0) {
+                setMarginTop(margin);
+                setMarginBottom(margin);
+            }
+        }
+        return this;
+    }
+
+    public BaseDialogFragment setMarginStart(int marginStart) {
+        this.marginStart = marginStart;
+        return this;
+    }
+
+    public BaseDialogFragment setMarginTop(int marginTop) {
+        this.marginTop = marginTop;
+        return this;
+    }
+
+    public BaseDialogFragment setMarginEnd(int marginEnd) {
+        this.marginEnd = marginEnd;
+        return this;
+    }
+
+    public BaseDialogFragment setMarginBottom(int marginBottom) {
+        this.marginBottom = marginBottom;
+        return this;
+    }
+
+    public BaseDialogFragment setMarginHorizontal(int margin) {
+        setMarginStart(margin);
+        setMarginEnd(margin);
+        return this;
+    }
+
+    public BaseDialogFragment setMarginVertical(int margin) {
+        setMarginTop(margin);
+        setMarginBottom(margin);
+        return this;
+    }
 
     public BaseDialogFragment setCancelable(boolean cancelable) {
         this.cancelable = cancelable;

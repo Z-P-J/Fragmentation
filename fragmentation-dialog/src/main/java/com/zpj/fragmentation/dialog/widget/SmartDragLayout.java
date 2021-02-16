@@ -24,6 +24,7 @@ import com.zpj.utils.ViewUtils;
 public class SmartDragLayout extends FrameLayout implements NestedScrollingParent {
     private static final String TAG = "SmartDragLayout";
     private View child;
+    private View contentView;
     OverScroller scroller;
     VelocityTracker tracker;
     ShadowBgAnimator bgAnimator = new ShadowBgAnimator();
@@ -114,8 +115,11 @@ public class SmartDragLayout extends FrameLayout implements NestedScrollingParen
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 // click in child rect
+                if (contentView == null) {
+                    contentView = child;
+                }
                 Rect rect = new Rect();
-                child.getGlobalVisibleRect(rect);
+                contentView.getGlobalVisibleRect(rect);
                 if (!ViewUtils.isInRect(event.getRawX(), event.getRawY(), rect) && dismissOnTouchOutside) {
                     float distance = (float) Math.sqrt(Math.pow(event.getX() - touchX, 2) + Math.pow(event.getY() - touchY, 2));
                     if (distance < ViewConfiguration.get(getContext()).getScaledTouchSlop()) {
@@ -268,6 +272,10 @@ public class SmartDragLayout extends FrameLayout implements NestedScrollingParen
     @Override
     public int getNestedScrollAxes() {
         return ViewCompat.SCROLL_AXIS_VERTICAL;
+    }
+
+    public void bindContentView(View contentView) {
+        this.contentView = contentView;
     }
 
     public void enableDrag(boolean enableDrag) {

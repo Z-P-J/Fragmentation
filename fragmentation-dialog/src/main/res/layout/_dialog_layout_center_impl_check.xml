@@ -13,15 +13,18 @@
         android:layout_height="wrap_content"
         android:paddingStart="24dp"
         android:paddingEnd="24dp"
-        android:paddingTop="18dp"
-        android:paddingBottom="0dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="8dp"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:text="Title" />
+        android:text="Title"
+        />
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,38 +38,6 @@
                 android:layout_height="wrap_content"
                 />
 
-            <LinearLayout
-                android:id="@+id/layout_check"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="24dp"
-                android:paddingEnd="24dp"
-                android:paddingBottom="8dp"
-                android:paddingTop="8dp"
-                >
-
-                <com.zpj.widget.checkbox.SmoothCheckBox
-                    android:id="@+id/check_box"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_gravity="center_vertical"
-                    app:color_checked="#ff0000"
-                    />
-
-                <TextView
-                    android:id="@+id/check_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="check title"
-                    android:layout_gravity="center_vertical"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="0dp"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    />
-
-            </LinearLayout>
-
         </LinearLayout>
 
 
@@ -74,49 +45,36 @@
     </ScrollView>
 
     <LinearLayout
+        android:id="@+id/layout_check"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="end"
-        android:orientation="horizontal"
         android:paddingStart="24dp"
         android:paddingEnd="24dp"
-        android:paddingTop="0dp"
-        android:paddingBottom="16dp"
+        android:paddingTop="8dp"
         >
 
-        <TextView
-            android:id="@+id/tv_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:padding="8dp"
-            android:text="@string/btn_cancel"
-            android:textSize="14sp"
+        <com.zpj.widget.checkbox.SmoothCheckBox
+            android:id="@+id/check_box"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_gravity="center_vertical"
+            app:color_checked="#ff0000"
             />
 
         <TextView
-            android:id="@+id/tv_neutral"
-            android:layout_width="wrap_content"
+            android:id="@+id/check_title"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:padding="8dp"
-            android:text="好的"
-            android:textSize="14sp"
-            android:visibility="gone"
-            />
-
-        <TextView
-            android:id="@+id/tv_confirm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
-            android:padding="8dp"
-            android:text="@string/btn_ok"
-            android:textSize="14sp"
+            android:text="check title"
+            android:layout_gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="0dp"
+            android:maxLines="1"
+            android:ellipsize="end"
             />
 
     </LinearLayout>
+
+    <include layout="@layout/_dialog_buttons_simple" />
 
 </LinearLayout>

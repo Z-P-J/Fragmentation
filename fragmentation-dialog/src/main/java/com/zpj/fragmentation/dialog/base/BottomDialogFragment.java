@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -13,7 +12,6 @@ import com.zpj.fragmentation.anim.DefaultNoAnimator;
 import com.zpj.fragmentation.dialog.R;
 import com.zpj.fragmentation.dialog.animator.PopupAnimator;
 import com.zpj.fragmentation.dialog.utils.DialogThemeUtils;
-import com.zpj.fragmentation.dialog.utils.Utility;
 import com.zpj.fragmentation.dialog.widget.SmartDragLayout;
 import com.zpj.utils.ScreenUtils;
 
@@ -24,9 +22,13 @@ public abstract class BottomDialogFragment extends BaseDialogFragment {
 
     protected SmartDragLayout bottomPopupContainer;
 
-    private View contentView;
+    private ViewGroup contentView;
 
     protected Boolean enableDrag = true;
+
+    public BottomDialogFragment() {
+        setMaxWidth(MATCH_PARENT);
+    }
 
     @Override
     protected final int getImplLayoutId() {
@@ -60,8 +62,16 @@ public abstract class BottomDialogFragment extends BaseDialogFragment {
         layoutParams.width = MATCH_PARENT;
 
 
-        contentView = getLayoutInflater().inflate(getContentLayoutId(), null, false);
-        bottomPopupContainer.addView(contentView);
+        contentView = (ViewGroup) getLayoutInflater().inflate(getContentLayoutId(), null, false);
+        if (getMarginTop() > 0 || getMarginBottom() > 0) {
+            FrameLayout flContainer = new FrameLayout(context);
+            flContainer.addView(contentView);
+            bottomPopupContainer.addView(flContainer);
+        } else {
+            bottomPopupContainer.addView(contentView);
+        }
+
+
 
         if (bgDrawable != null) {
             contentView.setBackground(bgDrawable);
@@ -69,21 +79,24 @@ public abstract class BottomDialogFragment extends BaseDialogFragment {
             contentView.setBackground(DialogThemeUtils.getBottomDialogBackground(context));
         }
 
-        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) contentView.getLayoutParams();
-        int maxHeight = getMaxHeight();
-        if (maxHeight > 0) {
-            params.height = WRAP_CONTENT;
-            int topMargin = ScreenUtils.getScreenHeight(context) - maxHeight;
-            if (topMargin < 0) {
-                topMargin = 0;
-            }
-            params.topMargin = topMargin;
-        } else {
-            params.height = maxHeight;
-        }
-//        params.height = getMaxHeight();
-        params.width = getMaxWidth();
-        params.gravity = Gravity.BOTTOM;
+        super.initLayoutParams(contentView);
+        contentView.setClickable(false);
+        bottomPopupContainer.bindContentView(contentView);
+//        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) contentView.getLayoutParams();
+//        int maxHeight = getMaxHeight();
+//        if (maxHeight > 0) {
+//            params.height = WRAP_CONTENT;
+//            int topMargin = ScreenUtils.getScreenHeight(context) - maxHeight;
+//            if (topMargin < 0) {
+//                topMargin = 0;
+//            }
+//            params.topMargin = topMargin;
+//        } else {
+//            params.height = maxHeight;
+//        }
+////        params.height = getMaxHeight();
+//        params.width = getMaxWidth();
+//        params.gravity = getGravity();
 
         bottomPopupContainer.enableDrag(enableDrag);
         bottomPopupContainer.dismissOnTouchOutside(true);
@@ -113,7 +126,12 @@ public abstract class BottomDialogFragment extends BaseDialogFragment {
             }
         });
 
-        Utility.applyPopupSize(getImplView(), getMaxWidth(), 0);
+//        Utility.applyPopupSize(getImplView(), getMaxWidth(), 0);
+
+    }
+
+    @Override
+    protected void initLayoutParams(ViewGroup view) {
 
     }
 
@@ -132,14 +150,6 @@ public abstract class BottomDialogFragment extends BaseDialogFragment {
     public void doDismissAnimation() {
         super.doDismissAnimation();
         bottomPopupContainer.close();
-    }
-
-    protected int getMaxWidth() {
-        return (int) (ScreenUtils.getScreenWidth(context));
-    }
-
-    protected int getMaxHeight() {
-        return WRAP_CONTENT;
     }
 
     public View getContentView() {

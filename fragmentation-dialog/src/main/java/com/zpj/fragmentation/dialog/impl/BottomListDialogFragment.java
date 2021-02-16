@@ -17,6 +17,7 @@ import com.zpj.fragmentation.dialog.widget.CheckView;
 import com.zpj.recyclerview.EasyRecyclerView;
 import com.zpj.recyclerview.EasyViewHolder;
 import com.zpj.recyclerview.IEasy;
+import com.zpj.utils.ContextUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,10 @@ public class BottomListDialogFragment<T> extends BottomDialogFragment
     String title;
     int[] iconIds;
 
+    public BottomListDialogFragment() {
+        setDialogBackground(DialogThemeUtils.getBottomDialogBackground(ContextUtils.getApplicationContext()));
+    }
+
     @Override
     protected int getContentLayoutId() {
         return R.layout._dialog_layout_bottom_impl_list;
@@ -47,7 +52,7 @@ public class BottomListDialogFragment<T> extends BottomDialogFragment
 
     @Override
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
-        bgDrawable = DialogThemeUtils.getBottomDialogBackground(context);
+
         super.initView(view, savedInstanceState);
 
         majorTextColor = DialogThemeUtils.getMajorTextColor(context);
@@ -58,7 +63,7 @@ public class BottomListDialogFragment<T> extends BottomDialogFragment
         if (tvTitle != null) {
             if (TextUtils.isEmpty(title)) {
                 tvTitle.setVisibility(View.GONE);
-                findViewById(R.id._dialog_view_divider).setVisibility(View.GONE);
+                findViewById(R.id.view_shadow_bottom).setVisibility(View.GONE);
             } else {
                 tvTitle.setText(title);
                 tvTitle.setTextColor(DialogThemeUtils.getMajorTextColor(context));
@@ -74,8 +79,8 @@ public class BottomListDialogFragment<T> extends BottomDialogFragment
     }
 
     protected void initRecyclerView(RecyclerView recyclerView, List<T> list) {
-        new EasyRecyclerView<T>(recyclerView)
-                .setData(list)
+        this.recyclerView = new EasyRecyclerView<T>(recyclerView);
+        this.recyclerView.setData(list)
                 .setItemRes(R.layout._dialog_item_text)
                 .onBindViewHolder(this)
                 .onItemClick(this)
@@ -86,25 +91,29 @@ public class BottomListDialogFragment<T> extends BottomDialogFragment
     public void onBindViewHolder(EasyViewHolder holder, List<T> list, int position, List<Object> payloads) {
         holder.setText(R.id.tv_text, list.get(position).toString());
         if (iconIds != null && iconIds.length > position) {
-            holder.getView(R.id.iv_image).setVisibility(View.VISIBLE);
-            holder.getView(R.id.iv_image).setBackgroundResource(iconIds[position]);
+            holder.setVisible(R.id.iv_image, true);
+            holder.setImageResource(R.id.iv_image, iconIds[position]);
         } else {
-            holder.getView(R.id.iv_image).setVisibility(View.GONE);
+            holder.setVisible(R.id.iv_image, false);
         }
 
+        holder.setInVisible(R.id.check_view);
         // 对勾View
         if (checkedPosition != -1) {
             if (holder.getView(R.id.check_view) != null) {
-                holder.getView(R.id.check_view).setVisibility(position == checkedPosition ? View.VISIBLE : View.GONE);
+                if (position == checkedPosition) {
+                    holder.setVisible(R.id.check_view, true);
+                }
+//                holder.setVisible(R.id.check_view, position == checkedPosition);
                 holder.<CheckView>getView(R.id.check_view).setColor(DialogThemeUtils.getColorPrimary(context));
             }
-            holder.<TextView>getView(R.id.tv_text).setTextColor(position == checkedPosition ? majorTextColor : normalTextColor);
+            holder.setTextColor(R.id.tv_text, position == checkedPosition ? majorTextColor : normalTextColor);
         } else if (selectedPosition != -1) {
-            holder.<TextView>getView(R.id.tv_text).setTextColor(position == checkedPosition ? majorTextColor : normalTextColor);
+            holder.setTextColor(R.id.tv_text, position == checkedPosition ? majorTextColor : normalTextColor);
         }
-        if (position == (list.size() - 1)) {
-            holder.getView(R.id._dialog_view_divider).setVisibility(View.INVISIBLE);
-        }
+//        if (position == (list.size() - 1)) {
+//            holder.setInVisible(R.id._dialog_view_divider);
+//        }
     }
 
     @Override

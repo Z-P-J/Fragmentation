@@ -55,7 +55,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="测试CenterDialogFragment"
+                android:text="测试AlertDialogFragment"
+                android:textColor="#000" />
+
+            <Button
+                android:id="@+id/btn_test_center_custom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="测试AlertDialog自定义"
+                android:textColor="#000" />
+
+            <Button
+                android:id="@+id/btn_test_center_long"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="测试AlertDialog长文本"
                 android:textColor="#000" />
 
             <Button
@@ -72,6 +88,14 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="测试BottomDialogFragment"
+                android:textColor="#000" />
+
+            <Button
+                android:id="@+id/btn_test_bottom_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="测试BottomDialog自定义"
                 android:textColor="#000" />
 
             <Button
@@ -107,11 +131,27 @@
                 android:textColor="#000" />
 
             <Button
+                android:id="@+id/btn_test_input_long"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="测试InputDialog长文本"
+                android:textColor="#000" />
+
+            <Button
                 android:id="@+id/btn_test_check"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="测试CheckDialogFragment"
+                android:textColor="#000" />
+
+            <Button
+                android:id="@+id/btn_test_check_long"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="测试CheckDialog长文本"
                 android:textColor="#000" />
 
             <Button

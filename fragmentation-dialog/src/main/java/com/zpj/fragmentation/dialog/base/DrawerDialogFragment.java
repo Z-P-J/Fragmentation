@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.zpj.fragmentation.anim.DefaultNoAnimator;
 import com.zpj.fragmentation.dialog.R;
 import com.zpj.fragmentation.dialog.animator.PopupAnimator;
 import com.zpj.fragmentation.dialog.enums.PopupPosition;
@@ -52,7 +53,12 @@ public abstract class DrawerDialogFragment extends BaseDialogFragment {
         drawerLayout.setOnCloseListener(new PopupDrawerLayout.OnCloseListener() {
             @Override
             public void onClose() {
-                dismiss();
+//                dismiss();
+                setFragmentAnimator(new DefaultNoAnimator());
+                postOnEnterAnimationEnd(() -> {
+                    popThis();
+                    onDismiss();
+                });
             }
 
             @Override
@@ -73,6 +79,11 @@ public abstract class DrawerDialogFragment extends BaseDialogFragment {
                 drawerLayout.close();
             }
         });
+    }
+
+    @Override
+    protected void initLayoutParams(ViewGroup view) {
+
     }
 
     @Override

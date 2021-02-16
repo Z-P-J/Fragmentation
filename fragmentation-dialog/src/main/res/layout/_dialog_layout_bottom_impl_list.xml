@@ -69,7 +69,9 @@
             android:layout_height="match_parent"
             android:overScrollMode="never" />
 
-        <View style="@style/layout_shadow_bottom"/>
+        <View style="@style/layout_shadow_bottom"
+            android:id="@+id/view_shadow_bottom"
+            />
 
         <View style="@style/layout_shadow_up"
             android:id="@+id/view_shadow_up"
@@ -81,6 +83,6 @@
 
     <include layout="@layout/_dialog_buttons"
         android:visibility="gone"
-        />
+        /> 
 
 </LinearLayout>

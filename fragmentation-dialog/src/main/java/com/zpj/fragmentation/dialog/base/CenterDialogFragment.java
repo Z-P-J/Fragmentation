@@ -25,17 +25,19 @@ public abstract class CenterDialogFragment extends BaseDialogFragment {
 
     protected View contentView;
 
+    public CenterDialogFragment() {
+        setMaxWidth(MATCH_PARENT);
+        int dp16 = ScreenUtils.dp2pxInt(16);
+        setMarginHorizontal(dp16);
+        setMarginVertical(dp16 * 2);
+    }
+
     @Override
     protected final int getImplLayoutId() {
         return R.layout._dialog_layout_center_view;
     }
 
     protected abstract int getContentLayoutId();
-
-    @Override
-    protected int getGravity() {
-        return Gravity.CENTER;
-    }
 
     @Override
     protected PopupAnimator getDialogAnimator(ViewGroup contentView) {
@@ -50,18 +52,6 @@ public abstract class CenterDialogFragment extends BaseDialogFragment {
         if (getContentLayoutId() > 0) {
             contentView = getLayoutInflater().inflate(getContentLayoutId(), null, false);
             centerPopupContainer.addView(contentView);
-        }
-
-
-        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams)  centerPopupContainer.getLayoutParams();
-
-        if (this instanceof FullScreenDialogFragment) {
-            params.height = MATCH_PARENT;
-            params.width = MATCH_PARENT;
-            centerPopupContainer.setmShadowLimit(0);
-            centerPopupContainer.setmCornerRadius(0);
-            centerPopupContainer.setmShadowColor(Color.TRANSPARENT);
-        } else {
             if (contentView != null) {
                 if (bgDrawable != null) {
                     contentView.setBackground(bgDrawable);
@@ -69,31 +59,34 @@ public abstract class CenterDialogFragment extends BaseDialogFragment {
                     contentView.setBackground(DialogThemeUtils.getCenterDialogBackground(context));
                 }
             }
-            float dp16 = ScreenUtils.dp2px(context, 16);
-            int maxHeight = getMaxHeight();
-            if (maxHeight == WRAP_CONTENT || maxHeight == MATCH_PARENT) {
-                int screenHeight = ScreenUtils.getScreenHeight(context);
-                int screenWidth = ScreenUtils.getScreenWidth(context);
-//                int margin = (int) (screenHeight * 0.07f - dp16);
-                int margin = (int) (screenHeight * dp16 * 2 / screenWidth - dp16);
-                params.topMargin = margin;
-                params.bottomMargin = margin;
-            }
-            params.height = maxHeight;
-
-            int maxWidth = getMaxWidth();
-            if (maxWidth == WRAP_CONTENT || maxWidth == MATCH_PARENT) {
-//                int screenWidth = ScreenUtils.getScreenWidth(context);
-//                int margin = (int) (screenWidth * 0.07f - dp16);
-                int margin = (int) (dp16);
-                params.leftMargin = margin;
-                params.rightMargin = margin;
-            }
-            params.width = maxWidth;
-
         }
 
-        params.gravity = Gravity.CENTER;
+
+//        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams)  centerPopupContainer.getLayoutParams();
+
+//        float dp16 = ScreenUtils.dp2px(context, 16);
+//        int maxHeight = getMaxHeight();
+//        if (maxHeight == WRAP_CONTENT || maxHeight == MATCH_PARENT) {
+//            int screenHeight = ScreenUtils.getScreenHeight(context);
+//            int screenWidth = ScreenUtils.getScreenWidth(context);
+////                int margin = (int) (screenHeight * 0.07f - dp16);
+//            int margin = (int) (screenHeight * dp16 * 2 / screenWidth - dp16);
+//            params.topMargin = margin;
+//            params.bottomMargin = margin;
+//        }
+//        params.height = maxHeight;
+//
+//        int maxWidth = getMaxWidth();
+//        if (maxWidth == WRAP_CONTENT || maxWidth == MATCH_PARENT) {
+////                int screenWidth = ScreenUtils.getScreenWidth(context);
+////                int margin = (int) (screenWidth * 0.07f - dp16);
+//            int margin = (int) (dp16);
+//            params.leftMargin = margin;
+//            params.rightMargin = margin;
+//        }
+//        params.width = maxWidth;
+//
+//        params.gravity = getGravity(); // Gravity.CENTER
 
     }
 
@@ -101,12 +94,12 @@ public abstract class CenterDialogFragment extends BaseDialogFragment {
         return contentView;
     }
 
-    protected int getMaxWidth() {
-        return MATCH_PARENT;
-    }
-
-    protected int getMaxHeight() {
-        return WRAP_CONTENT;
-    }
+//    protected int getMaxWidth() {
+//        return MATCH_PARENT;
+//    }
+//
+//    protected int getMaxHeight() {
+//        return WRAP_CONTENT;
+//    }
 
 }
