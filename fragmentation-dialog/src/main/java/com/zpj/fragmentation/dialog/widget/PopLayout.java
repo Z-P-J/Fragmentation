@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.zpj.fragmentation.dialog.R;
+import com.zpj.fragmentation.dialog.utils.DialogThemeUtils;
 
 
 /**
@@ -100,20 +101,20 @@ public class PopLayout extends FrameLayout implements View.OnLayoutChangeListene
 
         if (getBackground() == null) {
             // 需要设置背景，可能是因为没有背景Layout就不会去执行绘制操作
-            setBackgroundColor(Color.parseColor("#cccccc"));//Color.WHITE
+//            setBackgroundColor(Color.WHITE);//Color.WHITE // parseColor("#cccccc")
 //            setBackgroundColor(Color.WHITE);
+            setBackgroundColor(DialogThemeUtils.getDialogBackgroundColor(context));
         }
 
-        xfermode = new PorterDuffXfermode(PorterDuff.Mode.DST_IN);
-//        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O_MR1) {
-//            xfermode = new PorterDuffXfermode(PorterDuff.Mode.DST_IN);
-//        } else {
-//            xfermode = new PorterDuffXfermode(PorterDuff.Mode.DST_OUT);
-//            layoutPath = new Path();
-//        }
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O_MR1) {
+            xfermode = new PorterDuffXfermode(PorterDuff.Mode.DST_IN);
+        } else {
+            xfermode = new PorterDuffXfermode(PorterDuff.Mode.DST_OUT);
+        }
 
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaint.setXfermode(xfermode);
+        mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
 
         mBulgePath = new Path();
         mPopMaskPath = new Path();
@@ -266,10 +267,10 @@ public class PopLayout extends FrameLayout implements View.OnLayoutChangeListene
         super.draw(canvas);
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O_MR1) {
-            mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
+            mPaint.setXfermode(xfermode); // new PorterDuffXfermode(PorterDuff.Mode.DST_IN)
             canvas.drawPath(mPopMaskPath, mPaint);
         } else {
-            mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
+            mPaint.setXfermode(xfermode); // new PorterDuffXfermode(PorterDuff.Mode.DST_OUT)
 //            if (layoutPath == null) {
 //                layoutPath = new Path();
 //            }

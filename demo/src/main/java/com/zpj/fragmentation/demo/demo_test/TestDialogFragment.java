@@ -6,9 +6,9 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.zpj.fragmentation.demo.R;
-import com.zpj.fragmentation.dialog.base.CenterDialogFragment;
+import com.zpj.fragmentation.dialog.base.CardDialogFragment;
 
-public class TestDialogFragment extends CenterDialogFragment {
+public class TestDialogFragment extends CardDialogFragment {
 
     @Override
     protected int getContentLayoutId() {
@@ -18,6 +18,7 @@ public class TestDialogFragment extends CenterDialogFragment {
     @Override
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
         super.initView(view, savedInstanceState);
+        findViewById(R.id.fl_bg_shadow).setBackground(null);
         findViewById(R.id.btn_test).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

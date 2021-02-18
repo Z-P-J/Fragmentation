@@ -6,33 +6,34 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.zpj.fragmentation.BaseFragment;
 import com.zpj.fragmentation.demo.R;
 import com.zpj.fragmentation.dialog.impl.AlertDialogFragment;
 import com.zpj.fragmentation.dialog.impl.ArrowMenuDialogFragment;
 import com.zpj.fragmentation.dialog.impl.AttachListDialogFragment;
-import com.zpj.fragmentation.dialog.impl.BottomListDialogFragment;
-import com.zpj.fragmentation.dialog.impl.CenterListDialogFragment;
+import com.zpj.fragmentation.dialog.impl.BottomDragListDialogFragment;
 import com.zpj.fragmentation.dialog.impl.CheckDialogFragment;
 import com.zpj.fragmentation.dialog.impl.ImageViewerDialogFragment;
 import com.zpj.fragmentation.dialog.impl.InputDialogFragment;
 import com.zpj.fragmentation.dialog.impl.LoadingDialogFragment;
-import com.zpj.fragmentation.dialog.model.OptionMenu;
+import com.zpj.fragmentation.dialog.impl.SelectDialogFragment;
 import com.zpj.fragmentation.dialog.utils.DialogThemeUtils;
 import com.zpj.recyclerview.EasyViewHolder;
 import com.zpj.recyclerview.IEasy;
 import com.zpj.widget.checkbox.SmoothCheckBox;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainFragment extends BaseFragment {
@@ -44,6 +45,14 @@ public class MainFragment extends BaseFragment {
 
     @Override
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
+
+        Switch switchView = findViewById(R.id.switch_view);
+        switchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                getActivity().setTheme(isChecked ? R.style.AppThemeDark : R.style.AppThemeLight);
+            }
+        });
 
         findViewById(R.id.btn_test_part_shadow).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,19 +120,35 @@ public class MainFragment extends BaseFragment {
                     }
                 });
 
-        findViewById(R.id.btn_test_center_list).setOnClickListener(v -> {
+        findViewById(R.id.btn_test_list).setOnClickListener(v -> {
             List<String> list = new ArrayList<>();
             for (int i = 0; i < 50; i++) {
                 list.add(String.valueOf(i));
             }
-            new CenterListDialogFragment<String>()
-                    .setTitle("CenterListDialogFragment")
-                    .setItemLayoutRes(R.layout._dialog_item_text)
-                    .setData(list)
-                    .setOnBindViewHolderListener(new IEasy.OnBindViewHolderListener<String>() {
+//            new ListDialogFragment<String>()
+//                    .setTitle("ListDialogFragment")
+//                    .setItemLayoutRes(R.layout._dialog_item_text)
+//                    .setData(list)
+//                    .setOnBindViewHolderListener(new IEasy.OnBindViewHolderListener<String>() {
+//                        @Override
+//                        public void onBindViewHolder(EasyViewHolder holder, List<String> list, int position, List<Object> payloads) {
+//                            holder.setText(R.id.tv_text, list.get(position));
+//                        }
+//                    })
+//                    .setOnItemClickListener(new IEasy.OnItemClickListener<String>() {
+//                        @Override
+//                        public void onClick(EasyViewHolder holder, View view, String data) {
+//                            Toast.makeText(context, data, Toast.LENGTH_SHORT).show();
+//                        }
+//                    })
+//                    .setGravity(Gravity.BOTTOM)
+//                    .show(MainFragment.this);
+
+            new SelectDialogFragment<String>()
+                    .setTitleCallback(new SelectDialogFragment.TitleCallback<String>() {
                         @Override
-                        public void onBindViewHolder(EasyViewHolder holder, List<String> list, int position, List<Object> payloads) {
-                            holder.setText(R.id.tv_text, list.get(position));
+                        public void onGetTitle(TextView titleView, String item, int position) {
+                            titleView.setText(item);
                         }
                     })
                     .setOnItemClickListener(new IEasy.OnItemClickListener<String>() {
@@ -132,6 +157,69 @@ public class MainFragment extends BaseFragment {
                             Toast.makeText(context, data, Toast.LENGTH_SHORT).show();
                         }
                     })
+                    .setTitle("单选")
+                    .setData(list)
+                    .setShowButtons(false)
+                    .show(MainFragment.this);
+        });
+
+        findViewById(R.id.btn_test_select).setOnClickListener(v -> {
+            List<String> list = new ArrayList<>();
+            for (int i = 0; i < 50; i++) {
+                list.add(String.valueOf(System.currentTimeMillis() * Math.random()));
+            }
+            new SelectDialogFragment<String>()
+                    .setTitleCallback(new SelectDialogFragment.TitleCallback<String>() {
+                        @Override
+                        public void onGetTitle(TextView titleView, String item, int position) {
+                            titleView.setText(item);
+                        }
+                    })
+                    .setSubtitleCallback(new SelectDialogFragment.SubtitleCallback<String>() {
+                        @Override
+                        public void onGetSubtitle(TextView subtitleView, String item, int position) {
+                            subtitleView.setText(String.valueOf(position));
+                        }
+                    })
+                    .setOnSingleSelectListener(new SelectDialogFragment.OnSingleSelectListener<String>() {
+                        @Override
+                        public void onSelect(int position, String item) {
+                            Toast.makeText(context, item, Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .setTitle("单选")
+                    .setData(list)
+                    .setShowButtons(false)
+                    .show(MainFragment.this);
+        });
+
+        findViewById(R.id.btn_test_multi_select).setOnClickListener(v -> {
+            List<String> list = new ArrayList<>();
+            for (int i = 0; i < 50; i++) {
+                list.add(String.valueOf(System.currentTimeMillis() * Math.random()));
+            }
+            new SelectDialogFragment<String>()
+
+                    .setTitleCallback(new SelectDialogFragment.TitleCallback<String>() {
+                        @Override
+                        public void onGetTitle(TextView titleView, String item, int position) {
+                            titleView.setText(item);
+                        }
+                    })
+                    .setSubtitleCallback(new SelectDialogFragment.SubtitleCallback<String>() {
+                        @Override
+                        public void onGetSubtitle(TextView subtitleView, String item, int position) {
+                            subtitleView.setText(String.valueOf(position));
+                        }
+                    })
+                    .setOnMultiSelectListener(new SelectDialogFragment.OnMultiSelectListener<String>() {
+                        @Override
+                        public void onSelect(List<Integer> selected, List<String> list) {
+                            Toast.makeText(context, Arrays.toString(list.toArray()), Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .setTitle("多选")
+                    .setData(list)
                     .show(MainFragment.this);
         });
 
@@ -146,14 +234,14 @@ public class MainFragment extends BaseFragment {
         findViewById(R.id.btn_test_bottom).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TestBottomDialogFragment().show(context);
+                new TestBottomDragDialogFragment().show(context);
             }
         });
 
         findViewById(R.id.btn_test_bottom_margin).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TestBottomDialogFragment()
+                new TestBottomDragDialogFragment()
                         .setDialogBackground(DialogThemeUtils.getCenterDialogBackground(context))
                         .setMarginHorizontal(getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin))
                         .setMarginBottom(getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin))
@@ -166,8 +254,25 @@ public class MainFragment extends BaseFragment {
             for (int i = 0; i < 50; i++) {
                 list.add(String.valueOf(i));
             }
-            new BottomListDialogFragment<String>()
+            new BottomDragListDialogFragment<String>()
                     .setTitle("BottomListDialogFragment")
+                    .setItemLayoutId(R.layout._dialog_item_select)
+                    .setOnBindViewHolderListener(new IEasy.OnBindViewHolderListener<String>() {
+                        @Override
+                        public void onBindViewHolder(EasyViewHolder holder, List<String> list, int position, List<Object> payloads) {
+                            holder.setText(R.id.title_view, list.get(position));
+                            holder.setVisible(R.id.content_view, false);
+                            holder.setVisible(R.id.icon_view, false);
+                            holder.setVisible(R.id.check_box, false);
+                            holder.setTextColor(R.id.title_view, DialogThemeUtils.getMajorTextColor(context));
+                        }
+                    })
+                    .setOnItemClickListener(new IEasy.OnItemClickListener<String>() {
+                        @Override
+                        public void onClick(EasyViewHolder holder, View view, String data) {
+                            Toast.makeText(context, data, Toast.LENGTH_SHORT).show();
+                        }
+                    })
                     .setData(list)
                     .show(MainFragment.this);
         });
@@ -346,7 +451,14 @@ public class MainFragment extends BaseFragment {
         findViewById(R.id.btn_test_arrow_menu_bottom).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showArrowMenuDialogFragment(v);
+                showArrowMenuDialogFragment(LinearLayout.HORIZONTAL, v);
+            }
+        });
+
+        findViewById(R.id.btn_test_arrow_menu_vertical).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showArrowMenuDialogFragment(LinearLayout.VERTICAL, v);
             }
         });
 
@@ -354,17 +466,17 @@ public class MainFragment extends BaseFragment {
         findViewById(R.id.btn_test_arrow_menu_top).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showArrowMenuDialogFragment(v);
+                showArrowMenuDialogFragment(LinearLayout.HORIZONTAL, v);
             }
         });
 
 
     }
 
-    private void showArrowMenuDialogFragment(View view) {
+    private void showArrowMenuDialogFragment(int o, View view) {
         new ArrowMenuDialogFragment()
                 .setOptionMenus("详细信息", "分享", "卸载", "打开")
-                .setOrientation(LinearLayout.HORIZONTAL)
+                .setOrientation(o)
                 .setOnItemClickListener((position, menu) -> {
                     Toast.makeText(context, menu.getTitle(), Toast.LENGTH_SHORT).show();
                 })

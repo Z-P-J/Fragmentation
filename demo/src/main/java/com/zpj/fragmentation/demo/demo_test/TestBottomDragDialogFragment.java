@@ -6,9 +6,9 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.zpj.fragmentation.demo.R;
-import com.zpj.fragmentation.dialog.base.BottomDialogFragment;
+import com.zpj.fragmentation.dialog.base.BottomDragDialogFragment;
 
-public class TestBottomDialogFragment extends BottomDialogFragment {
+public class TestBottomDragDialogFragment extends BottomDragDialogFragment {
 
     @Override
     protected int getContentLayoutId() {
@@ -18,6 +18,7 @@ public class TestBottomDialogFragment extends BottomDialogFragment {
     @Override
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
         super.initView(view, savedInstanceState);
+        findViewById(R.id.fl_bg_shadow).setBackground(null);
         findViewById(R.id.btn_test).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

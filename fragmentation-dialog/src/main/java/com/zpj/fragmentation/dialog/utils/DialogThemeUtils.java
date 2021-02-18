@@ -48,6 +48,10 @@ public final class DialogThemeUtils {
 //        return color;
     }
 
+    public static int getDialogBackgroundColor(Context context) {
+        return getColor(context, R.attr._dialog_background_color, Color.WHITE);
+    }
+
     public static int getMajorTextColor(Context context) {
         return getColor(context, R.attr._dialog_text_color_major, context.getResources().getColor(R.color._dialog_text_major_color));
     }

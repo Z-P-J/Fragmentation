@@ -33,7 +33,7 @@
         app:cardCornerRadius="8dp"
         app:cardUseCompatPadding="false"
         app:cardElevation="0dp"
-        app:cardBackgroundColor="#fff"
+        app:cardBackgroundColor="@color/transparent"
         >
 
         <android.support.v7.widget.RecyclerView

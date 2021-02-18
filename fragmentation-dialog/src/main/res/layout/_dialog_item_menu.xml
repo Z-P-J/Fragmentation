@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--    style="@style/MyOptionMenuStyle"-->
 <com.zpj.fragmentation.dialog.widget.OptionItemView xmlns:tools="http://schemas.android.com/tools"
-    style="@style/MyOptionMenuStyle"
-    tools:ignore="ResourceName" />
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:gravity="center"
+    android:maxLines="1"
+    android:ellipsize="end"
+    android:drawablePadding="8dp"
+    android:textStyle="bold"
+    android:textColor="#333333"
+    android:background="?attr/selectableItemBackground"
+    />

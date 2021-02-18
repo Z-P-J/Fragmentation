@@ -100,12 +100,12 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
     protected void initLayoutParams(ViewGroup view) {
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
         params.gravity = getGravity();
-        params.leftMargin = marginStart;
-        params.topMargin = marginTop;
-        params.rightMargin = marginEnd;
-        params.bottomMargin = marginBottom;
-        params.height = maxHeight;
-        params.width = maxWidth;
+        params.leftMargin = getMarginStart();
+        params.topMargin = getMarginTop();
+        params.rightMargin = getMarginEnd();
+        params.bottomMargin = getMarginBottom();
+        params.height = getMaxHeight();
+        params.width = getMaxWidth();
         view.setFocusableInTouchMode(true);
         view.setFocusable(true);
         view.setClickable(true);

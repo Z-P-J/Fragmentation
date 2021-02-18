@@ -1,13 +1,11 @@
 package com.zpj.fragmentation.demo.demo_test;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Toast;
 
 import com.zpj.fragmentation.demo.R;
-import com.zpj.fragmentation.dialog.base.BottomDialogFragment;
 import com.zpj.fragmentation.dialog.impl.FullScreenDialogFragment;
 
 public class TestFullScreenDialogFragment extends FullScreenDialogFragment {

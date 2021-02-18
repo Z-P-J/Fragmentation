@@ -6,12 +6,12 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.zpj.fragmentation.dialog.R;
-import com.zpj.fragmentation.dialog.base.CenterDialogFragment;
+import com.zpj.fragmentation.dialog.base.CardDialogFragment;
 import com.zpj.fragmentation.dialog.utils.DialogThemeUtils;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
-public class LoadingDialogFragment extends CenterDialogFragment {
+public class LoadingDialogFragment extends CardDialogFragment {
 
     private TextView tvTitle;
 

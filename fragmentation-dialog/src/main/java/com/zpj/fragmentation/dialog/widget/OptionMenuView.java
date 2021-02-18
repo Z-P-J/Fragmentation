@@ -1,8 +1,7 @@
 package com.zpj.fragmentation.dialog.widget;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
@@ -13,6 +12,7 @@ import android.widget.LinearLayout;
 
 import com.zpj.fragmentation.dialog.R;
 import com.zpj.fragmentation.dialog.model.OptionMenu;
+import com.zpj.fragmentation.dialog.utils.DialogThemeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,11 +80,11 @@ public class OptionMenuView extends LinearLayout
         initialize(context, attrs, defStyleAttr);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public OptionMenuView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        initialize(context, attrs, defStyleAttr);
-    }
+//    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+//    public OptionMenuView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+//        super(context, attrs, defStyleAttr, defStyleRes);
+//        initialize(context, attrs, defStyleAttr);
+//    }
 
     private void initialize(Context context, AttributeSet attrs, int defStyleAttr) {
         mOptionMenus = new ArrayList<>();
@@ -225,6 +225,7 @@ public class OptionMenuView extends LinearLayout
 
     private OptionItemView newMenuItemView() {
         OptionItemView itemView = (OptionItemView) inflate(getContext(), mItemRes, null);
+        itemView.setTextColor(DialogThemeUtils.getMajorTextColor(getContext()));
         LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         if (getOrientation() == HORIZONTAL) {
             if (getChildCount() > 0) {

@@ -26,6 +26,15 @@
             android:paddingVertical="32dp"
             >
 
+            <Switch
+                android:id="@+id/switch_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="黑暗主题"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="16dp"
+                />
+
             <Button
                 android:id="@+id/btn_test_part_shadow"
                 android:layout_width="wrap_content"
@@ -48,6 +57,14 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="测试ArrowMenuDialogFragment Bottom"
+                android:textColor="#000" />
+
+            <Button
+                android:id="@+id/btn_test_arrow_menu_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="测试ArrowMenuDialog竖向"
                 android:textColor="#000" />
 
             <Button
@@ -75,11 +92,27 @@
                 android:textColor="#000" />
 
             <Button
-                android:id="@+id/btn_test_center_list"
+                android:id="@+id/btn_test_list"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="测试CenterListDialogFragment"
+                android:text="测试ListDialogFragment"
+                android:textColor="#000" />
+
+            <Button
+                android:id="@+id/btn_test_select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="测试SelectDialog单选"
+                android:textColor="#000" />
+
+            <Button
+                android:id="@+id/btn_test_multi_select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="测试SelectDialog多选"
                 android:textColor="#000" />
 
             <Button

@@ -1,22 +1,38 @@
 package com.zpj.fragmentation.dialog.impl;
 
 import android.annotation.SuppressLint;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.PorterDuff;
+import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
 import android.support.annotation.ArrayRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.view.menu.MenuBuilder;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.lihang.ShadowLayout;
+import com.zpj.fragmentation.dialog.R;
 import com.zpj.fragmentation.dialog.base.ArrowDialogFragment;
 import com.zpj.fragmentation.dialog.model.OptionMenu;
+import com.zpj.fragmentation.dialog.utils.DialogThemeUtils;
 import com.zpj.fragmentation.dialog.widget.OptionMenuView;
 import com.zpj.fragmentation.dialog.widget.PopHorizontalScrollView;
 import com.zpj.fragmentation.dialog.widget.PopVerticalScrollView;
+import com.zpj.utils.ColorUtils;
 import com.zpj.utils.ContextUtils;
 import com.zpj.utils.ScreenUtils;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,8 +46,10 @@ public class ArrowMenuDialogFragment extends ArrowDialogFragment {
 
     private OnItemClickListener onItemClickListener;
 
+    private boolean showDivider = true;
+
     @Override
-    protected int getContentLayoutId() {
+    protected final int getContentLayoutId() {
         return 0;
     }
 
@@ -45,13 +63,30 @@ public class ArrowMenuDialogFragment extends ArrowDialogFragment {
             mOptionMenuView.setMinimumWidth((int) (ScreenUtils.getScreenWidth(context) / 2.8));
         }
         mOptionMenuView.setOrientation(mOrientation);
+        if (showDivider) {
+            mOptionMenuView.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
+            GradientDrawable mDividerDrawable = new GradientDrawable();
+            mDividerDrawable.setColor(DialogThemeUtils.getNormalTextColor(context));
+            mDividerDrawable.setAlpha(40);
+            mDividerDrawable.setShape(GradientDrawable.RECTANGLE);
+            int dp16 = ScreenUtils.dp2pxInt(16);
+            if (mOrientation == LinearLayout.VERTICAL) {
+                mDividerDrawable.setSize(dp16, ScreenUtils.dp2pxInt(0.5f));
+            } else {
+                mDividerDrawable.setSize(ScreenUtils.dp2pxInt(0.5f), dp16);
+            }
+
+            mOptionMenuView.setDividerDrawable(mDividerDrawable);
+            mOptionMenuView.setDividerPadding(dp16);
+        }
+
         mOptionMenuView.setOnOptionMenuClickListener(new OptionMenuView.OnOptionMenuClickListener() {
             @Override
             public boolean onOptionMenuClick(int position, OptionMenu menu) {
-                dismiss();
                 if (onItemClickListener != null) {
                     onItemClickListener.onItemClick(position, menu);
                 }
+                dismiss();
                 return true;
             }
         });
@@ -87,6 +122,12 @@ public class ArrowMenuDialogFragment extends ArrowDialogFragment {
 
 
     //----------------------------------setter----------------------------------
+
+
+    public ArrowMenuDialogFragment setShowDivider(boolean showDivider) {
+        this.showDivider = showDivider;
+        return this;
+    }
 
     public ArrowMenuDialogFragment setMenuRes(int menuRes) {
         this.menuRes = menuRes;

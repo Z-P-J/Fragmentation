@@ -59,7 +59,7 @@ public class AttachListDialogFragment<T> extends AttachDialogFragment {
     @Override
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
         super.initView(view, savedInstanceState);
-        int color = DialogThemeUtils.getAttachListDialogBackgroundColor(context);
+        int color = DialogThemeUtils.getDialogBackgroundColor(context);
         ShadowLayout shadowLayout = findViewById(R.id.shadow_layout);
 //        shadowLayout.setmShadowColor(ColorUtils.isDarkenColor(color) ? Color.LTGRAY : Color.DKGRAY);
         shadowLayout.setmShadowColor(Color.DKGRAY);
@@ -72,9 +72,9 @@ public class AttachListDialogFragment<T> extends AttachDialogFragment {
             e.printStackTrace();
         }
 
-        CardView cardView = findViewById(R.id.cv_container);
-
-        cardView.setCardBackgroundColor(color);
+//        CardView cardView = findViewById(R.id.cv_container);
+//
+//        cardView.setCardBackgroundColor(color);
         if (textColor == 0) {
             textColor = DialogThemeUtils.getMajorTextColor(context);
         }

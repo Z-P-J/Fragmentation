@@ -7,18 +7,17 @@ import android.support.annotation.StringRes;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.zpj.fragmentation.dialog.R;
-import com.zpj.fragmentation.dialog.base.CenterDialogFragment;
+import com.zpj.fragmentation.dialog.base.CardDialogFragment;
 import com.zpj.fragmentation.dialog.utils.DialogThemeUtils;
 import com.zpj.utils.ContextUtils;
 import com.zpj.utils.ScreenUtils;
 
-public class AlertDialogFragment extends CenterDialogFragment
+public class AlertDialogFragment extends CardDialogFragment
         implements View.OnClickListener {
 
     protected TextView tv_title, tv_cancel, tv_confirm, tv_neutral;
