@@ -34,7 +34,6 @@ public abstract class PartShadowDialogFragment extends AttachDialogFragment {
     @Override
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
         super.initView(view, savedInstanceState);
-
     }
 
     @Override

@@ -1,27 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.lihang.ShadowLayout
+<android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:id="@+id/centerPopupContainer"
     android:layout_height="wrap_content"
-    android:clickable="true"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
-    app:hl_shadowColor="#20000000"
-    app:hl_shadowLimit="16dp"
-    app:hl_cornerRadius="8dp"
-    app:hl_shadowBackColor="@color/transparent"
     >
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/_dialog_card_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="8dp"
-        app:cardUseCompatPadding="false"
-        app:cardElevation="0dp"
-        app:cardBackgroundColor="@color/transparent"
-        />
+<!--    <android.support.v7.widget.CardView-->
+<!--        android:id="@+id/_dialog_card_view"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:cardCornerRadius="8dp"-->
+<!--        app:cardUseCompatPadding="false"-->
+<!--        app:cardElevation="0dp"-->
+<!--        app:cardBackgroundColor="@color/transparent"-->
+<!--        />-->
 
-</com.lihang.ShadowLayout>
+</android.support.v7.widget.CardView>

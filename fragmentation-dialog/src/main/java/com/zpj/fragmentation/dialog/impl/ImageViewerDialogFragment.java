@@ -52,7 +52,6 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
 
 //    private final BlockActionQueue actionQueue = new BlockActionQueue();
 
-//    protected FrameLayout container;
     protected PhotoViewContainer photoViewContainer;
     protected HackyViewPager pager;
     protected ArgbEvaluator argbEvaluator = new ArgbEvaluator();

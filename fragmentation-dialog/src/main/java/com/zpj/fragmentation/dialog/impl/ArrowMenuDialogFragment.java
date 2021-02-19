@@ -67,7 +67,7 @@ public class ArrowMenuDialogFragment extends ArrowDialogFragment {
             mOptionMenuView.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
             GradientDrawable mDividerDrawable = new GradientDrawable();
             mDividerDrawable.setColor(DialogThemeUtils.getNormalTextColor(context));
-            mDividerDrawable.setAlpha(40);
+            mDividerDrawable.setAlpha(20);
             mDividerDrawable.setShape(GradientDrawable.RECTANGLE);
             int dp16 = ScreenUtils.dp2pxInt(16);
             if (mOrientation == LinearLayout.VERTICAL) {

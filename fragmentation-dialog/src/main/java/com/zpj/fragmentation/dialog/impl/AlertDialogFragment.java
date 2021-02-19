@@ -27,7 +27,6 @@ public class AlertDialogFragment extends CardDialogFragment
     protected CharSequence content;
 
     protected View contentView;
-    private LinearLayout llButtons;
 
     protected OnButtonClickListener cancelListener;
     protected OnButtonClickListener confirmListener;
@@ -57,8 +56,7 @@ public class AlertDialogFragment extends CardDialogFragment
         tv_confirm = findViewById(R.id.tv_confirm);
         tv_title.setTextColor(DialogThemeUtils.getMajorTextColor(context));
 
-        llButtons = findViewById(R.id.ll_buttons);
-
+//        LinearLayout llButtons = findViewById(R.id.ll_buttons);
 
         if (contentView == null && !TextUtils.isEmpty(content)) {
             this.contentView = createContentView(content);

@@ -18,7 +18,7 @@ import com.zpj.utils.ContextUtils;
 import com.zpj.utils.KeyboardObserver;
 import com.zpj.utils.ScreenUtils;
 
-public class InputDialogFragment extends AlertDialogFragment implements View.OnClickListener{
+public class InputDialogFragment extends AlertDialogFragment implements View.OnClickListener {
 
     private boolean autoShowKeyboard = true;
     private boolean emptyable = false;
@@ -29,7 +29,7 @@ public class InputDialogFragment extends AlertDialogFragment implements View.OnC
     private boolean singleLine = true;
 
     private AppCompatEditText et_input;
-    public CharSequence inputContent;
+    private CharSequence inputContent;
     private CharSequence hint;
 
     @Override
@@ -70,10 +70,10 @@ public class InputDialogFragment extends AlertDialogFragment implements View.OnC
                 centerPopupContainer.setTranslationY(0);
             }
         });
-        if(!TextUtils.isEmpty(hint)){
+        if (!TextUtils.isEmpty(hint)) {
             et_input.setHint(hint);
         }
-        if(!TextUtils.isEmpty(inputContent)){
+        if (!TextUtils.isEmpty(inputContent)) {
             et_input.setText(inputContent);
             if (selectionStart < 0) {
                 selectionStart = 0;
@@ -203,7 +203,7 @@ public class InputDialogFragment extends AlertDialogFragment implements View.OnC
         return getEditText().getText().toString();
     }
 
-    protected void applyPrimary(){
+    protected void applyPrimary() {
         super.applyPrimaryColor();
 //        XPopupUtils.setCursorDrawableColor(et_input, getColorPrimary());
     }

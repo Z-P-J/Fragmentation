@@ -475,9 +475,9 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
         return this;
     }
 
-    public BaseDialogFragment setBackgroundDrawable(Drawable drawable) {
-        this.bgDrawable = drawable;
-        return this;
-    }
+//    public BaseDialogFragment setBackgroundDrawable(Drawable drawable) {
+//        this.bgDrawable = drawable;
+//        return this;
+//    }
 
 }

@@ -20,7 +20,6 @@ import com.zpj.fragmentation.dialog.enums.PopupPosition;
 import com.zpj.fragmentation.dialog.widget.PartShadowContainer;
 import com.zpj.utils.ScreenUtils;
 
-
 public abstract class AttachDialogFragment extends BaseDialogFragment {
 
     private static final String TAG = "AttachDialogFragment";
@@ -82,13 +81,23 @@ public abstract class AttachDialogFragment extends BaseDialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+//        contentView
+//                .getViewTreeObserver()
+//                .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//                    @Override
+//                    public void onGlobalLayout() {
+//                        contentView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+//                        doAttach();
+//                    }
+//                });
         contentView
                 .getViewTreeObserver()
-                .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                     @Override
-                    public void onGlobalLayout() {
-                        contentView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    public boolean onPreDraw() {
+                        contentView.getViewTreeObserver().removeOnPreDrawListener(this);
                         doAttach();
+                        return false;
                     }
                 });
     }

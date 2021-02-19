@@ -27,6 +27,7 @@ import com.zpj.fragmentation.dialog.impl.ImageViewerDialogFragment;
 import com.zpj.fragmentation.dialog.impl.InputDialogFragment;
 import com.zpj.fragmentation.dialog.impl.LoadingDialogFragment;
 import com.zpj.fragmentation.dialog.impl.SelectDialogFragment;
+import com.zpj.fragmentation.dialog.impl.SimpleSelectDialogFragment;
 import com.zpj.fragmentation.dialog.utils.DialogThemeUtils;
 import com.zpj.recyclerview.EasyViewHolder;
 import com.zpj.recyclerview.IEasy;
@@ -104,6 +105,7 @@ public class MainFragment extends BaseFragment {
                         })
                         .setGravity(Gravity.BOTTOM)
                         .setMarginHorizontal(getResources().getDimensionPixelSize(R.dimen.bottombar_height))
+                        .setDialogBackground(DialogThemeUtils.getCenterDialogBackground(context))
                         .show(MainFragment.this);
             }
         });
@@ -112,7 +114,6 @@ public class MainFragment extends BaseFragment {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                start(new TestDialogFragment());
                         new AlertDialogFragment()
                                 .setTitle("内存使用情况")
                                 .setContent(R.string.large_text)
@@ -223,13 +224,22 @@ public class MainFragment extends BaseFragment {
                     .show(MainFragment.this);
         });
 
-//        findViewById(R.id.btn_test1).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(context, "Test1", Toast.LENGTH_SHORT).show();
-//                start(new MainFragment());
-//            }
-//        });
+        findViewById(R.id.btn_test_simple_select).setOnClickListener(v -> {
+            List<String> list = new ArrayList<>();
+            for (int i = 0; i < 50; i++) {
+                list.add(String.valueOf(System.currentTimeMillis() * Math.random()));
+            }
+            new SimpleSelectDialogFragment()
+                    .setTitles(list)
+                    .setOnItemClickListener(new IEasy.OnItemClickListener<String>() {
+                        @Override
+                        public void onClick(EasyViewHolder holder, View view, String data) {
+                            Toast.makeText(context, data, Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .setTitle("多选")
+                    .show(MainFragment.this);
+        });
 
         findViewById(R.id.btn_test_bottom).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -363,7 +373,7 @@ public class MainFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 List<String> list = new ArrayList<>();
-                for (int i = 0; i < 5; i++) {
+                for (int i = 0; i < 50; i++) {
                     list.add(String.valueOf(i));
                 }
                 new AttachListDialogFragment<String>()

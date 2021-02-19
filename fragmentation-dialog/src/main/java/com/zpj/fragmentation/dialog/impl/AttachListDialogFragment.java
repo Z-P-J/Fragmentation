@@ -61,7 +61,6 @@ public class AttachListDialogFragment<T> extends AttachDialogFragment {
         super.initView(view, savedInstanceState);
         int color = DialogThemeUtils.getDialogBackgroundColor(context);
         ShadowLayout shadowLayout = findViewById(R.id.shadow_layout);
-//        shadowLayout.setmShadowColor(ColorUtils.isDarkenColor(color) ? Color.LTGRAY : Color.DKGRAY);
         shadowLayout.setmShadowColor(Color.DKGRAY);
         try {
             Field mBackGroundColor = ShadowLayout.class.getDeclaredField("mBackGroundColor");
@@ -72,16 +71,11 @@ public class AttachListDialogFragment<T> extends AttachDialogFragment {
             e.printStackTrace();
         }
 
-//        CardView cardView = findViewById(R.id.cv_container);
-//
-//        cardView.setCardBackgroundColor(color);
         if (textColor == 0) {
             textColor = DialogThemeUtils.getMajorTextColor(context);
         }
 
-        recyclerView = findViewById(R.id.recyclerView);
-//        recyclerView.setupDivider();
-
+        recyclerView = findViewById(R.id._dialog_recycler_View);
         EasyRecyclerView<T> easyRecyclerView = new EasyRecyclerView<>(recyclerView);
         easyRecyclerView.setData(items)
                 .setItemRes(bindItemLayoutId == 0 ? R.layout._dialog_item_text : bindItemLayoutId)
@@ -90,15 +84,10 @@ public class AttachListDialogFragment<T> extends AttachDialogFragment {
                     tvText.setTextColor(textColor);
 
                     ImageView ivImage = holder.getView(R.id.iv_image);
-
-//                    holder.getView(R.id._dialog_view_divider).setVisibility(View.GONE);
-
-
                     if (iconCallback == null) {
                         if (iconIds.size() > position) {
                             ivImage.setVisibility(View.VISIBLE);
                             ivImage.setImageResource(iconIds.get(position));
-//                        ivImage.setImageDrawable(context.getResources().getDrawable(iconIds.get(position)));
                             if (tintColor == Color.TRANSPARENT) {
                                 ivImage.clearColorFilter();
                             } else {
@@ -117,20 +106,16 @@ public class AttachListDialogFragment<T> extends AttachDialogFragment {
                         iconCallback.onGetIcon(ivImage, list.get(position), position);
                     }
                     if (titleCallback == null) {
-//                        tvText.setVisibility(View.GONE);
                         tvText.setText(list.get(position).toString());
                     } else {
-//                        tvText.setVisibility(View.VISIBLE);
                         titleCallback.onGetTitle(tvText, list.get(position), position);
                     }
 
                 })
                 .onItemClick((holder, view1, data) -> {
-//                    dismiss();
                     if (selectListener != null) {
                         selectListener.onSelect(AttachListDialogFragment.this, holder.getAdapterPosition(), data);
                     }
-
                 })
                 .build();
     }

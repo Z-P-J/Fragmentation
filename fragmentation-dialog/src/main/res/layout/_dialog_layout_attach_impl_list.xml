@@ -37,7 +37,7 @@
         >
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
+            android:id="@+id/_dialog_recycler_View"
             android:overScrollMode="never"
             android:scrollbars="vertical"
             android:layout_width="wrap_content"

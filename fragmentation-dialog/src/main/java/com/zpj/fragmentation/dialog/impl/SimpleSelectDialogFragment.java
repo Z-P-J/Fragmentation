@@ -1,5 +1,6 @@
 package com.zpj.fragmentation.dialog.impl;
 
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,16 +22,20 @@ public class SimpleSelectDialogFragment extends SelectDialogFragment<String> {
         setSubtitleCallback(new SubtitleCallback<String>() {
             @Override
             public void onGetSubtitle(TextView subtitleView, String item, int position) {
-                if (position < subTitles.size()) {
+                if (!subTitles.isEmpty() && position < subTitles.size()) {
                     subtitleView.setText(subTitles.get(position));
+                } else  {
+                    subtitleView.setVisibility(View.GONE);
                 }
             }
         });
         setIconCallback(new IconCallback<String>() {
             @Override
             public void onGetIcon(ImageView icon, String item, int position) {
-                if (position < iconIds.size()) {
+                if (!iconIds.isEmpty() && position < iconIds.size()) {
                     icon.setImageResource(iconIds.get(position));
+                } else {
+                    icon.setVisibility(View.GONE);
                 }
             }
         });

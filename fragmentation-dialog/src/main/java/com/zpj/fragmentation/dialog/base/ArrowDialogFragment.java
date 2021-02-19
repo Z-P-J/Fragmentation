@@ -19,7 +19,6 @@ import com.zpj.fragmentation.dialog.model.OptionMenu;
 import com.zpj.fragmentation.dialog.widget.PopLayout;
 import com.zpj.utils.ScreenUtils;
 
-
 public abstract class ArrowDialogFragment extends BaseDialogFragment {
 
     private static final String TAG = "ArrowDialogFragment";

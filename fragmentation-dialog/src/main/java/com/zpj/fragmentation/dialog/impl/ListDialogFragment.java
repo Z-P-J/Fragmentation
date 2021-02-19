@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.zpj.fragmentation.dialog.R;
+import com.zpj.fragmentation.dialog.animator.PopupAnimator;
 import com.zpj.fragmentation.dialog.base.ContainerDialogFragment;
 import com.zpj.fragmentation.dialog.utils.DialogThemeUtils;
 import com.zpj.recyclerview.EasyRecyclerView;
@@ -32,7 +33,7 @@ public class ListDialogFragment<T> extends ContainerDialogFragment {
 
     protected boolean showButtons = false;
 
-    protected int bindItemLayoutId = R.layout._dialog_item_text;
+    protected int bindItemLayoutId;
 
     private IEasy.OnBindViewHolderListener<T> onBindViewHolderListener;
     protected IEasy.OnItemClickListener<T> onItemClickListener;
@@ -57,6 +58,10 @@ public class ListDialogFragment<T> extends ContainerDialogFragment {
 
     @Override
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
+        if (getItemRes() <= 0) {
+            dismiss();
+            return;
+        }
         super.initView(view, savedInstanceState);
 
         tvTitle = findViewById(R.id.tv_title);
@@ -114,6 +119,16 @@ public class ListDialogFragment<T> extends ContainerDialogFragment {
 //                        ListDialogFragment.super.doShowAnimation();
 //                    }
 //                });
+        recyclerView.getViewTreeObserver()
+                .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                    @Override
+                    public boolean onPreDraw() {
+                        recyclerView.getViewTreeObserver()
+                                .removeOnPreDrawListener(this);
+                        ListDialogFragment.super.doShowAnimation();
+                        return false;
+                    }
+                });
     }
 
     protected void initRecyclerView(RecyclerView recyclerView, List<T> list) {
@@ -125,10 +140,10 @@ public class ListDialogFragment<T> extends ContainerDialogFragment {
                 .build();
     }
 
-//    @Override
-//    public void doShowAnimation() {
-//
-//    }
+    @Override
+    public void doShowAnimation() {
+
+    }
 
     protected void onNegativeButtonClick(View view) {
         dismiss();

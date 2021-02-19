@@ -18,7 +18,6 @@ public class TestDialogFragment extends CardDialogFragment {
     @Override
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
         super.initView(view, savedInstanceState);
-        findViewById(R.id.fl_bg_shadow).setBackground(null);
         findViewById(R.id.btn_test).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
