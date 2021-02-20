@@ -32,54 +32,54 @@ import java.io.OutputStream;
  */
 public class Utility {
 
-    public static void applyPopupSize(ViewGroup content, int maxWidth, int maxHeight) {
-        applyPopupSize(content, maxWidth, maxHeight, null);
-    }
-
-    public static void applyPopupSize(final ViewGroup content, final int maxWidth, final int maxHeight, final Runnable afterApplySize) {
-        content.post(new Runnable() {
-            @Override
-            public void run() {
-                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) content.getLayoutParams();
-                View implView = content.getChildAt(0);
-                ViewGroup.LayoutParams implParams = implView.getLayoutParams();
-                // 假设默认Content宽是match，高是wrap
-                int w = content.getMeasuredWidth();
-                // response impl view wrap_content params.
-                if (implParams.width == FrameLayout.LayoutParams.WRAP_CONTENT) {
-//                    w = Math.min(w, implView.getMeasuredWidth());
-                }
-                if (maxWidth != 0) {
-                    params.width = Math.min(w, maxWidth);
-                }
-
-                int h = content.getMeasuredHeight();
-                // response impl view match_parent params.
-                if (implParams.height == FrameLayout.LayoutParams.MATCH_PARENT) {
-                    h = ((ViewGroup) content.getParent()).getMeasuredHeight();
-                    params.height = h;
-                }
-                if (maxHeight != 0) {
-                    // 如果content的高为match，则maxHeight限制impl
-                    if (params.height == FrameLayout.LayoutParams.MATCH_PARENT ||
-                            params.height == (ScreenUtils.getScreenHeight(content.getContext()) + StatusBarUtils.getStatusBarHeight(content.getContext()))) {
-                        implParams.height = Math.min(implView.getMeasuredHeight(), maxHeight);
-                        implView.setLayoutParams(implParams);
-                    } else {
-                        params.height = Math.min(h, maxHeight);
-                    }
-//                    int margin = getWindowHeight(content.getContext()) - maxHeight - XPopupUtils.getStatusBarHeight();
-//                    params.topMargin = XPopupUtils.getStatusBarHeight() + margin / 2;
-//                    params.bottomMargin = margin / 2;
-                }
-                content.setLayoutParams(params);
-
-                if (afterApplySize != null) {
-                    afterApplySize.run();
-                }
-            }
-        });
-    }
+//    public static void applyPopupSize(ViewGroup content, int maxWidth, int maxHeight) {
+//        applyPopupSize(content, maxWidth, maxHeight, null);
+//    }
+//
+//    public static void applyPopupSize(final ViewGroup content, final int maxWidth, final int maxHeight, final Runnable afterApplySize) {
+//        content.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) content.getLayoutParams();
+//                View implView = content.getChildAt(0);
+//                ViewGroup.LayoutParams implParams = implView.getLayoutParams();
+//                // 假设默认Content宽是match，高是wrap
+//                int w = content.getMeasuredWidth();
+//                // response impl view wrap_content params.
+//                if (implParams.width == FrameLayout.LayoutParams.WRAP_CONTENT) {
+////                    w = Math.min(w, implView.getMeasuredWidth());
+//                }
+//                if (maxWidth != 0) {
+//                    params.width = Math.min(w, maxWidth);
+//                }
+//
+//                int h = content.getMeasuredHeight();
+//                // response impl view match_parent params.
+//                if (implParams.height == FrameLayout.LayoutParams.MATCH_PARENT) {
+//                    h = ((ViewGroup) content.getParent()).getMeasuredHeight();
+//                    params.height = h;
+//                }
+//                if (maxHeight != 0) {
+//                    // 如果content的高为match，则maxHeight限制impl
+//                    if (params.height == FrameLayout.LayoutParams.MATCH_PARENT ||
+//                            params.height == (ScreenUtils.getScreenHeight(content.getContext()) + StatusBarUtils.getStatusBarHeight(content.getContext()))) {
+//                        implParams.height = Math.min(implView.getMeasuredHeight(), maxHeight);
+//                        implView.setLayoutParams(implParams);
+//                    } else {
+//                        params.height = Math.min(h, maxHeight);
+//                    }
+////                    int margin = getWindowHeight(content.getContext()) - maxHeight - XPopupUtils.getStatusBarHeight();
+////                    params.topMargin = XPopupUtils.getStatusBarHeight() + margin / 2;
+////                    params.bottomMargin = margin / 2;
+//                }
+//                content.setLayoutParams(params);
+//
+//                if (afterApplySize != null) {
+//                    afterApplySize.run();
+//                }
+//            }
+//        });
+//    }
 
     public static void setCursorDrawableColor(EditText et, int color) {
         //暂时没有找到有效的方法来动态设置cursor的颜色

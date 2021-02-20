@@ -25,6 +25,16 @@ android {
         targetCompatibility = '1.8'
     }
 
+//    publish {
+//        artifactId = 'Fragmentation-Dialog'
+//        userOrg = 'z-p-j'
+//        groupId = 'com.zpj.widget'
+//        publishVersion = '1.1.0'
+//        desc = 'A powerful library that manage DialogFragment for Android.'
+//        website = 'https://github.com/Z-P-J/Fragmentation'
+//        licences = ['Apache-2.0']
+//    }
+
 }
 
 dependencies {

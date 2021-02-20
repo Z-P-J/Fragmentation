@@ -32,8 +32,8 @@ public class TranslateAlphaAnimator extends PopupAnimator {
     }
 
     private void applyTranslation() {
-        int halfWidthOffset = ScreenUtils.getScreenWidth(targetView.getContext())/2 - targetView.getMeasuredWidth()/2;
-        int halfHeightOffset = ScreenUtils.getScreenHeight(targetView.getContext())/2 - targetView.getMeasuredHeight()/2;
+//        int halfWidthOffset = ScreenUtils.getScreenWidth(targetView.getContext())/2 - targetView.getMeasuredWidth()/2;
+//        int halfHeightOffset = ScreenUtils.getScreenHeight(targetView.getContext())/2 - targetView.getMeasuredHeight()/2;
         switch (popupAnimation){
             case TranslateAlphaFromLeft:
                 targetView.setTranslationX(-(targetView.getMeasuredWidth()/* + halfWidthOffset*/));

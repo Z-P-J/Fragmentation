@@ -130,7 +130,10 @@ public abstract class ArrowDialogFragment extends BaseDialogFragment {
         float max2 = Math.max(right, left);
         float max = Math.max(max1, max2);
         Log.d("whwhwhwhwh", "max1=" + max1 + "   max2=" + max2 + "  max=" + max);
-        int offsetY = ScreenUtils.getScreenHeight(context) - getRootView().getMeasuredHeight();
+//        int offsetY = ScreenUtils.getScreenHeight(context) - getRootView().getMeasuredHeight();
+        int[] rootLocations = new int[2];
+        getRootView().getLocationOnScreen(rootLocations);
+        int offsetY = rootLocations[1];
         if (max == bottom) {
             Log.d("whwhwhwhwh", "showAtBottom");
             showAtBottom(anchor, origin, offset.x, -offsetY);

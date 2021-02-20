@@ -121,14 +121,17 @@ public abstract class AttachDialogFragment extends BaseDialogFragment {
     }
 
     protected void doAttach() {
-        int offset = ScreenUtils.getScreenHeight(context) - getRootView().getMeasuredHeight();
-
-        maxY = ScreenUtils.getScreenHeight(context);
+//        int offset = ScreenUtils.getScreenHeight(context) - getRootView().getMeasuredHeight();
+        int[] rootLocations = new int[2];
+        getRootView().getLocationOnScreen(rootLocations);
+        int offset = rootLocations[1];
+        int windowWidth = getRootView().getMeasuredWidth();
+        int windowHeight = getRootView().getMeasuredHeight();
+        maxY = windowHeight;
         int width = getImplView().getMeasuredWidth();
         int height = getImplView().getMeasuredHeight();
         Log.d(TAG, "width=" + width + " height=" + height);
-        int windowWidth = ScreenUtils.getScreenWidth(context);
-        int windowHeight = ScreenUtils.getScreenHeight(context);
+
         //0. 判断是依附于某个点还是某个View
         if (touchPoint != null) {
 

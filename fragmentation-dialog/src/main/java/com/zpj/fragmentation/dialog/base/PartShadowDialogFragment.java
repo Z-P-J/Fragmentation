@@ -38,7 +38,7 @@ public abstract class PartShadowDialogFragment extends AttachDialogFragment {
 
     @Override
     protected void doAttach() {
-        Log.d(TAG, "screenHeight=" + ScreenUtils.getScreenHeight(context) + " getRootView().getMeasuredHeight()=" + getRootView().getMeasuredHeight());
+//        Log.d(TAG, "screenHeight=" + ScreenUtils.getScreenHeight(context) + " getRootView().getMeasuredHeight()=" + getRootView().getMeasuredHeight());
 
         if (attachView == null)
             throw new IllegalArgumentException("atView must not be null for PartShadowPopupView！");
@@ -70,14 +70,10 @@ public abstract class PartShadowDialogFragment extends AttachDialogFragment {
         int centerY = rect.top + rect.height() / 2;
         Log.d(TAG, "centerY=" + centerY + " getImplView().getMeasuredHeight()=" + getImplView().getMeasuredHeight() + " getContentView().getMeasuredHeight()" + getContentView().getMeasuredHeight());
 
-        int offset = ScreenUtils.getScreenHeight(context) - getRootView().getMeasuredHeight();
-//        if (getActivity() != null && (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-//                & getActivity().getWindow().getAttributes().flags)
-//                == WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS) {
-//            offset = 0;
-//        } else {
-//            offset = ScreenUtils.getStatusBarHeight(context);
-//        }
+//        int offset = ScreenUtils.getScreenHeight(context) - getRootView().getMeasuredHeight();
+        int[] rootLocations = new int[2];
+        getRootView().getLocationOnScreen(rootLocations);
+        int offset = rootLocations[1];
 
         if ((centerY > getImplView().getMeasuredHeight() || popupPosition == PopupPosition.Top) && popupPosition != PopupPosition.Bottom) {
             // 说明atView在Window下半部分，PartShadow应该显示在它上方，计算atView之上的高度
@@ -98,8 +94,8 @@ public abstract class PartShadowDialogFragment extends AttachDialogFragment {
         } else {
             // atView在上半部分，PartShadow应该显示在它下方，计算atView之下的高度
 //            params.height = getContentView().getMeasuredHeight() - rect.bottom;
-//            params.height = getRootView().getMeasuredHeight() - rect.bottom + offset;
-            params.height = ScreenUtils.getScreenHeight(context) - rect.bottom;
+            params.height = getRootView().getMeasuredHeight() - rect.bottom + offset;
+//            params.height = ScreenUtils.getScreenHeight(context) - rect.bottom;
             params.width = MATCH_PARENT;
             // 防止伸到导航栏下面
 //            if (XPopupUtils.isNavBarVisible(getContext())) {

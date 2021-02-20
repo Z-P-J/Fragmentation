@@ -264,7 +264,10 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
             snapshotView = new PlaceholderImageView(getContext());
             photoViewContainer.addView(snapshotView);
             snapshotView.setScaleType(srcView.getScaleType());
-            int offset = ScreenUtils.getScreenHeight(context) - getRootView().getMeasuredHeight();
+//            int offset = ScreenUtils.getScreenHeight(context) - getRootView().getMeasuredHeight();
+            int[] rootLocations = new int[2];
+            getRootView().getLocationOnScreen(rootLocations);
+            int offset = rootLocations[1];
             snapshotView.setTranslationX(rect.left);
             snapshotView.setTranslationY(rect.top - offset);
             setWidthHeight(snapshotView, rect.width(), rect.height());
@@ -378,7 +381,10 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
                     }
                 }));
 
-        int offset = ScreenUtils.getScreenHeight(context) - getRootView().getMeasuredHeight();
+//        int offset = ScreenUtils.getScreenHeight(context) - getRootView().getMeasuredHeight();
+        int[] rootLocations = new int[2];
+        getRootView().getLocationOnScreen(rootLocations);
+        int offset = rootLocations[1];
         snapshotView.setTranslationY(rect.top - offset);
         snapshotView.setTranslationX(rect.left);
         snapshotView.setScaleX(1f);
