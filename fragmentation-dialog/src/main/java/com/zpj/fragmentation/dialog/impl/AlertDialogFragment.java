@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.zpj.fragmentation.dialog.R;
 import com.zpj.fragmentation.dialog.base.CardDialogFragment;
 import com.zpj.fragmentation.dialog.utils.DialogThemeUtils;
+import com.zpj.fragmentation.dialog.widget.CustomScrollView;
 import com.zpj.utils.ContextUtils;
 import com.zpj.utils.ScreenUtils;
 
@@ -92,6 +93,40 @@ public class AlertDialogFragment extends CardDialogFragment
         }
 
         if (isHideCancel) tv_cancel.setVisibility(View.GONE);
+
+        View shadowBottomView = findViewById(R.id.view_shadow_bottom);
+        View shadowUpView = findViewById(R.id.view_shadow_up);
+
+        if (shadowBottomView != null && shadowUpView != null) {
+            CustomScrollView scrollView = findViewById(R.id._scroll_view);
+            scrollView.setOnScrollChangeListener(new CustomScrollView.OnScrollChangeListener() {
+                @Override
+                public void onScrollToStart() {
+
+                }
+
+                @Override
+                public void onScrollToEnd() {
+
+                }
+
+                @Override
+                public void onScrollChanged(int l, int t, int oldl, int oldt) {
+                    shadowBottomView.setVisibility(scrollView.isScrollToTop() ? View.GONE : View.VISIBLE);
+                    shadowUpView.setVisibility(scrollView.isScrollToBottom() ? View.GONE : View.VISIBLE);
+                }
+            });
+
+            postOnEnterAnimationEnd(new Runnable() {
+                @Override
+                public void run() {
+                    shadowBottomView.setVisibility(scrollView.isScrollToTop() ? View.GONE : View.VISIBLE);
+                    shadowUpView.setVisibility(scrollView.isScrollToBottom() ? View.GONE : View.VISIBLE);
+                }
+            });
+        }
+
+
 
     }
 

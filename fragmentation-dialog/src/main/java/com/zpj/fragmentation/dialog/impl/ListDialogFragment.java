@@ -1,6 +1,7 @@
 package com.zpj.fragmentation.dialog.impl;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -29,6 +30,8 @@ public class ListDialogFragment<T> extends ContainerDialogFragment {
 
     protected TextView tvTitle;
     protected TextView tvOk;
+    private View shadowBottomView;
+    private View shadowUpView;
 
     protected boolean showButtons = false;
 
@@ -63,13 +66,16 @@ public class ListDialogFragment<T> extends ContainerDialogFragment {
         }
         super.initView(view, savedInstanceState);
 
+        shadowBottomView = findViewById(R.id.view_shadow_bottom);
+        shadowUpView = findViewById(R.id.view_shadow_up);
+
         tvTitle = findViewById(R.id.tv_title);
 
         if (tvTitle != null) {
             tvTitle.setTextColor(DialogThemeUtils.getMajorTextColor(context));
             if (TextUtils.isEmpty(title)) {
                 tvTitle.setVisibility(View.GONE);
-                findViewById(R.id.view_shadow_bottom).setVisibility(View.GONE);
+                shadowBottomView.setVisibility(View.GONE);
             } else {
                 tvTitle.setText(title);
             }
@@ -78,7 +84,7 @@ public class ListDialogFragment<T> extends ContainerDialogFragment {
         LinearLayout buttons = findViewById(R.id.layout_buttons);
         if (showButtons) {
             buttons.setVisibility(View.VISIBLE);
-            findViewById(R.id.view_shadow_up).setVisibility(View.VISIBLE);
+            shadowUpView.setVisibility(View.VISIBLE);
 
             TextView tvCancel = buttons.findViewById(R.id.tv_cancel);
             if (!TextUtils.isEmpty(negativeText)) {
@@ -96,7 +102,7 @@ public class ListDialogFragment<T> extends ContainerDialogFragment {
             tvOk.setOnClickListener(this::onPositiveButtonClick);
         } else {
             buttons.setVisibility(View.GONE);
-            findViewById(R.id.view_shadow_up).setVisibility(View.GONE);
+            shadowUpView.setVisibility(View.GONE);
 
             FrameLayout flContainer = findViewById(R.id._fl_container);
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) flContainer.getLayoutParams();
@@ -106,6 +112,13 @@ public class ListDialogFragment<T> extends ContainerDialogFragment {
         }
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                test(recyclerView);
+            }
+        });
         initRecyclerView(recyclerView, list);
 
 //        recyclerView.getViewTreeObserver()
@@ -125,9 +138,25 @@ public class ListDialogFragment<T> extends ContainerDialogFragment {
                         recyclerView.getViewTreeObserver()
                                 .removeOnPreDrawListener(this);
                         ListDialogFragment.super.doShowAnimation();
+                        postOnEnterAnimationEnd(() -> test(recyclerView));
                         return false;
                     }
                 });
+    }
+
+    private void test(RecyclerView recyclerView) {
+        if (!recyclerView.canScrollVertically(-1)) {
+            shadowBottomView.setVisibility(View.GONE);
+        } else {
+            shadowBottomView.setVisibility(View.VISIBLE);
+        }
+        if (showButtons) {
+            if (!recyclerView.canScrollVertically(1)) {
+                shadowUpView.setVisibility(View.GONE);
+            } else {
+                shadowUpView.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     protected void initRecyclerView(RecyclerView recyclerView, List<T> list) {

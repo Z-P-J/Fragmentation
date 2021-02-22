@@ -19,16 +19,17 @@
         android:text="Title"
         />
 
-    <ScrollView
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:scrollbars="none">
+        >
 
-        <LinearLayout
+        <com.zpj.fragmentation.dialog.widget.CustomScrollView
+            android:id="@+id/_scroll_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
             >
 
             <FrameLayout
@@ -37,11 +38,20 @@
                 android:layout_height="wrap_content"
                 />
 
-        </LinearLayout>
+        </com.zpj.fragmentation.dialog.widget.CustomScrollView>
 
+        <View style="@style/layout_shadow_bottom"
+            android:id="@+id/view_shadow_bottom"
+            android:visibility="gone"
+            />
 
+        <View style="@style/layout_shadow_up"
+            android:id="@+id/view_shadow_up"
+            android:layout_gravity="bottom"
+            android:visibility="gone"
+            />
 
-    </ScrollView>
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/layout_check"
