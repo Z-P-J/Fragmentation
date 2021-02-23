@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -51,6 +52,8 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
 
     protected IDialog.OnDismissListener onDismissListener;
 
+    private Fragment preFragment;
+
     protected Drawable bgDrawable;
 
     @Override
@@ -68,6 +71,7 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
 
     @Override
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
+        preFragment = (Fragment) getPreFragment();
         FrameLayout flContainer = findViewById(R.id._dialog_fl_container);
         this.rootView = flContainer;
 
@@ -141,27 +145,28 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
                     public void onGlobalLayout() {
                         getRootView().getViewTreeObserver().removeOnGlobalLayoutListener(this);
                         doShowAnimation();
+                        if (preFragment != null) {
+                            preFragment.onPause();
+                        }
                     }
                 });
     }
 
-    @Override
-    public void onSupportVisible() {
-        super.onSupportVisible();
-        ISupportFragment preFragment = getPreFragment();
-        if (preFragment != null) {
-            preFragment.onSupportVisible();
-        }
-    }
+//    @Override
+//    public void onSupportVisible() {
+//        super.onSupportVisible();
+//        if (preFragment != null) {
+//            preFragment.onSupportVisible();
+//        }
+//    }
 
-    @Override
-    public void onSupportInvisible() {
-        super.onSupportInvisible();
-        ISupportFragment preFragment = getPreFragment();
-        if (preFragment != null) {
-            preFragment.onSupportInvisible();
-        }
-    }
+//    @Override
+//    public void onSupportInvisible() {
+//        super.onSupportInvisible();
+//        if (preFragment != null) {
+//            preFragment.onSupportInvisible();
+//        }
+//    }
 
     @Override
     public void onStart() {
@@ -190,9 +195,8 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
 
     @Override
     public void onDestroy() {
-        ISupportFragment preFragment = getPreFragment();
         if (preFragment != null) {
-            preFragment.onSupportVisible();
+            preFragment.onResume();
         }
         this.isDismissing = false;
         super.onDestroy();

@@ -134,7 +134,7 @@ public class ArrowMenuDialogFragment extends ArrowDialogFragment {
         return this;
     }
 
-    public ArrowMenuDialogFragment setOptionMenus(List<OptionMenu> optionMenus) {
+    public ArrowMenuDialogFragment addOptionMenus(List<OptionMenu> optionMenus) {
         this.optionMenus.addAll(optionMenus);
         return this;
     }
@@ -151,8 +151,23 @@ public class ArrowMenuDialogFragment extends ArrowDialogFragment {
         return this;
     }
 
+    public ArrowMenuDialogFragment setOptionMenus(List<String> list) {
+        this.optionMenus.clear();
+        for (String title : list) {
+            addOptionMenus(title);
+        }
+        return this;
+    }
+
     public ArrowMenuDialogFragment addOptionMenus(OptionMenu optionMenu) {
         this.optionMenus.add(optionMenu);
+        return this;
+    }
+
+    public ArrowMenuDialogFragment addOptionMenuIf(boolean flag, String item) {
+        if (flag) {
+            addOptionMenus(item);
+        }
         return this;
     }
 

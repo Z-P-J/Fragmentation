@@ -52,6 +52,7 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
 
 //    private final BlockActionQueue actionQueue = new BlockActionQueue();
 
+    protected FrameLayout container;
     protected PhotoViewContainer photoViewContainer;
     protected HackyViewPager pager;
     protected ArgbEvaluator argbEvaluator = new ArgbEvaluator();
@@ -104,11 +105,13 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
         super.initView(view, savedInstanceState);
         photoViewContainer = findViewById(R.id.photoViewContainer);
+
+        container = findViewById(R.id._dialog_fl_container);
         if (getCustomLayoutId() > 0) {
             customView = getLayoutInflater().inflate(getCustomLayoutId(), null, false);
             customView.setVisibility(View.INVISIBLE);
             customView.setAlpha(0);
-            photoViewContainer.addView(customView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            container.addView(customView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         }
         photoViewContainer.setOnDragChangeListener(this);
         photoViewContainer.setFocusableInTouchMode(true);

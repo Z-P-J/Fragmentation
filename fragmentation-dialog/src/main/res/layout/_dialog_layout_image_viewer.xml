@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.zpj.fragmentation.dialog.widget.PhotoViewContainer
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/photoViewContainer"
+    android:id="@+id/_dialog_fl_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.zpj.fragmentation.dialog.widget.HackyViewPager
-        android:id="@+id/pager"
+    <com.zpj.fragmentation.dialog.widget.PhotoViewContainer
+        android:id="@+id/photoViewContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent">
 
-</com.zpj.fragmentation.dialog.widget.PhotoViewContainer>
+        <com.zpj.fragmentation.dialog.widget.HackyViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.zpj.fragmentation.dialog.widget.PhotoViewContainer>
+
+</FrameLayout>
