@@ -36,7 +36,7 @@ public abstract class ContainerDialogFragment extends BaseDialogFragment {
     protected abstract boolean isDragDialog();
 
     @Override
-    protected int getImplLayoutId() {
+    protected final int getImplLayoutId() {
         if (isDragDialog()) {
             return R.layout._dialog_layout_bottom_view;
         }
@@ -132,7 +132,7 @@ public abstract class ContainerDialogFragment extends BaseDialogFragment {
 //            ViewGroup centerPopupContainer = findViewById(R.id._dialog_card_view);
             CardView cardView = findViewById(R.id.centerPopupContainer);
             if (getContentLayoutId() > 0) {
-                contentView = (ViewGroup) getLayoutInflater().inflate(getContentLayoutId(), null, false);
+                contentView = (ViewGroup) getLayoutInflater().inflate(getContentLayoutId(), cardView, false);
 
                 cardView.setUseCompatPadding(false);
                 if (bgDrawable != null) {

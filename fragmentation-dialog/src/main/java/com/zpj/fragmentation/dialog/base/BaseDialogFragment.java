@@ -92,7 +92,7 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
             }
         });
 
-        implView = (ViewGroup) getLayoutInflater().inflate(getImplLayoutId(), null, false);
+        implView = (ViewGroup) getLayoutInflater().inflate(getImplLayoutId(), flContainer, false);
         flContainer.addView(implView);
 
         initLayoutParams(implView);

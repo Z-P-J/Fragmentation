@@ -73,6 +73,15 @@ public class MainFragment extends BaseFragment {
             }
         });
 
+        findViewById(R.id.btn_test_app_url_center).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new MyExpandableListDialogFragment()
+                        .setAnchorView(v)
+                        .show(context);
+            }
+        });
+
         findViewById(R.id.btn_test_center).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

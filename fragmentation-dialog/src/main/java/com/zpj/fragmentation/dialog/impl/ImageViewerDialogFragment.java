@@ -106,7 +106,7 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
         super.initView(view, savedInstanceState);
         photoViewContainer = findViewById(R.id.photoViewContainer);
 
-        container = findViewById(R.id._dialog_fl_container);
+        container = findViewById(R.id._image_viewer_dialog_fl_container);
         if (getCustomLayoutId() > 0) {
             customView = getLayoutInflater().inflate(getCustomLayoutId(), null, false);
             customView.setVisibility(View.INVISIBLE);

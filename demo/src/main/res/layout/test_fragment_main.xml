@@ -36,6 +36,14 @@
                 />
 
             <Button
+                android:id="@+id/btn_test_app_url_center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="测试AppUrlCenterListDialogFragment"
+                android:textColor="#000" />
+
+            <Button
                 android:id="@+id/btn_test_part_shadow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

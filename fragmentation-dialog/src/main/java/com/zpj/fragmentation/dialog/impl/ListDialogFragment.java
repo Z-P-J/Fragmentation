@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -35,7 +36,7 @@ public class ListDialogFragment<T> extends ContainerDialogFragment {
 
     protected boolean showButtons = false;
 
-    protected int bindItemLayoutId;
+    protected int bindItemLayoutId = R.layout._dialog_item_select;
 
     private IEasy.OnBindViewHolderListener<T> onBindViewHolderListener;
     protected IEasy.OnItemClickListener<T> onItemClickListener;
@@ -60,17 +61,16 @@ public class ListDialogFragment<T> extends ContainerDialogFragment {
 
     @Override
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
-        if (getItemRes() <= 0) {
-            dismiss();
-            return;
-        }
+//        if (getItemRes() <= 0) {
+//            dismiss();
+//            return;
+//        }
         super.initView(view, savedInstanceState);
 
         shadowBottomView = findViewById(R.id.view_shadow_bottom);
         shadowUpView = findViewById(R.id.view_shadow_up);
 
         tvTitle = findViewById(R.id.tv_title);
-
         if (tvTitle != null) {
             tvTitle.setTextColor(DialogThemeUtils.getMajorTextColor(context));
             if (TextUtils.isEmpty(title)) {
@@ -138,6 +138,16 @@ public class ListDialogFragment<T> extends ContainerDialogFragment {
                         recyclerView.getViewTreeObserver()
                                 .removeOnPreDrawListener(this);
                         ListDialogFragment.super.doShowAnimation();
+//                        if (shadowBgAnimator != null) {
+//                            shadowBgAnimator.initAnimator();
+//                            shadowBgAnimator.animateShow();
+//                        }
+//
+//                        popupContentAnimator = getDialogAnimator((ViewGroup) getImplView().getChildAt(0));
+//                        if (popupContentAnimator != null) {
+//                            popupContentAnimator.initAnimator();
+//                            popupContentAnimator.animateShow();
+//                        }
                         postOnEnterAnimationEnd(() -> test(recyclerView));
                         return false;
                     }

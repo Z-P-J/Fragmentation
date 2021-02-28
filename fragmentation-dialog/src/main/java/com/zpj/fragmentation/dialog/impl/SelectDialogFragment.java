@@ -57,11 +57,6 @@ public class SelectDialogFragment<T> extends ListDialogFragment<T>
     private SmoothCheckBox selectAllCheckBox;
 
     @Override
-    protected int getContentLayoutId() {
-        return R.layout._dialog_layout_center_impl_list;
-    }
-
-    @Override
     protected final int getItemRes() {
         return R.layout._dialog_item_select;
     }
