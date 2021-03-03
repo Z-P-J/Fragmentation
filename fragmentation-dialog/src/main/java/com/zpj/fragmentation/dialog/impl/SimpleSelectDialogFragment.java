@@ -4,6 +4,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.zpj.fragmentation.dialog.IDialog;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,15 +15,15 @@ public class SimpleSelectDialogFragment extends SelectDialogFragment<String> {
     private final List<Integer> iconIds = new ArrayList<>();
 
     public SimpleSelectDialogFragment() {
-        setTitleCallback(new TitleCallback<String>() {
+        onBindTitle(new IDialog.ViewBinder<TextView, String>() {
             @Override
-            public void onGetTitle(TextView titleView, String item, int position) {
+            public void onBindView(TextView titleView, String item, int position) {
                 titleView.setText(item);
             }
         });
-        setSubtitleCallback(new SubtitleCallback<String>() {
+        onBindSubtitle(new IDialog.ViewBinder<TextView, String>() {
             @Override
-            public void onGetSubtitle(TextView subtitleView, String item, int position) {
+            public void onBindView(TextView subtitleView, String item, int position) {
                 if (!subTitles.isEmpty() && position < subTitles.size()) {
                     subtitleView.setText(subTitles.get(position));
                 } else  {
@@ -29,9 +31,9 @@ public class SimpleSelectDialogFragment extends SelectDialogFragment<String> {
                 }
             }
         });
-        setIconCallback(new IconCallback<String>() {
+        onBindIcon(new IDialog.ViewBinder<ImageView, String>() {
             @Override
-            public void onGetIcon(ImageView icon, String item, int position) {
+            public void onBindView(ImageView icon, String item, int position) {
                 if (!iconIds.isEmpty() && position < iconIds.size()) {
                     icon.setImageResource(iconIds.get(position));
                 } else {

@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.zpj.fragmentation.dialog.IDialog;
 import com.zpj.fragmentation.dialog.R;
 import com.zpj.fragmentation.dialog.base.CardDialogFragment;
 import com.zpj.fragmentation.dialog.utils.DialogThemeUtils;
@@ -29,9 +30,9 @@ public class AlertDialogFragment extends CardDialogFragment
 
     protected View contentView;
 
-    protected OnButtonClickListener cancelListener;
-    protected OnButtonClickListener confirmListener;
-    protected OnButtonClickListener onNeutralButtonClickListener;
+    protected IDialog.OnButtonClickListener<AlertDialogFragment> cancelListener;
+    protected IDialog.OnButtonClickListener<AlertDialogFragment> confirmListener;
+    protected IDialog.OnButtonClickListener<AlertDialogFragment> onNeutralButtonClickListener;
 
     protected boolean isHideCancel = false;
     protected boolean autoDismiss = true;
@@ -142,7 +143,7 @@ public class AlertDialogFragment extends CardDialogFragment
     public void onClick(View v) {
         if (v == tv_cancel) {
             if (cancelListener != null) {
-                cancelListener.onClick(this);
+                cancelListener.onClick(this, IDialog.BUTTON_NEGATIVE);
             }
             if (autoDismiss) {
                 dismiss();
@@ -150,7 +151,7 @@ public class AlertDialogFragment extends CardDialogFragment
 
         } else if (v == tv_confirm) {
             if (confirmListener != null) {
-                confirmListener.onClick(this);
+                confirmListener.onClick(this, IDialog.BUTTON_POSITIVE);
             }
             if (autoDismiss) {
                 dismiss();
@@ -158,7 +159,7 @@ public class AlertDialogFragment extends CardDialogFragment
 
         }  else if (v == tv_neutral) {
             if (onNeutralButtonClickListener != null) {
-                onNeutralButtonClickListener.onClick(this);
+                onNeutralButtonClickListener.onClick(this, IDialog.BUTTON_NEUTRAL);
             }
             if (autoDismiss) {
                 dismiss();
@@ -203,52 +204,52 @@ public class AlertDialogFragment extends CardDialogFragment
         return this;
     }
 
-    public AlertDialogFragment setPositiveButton(OnButtonClickListener listener) {
+    public AlertDialogFragment setPositiveButton(IDialog.OnButtonClickListener<AlertDialogFragment> listener) {
         this.confirmListener = listener;
         return this;
     }
 
-    public AlertDialogFragment setPositiveButton(String btnStr, OnButtonClickListener listener) {
+    public AlertDialogFragment setPositiveButton(String btnStr, IDialog.OnButtonClickListener<AlertDialogFragment> listener) {
         this.confirmText = btnStr;
         this.confirmListener = listener;
         return this;
     }
 
-    public AlertDialogFragment setPositiveButton(int btnStrId, OnButtonClickListener listener) {
+    public AlertDialogFragment setPositiveButton(int btnStrId, IDialog.OnButtonClickListener<AlertDialogFragment> listener) {
         this.confirmText = ContextUtils.getApplicationContext().getString(btnStrId);
         this.confirmListener = listener;
         return this;
     }
 
-    public AlertDialogFragment setNegativeButton(OnButtonClickListener listener) {
+    public AlertDialogFragment setNegativeButton(IDialog.OnButtonClickListener<AlertDialogFragment> listener) {
         this.cancelListener = listener;
         return this;
     }
 
-    public AlertDialogFragment setNegativeButton(String btnStr, OnButtonClickListener listener) {
+    public AlertDialogFragment setNegativeButton(String btnStr, IDialog.OnButtonClickListener<AlertDialogFragment> listener) {
         this.cancelText = btnStr;
         this.cancelListener = listener;
         return this;
     }
 
-    public AlertDialogFragment setNegativeButton(int btnStrId, OnButtonClickListener listener) {
+    public AlertDialogFragment setNegativeButton(int btnStrId, IDialog.OnButtonClickListener<AlertDialogFragment> listener) {
         this.cancelText = ContextUtils.getApplicationContext().getString(btnStrId);
         this.cancelListener = listener;
         return this;
     }
 
-    public AlertDialogFragment setNeutralButton(OnButtonClickListener listener) {
+    public AlertDialogFragment setNeutralButton(IDialog.OnButtonClickListener<AlertDialogFragment> listener) {
         this.onNeutralButtonClickListener = listener;
         return this;
     }
 
-    public AlertDialogFragment setNeutralButton(String btnStr, OnButtonClickListener listener) {
+    public AlertDialogFragment setNeutralButton(String btnStr, IDialog.OnButtonClickListener<AlertDialogFragment> listener) {
         this.neutralText = btnStr;
         this.onNeutralButtonClickListener = listener;
         return this;
     }
 
-    public AlertDialogFragment setNeutralButton(int btnStrId, OnButtonClickListener listener) {
+    public AlertDialogFragment setNeutralButton(int btnStrId, IDialog.OnButtonClickListener<AlertDialogFragment> listener) {
         this.neutralText = ContextUtils.getApplicationContext().getString(btnStrId);
         this.onNeutralButtonClickListener = listener;
         return this;
@@ -331,8 +332,8 @@ public class AlertDialogFragment extends CardDialogFragment
 //        void onClick(AlertDialogFragment fragment);
 //    }
 
-    public interface OnButtonClickListener {
-        void onClick(AlertDialogFragment fragment);
-    }
+//    public interface OnButtonClickListener {
+//        void onClick(AlertDialogFragment fragment);
+//    }
 
 }

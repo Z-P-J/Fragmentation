@@ -18,6 +18,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.zpj.fragmentation.BaseFragment;
 import com.zpj.fragmentation.demo.R;
+import com.zpj.fragmentation.dialog.IDialog;
 import com.zpj.fragmentation.dialog.impl.AlertDialogFragment;
 import com.zpj.fragmentation.dialog.impl.ArrowMenuDialogFragment;
 import com.zpj.fragmentation.dialog.impl.AttachListDialogFragment;
@@ -89,9 +90,9 @@ public class MainFragment extends BaseFragment {
                         .setTitle("内存使用情况")
                         .setContent(R.string.sign_in_success)
 //                        .setAutoDismiss(false)
-                        .setPositiveButton(new AlertDialogFragment.OnButtonClickListener() {
+                        .setPositiveButton(new IDialog.OnButtonClickListener<AlertDialogFragment>() {
                             @Override
-                            public void onClick(AlertDialogFragment fragment) {
+                            public void onClick(AlertDialogFragment fragment, int which) {
                                 fragment.start(new TestDialogFragment());
                             }
                         })
@@ -106,9 +107,9 @@ public class MainFragment extends BaseFragment {
                         .setTitle("内存使用情况")
                         .setContent(R.string.sign_in_success)
 //                        .setAutoDismiss(false)
-                        .setPositiveButton(new AlertDialogFragment.OnButtonClickListener() {
+                        .setPositiveButton(new IDialog.OnButtonClickListener<AlertDialogFragment>() {
                             @Override
-                            public void onClick(AlertDialogFragment fragment) {
+                            public void onClick(AlertDialogFragment fragment, int which) {
                                 fragment.start(new TestDialogFragment());
                             }
                         })
@@ -155,9 +156,9 @@ public class MainFragment extends BaseFragment {
 //                    .show(MainFragment.this);
 
             new SelectDialogFragment<String>()
-                    .setTitleCallback(new SelectDialogFragment.TitleCallback<String>() {
+                    .onBindTitle(new IDialog.ViewBinder<TextView, String>() {
                         @Override
-                        public void onGetTitle(TextView titleView, String item, int position) {
+                        public void onBindView(TextView titleView, String item, int position) {
                             titleView.setText(item);
                         }
                     })
@@ -179,21 +180,21 @@ public class MainFragment extends BaseFragment {
                 list.add(String.valueOf(System.currentTimeMillis() * Math.random()));
             }
             new SelectDialogFragment<String>()
-                    .setTitleCallback(new SelectDialogFragment.TitleCallback<String>() {
+                    .onBindTitle(new IDialog.ViewBinder<TextView, String>() {
                         @Override
-                        public void onGetTitle(TextView titleView, String item, int position) {
+                        public void onBindView(TextView titleView, String item, int position) {
                             titleView.setText(item);
                         }
                     })
-                    .setSubtitleCallback(new SelectDialogFragment.SubtitleCallback<String>() {
+                    .onBindSubtitle(new IDialog.ViewBinder<TextView, String>() {
                         @Override
-                        public void onGetSubtitle(TextView subtitleView, String item, int position) {
+                        public void onBindView(TextView subtitleView, String item, int position) {
                             subtitleView.setText(String.valueOf(position));
                         }
                     })
-                    .setOnSingleSelectListener(new SelectDialogFragment.OnSingleSelectListener<String>() {
+                    .onSingleSelect(new SelectDialogFragment.OnSingleSelectListener<String>() {
                         @Override
-                        public void onSelect(int position, String item) {
+                        public void onSelect(SelectDialogFragment<String> dialog, int position, String item) {
                             Toast.makeText(context, item, Toast.LENGTH_SHORT).show();
                         }
                     })
@@ -209,25 +210,27 @@ public class MainFragment extends BaseFragment {
                 list.add(String.valueOf(System.currentTimeMillis() * Math.random()));
             }
             new SelectDialogFragment<String>()
-
-                    .setTitleCallback(new SelectDialogFragment.TitleCallback<String>() {
+                    .onBindTitle(new IDialog.ViewBinder<TextView, String>() {
                         @Override
-                        public void onGetTitle(TextView titleView, String item, int position) {
+                        public void onBindView(TextView titleView, String item, int position) {
                             titleView.setText(item);
                         }
                     })
-                    .setSubtitleCallback(new SelectDialogFragment.SubtitleCallback<String>() {
+                    .onBindSubtitle(new IDialog.ViewBinder<TextView, String>() {
                         @Override
-                        public void onGetSubtitle(TextView subtitleView, String item, int position) {
+                        public void onBindView(TextView subtitleView, String item, int position) {
                             subtitleView.setText(String.valueOf(position));
                         }
                     })
-                    .setOnMultiSelectListener(new SelectDialogFragment.OnMultiSelectListener<String>() {
+                    .onMultiSelect(new SelectDialogFragment.OnMultiSelectListener<String>() {
                         @Override
-                        public void onSelect(List<Integer> selected, List<String> list) {
+                        public void onSelect(SelectDialogFragment<String> dialog, List<Integer> selected, List<String> list) {
                             Toast.makeText(context, Arrays.toString(list.toArray()), Toast.LENGTH_SHORT).show();
                         }
                     })
+                    .setAutoDismiss(false)
+                    .setNegativeButton((fragment, which) -> fragment.dismiss())
+                    .setPositiveButton((fragment, which) -> fragment.dismiss())
                     .setTitle("多选")
                     .setData(list)
                     .show(MainFragment.this);
@@ -276,7 +279,7 @@ public class MainFragment extends BaseFragment {
             new BottomDragListDialogFragment<String>()
                     .setTitle("BottomListDialogFragment")
                     .setItemLayoutId(R.layout._dialog_item_select)
-                    .setOnBindViewHolderListener(new IEasy.OnBindViewHolderListener<String>() {
+                    .onBindViewHolder(new IEasy.OnBindViewHolderListener<String>() {
                         @Override
                         public void onBindViewHolder(EasyViewHolder holder, List<String> list, int position, List<Object> payloads) {
                             holder.setText(R.id.title_view, list.get(position));

@@ -12,6 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.zpj.fragmentation.dialog.IDialog;
 import com.zpj.fragmentation.dialog.R;
 import com.zpj.fragmentation.dialog.utils.DialogThemeUtils;
 import com.zpj.utils.ContextUtils;
@@ -124,7 +125,7 @@ public class InputDialogFragment extends AlertDialogFragment implements View.OnC
     public void onClick(View v) {
         if (v == tv_cancel) {
             if (cancelListener != null) {
-                cancelListener.onClick(this);
+                cancelListener.onClick(this, IDialog.BUTTON_NEGATIVE);
             }
             if (autoDismiss) {
                 dismiss();
@@ -135,7 +136,7 @@ public class InputDialogFragment extends AlertDialogFragment implements View.OnC
                 return;
             }
             if (confirmListener != null) {
-                confirmListener.onClick(this);
+                confirmListener.onClick(this, IDialog.BUTTON_POSITIVE);
             }
             if (autoDismiss) {
                 dismiss();

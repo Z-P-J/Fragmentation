@@ -13,13 +13,16 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.zpj.fragmentation.dialog.IDialog;
 import com.zpj.fragmentation.dialog.R;
 import com.zpj.fragmentation.dialog.base.ContainerDialogFragment;
 import com.zpj.fragmentation.dialog.utils.DialogThemeUtils;
 import com.zpj.recyclerview.EasyRecyclerView;
 import com.zpj.recyclerview.IEasy;
+import com.zpj.utils.ContextUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ListDialogFragment<T> extends ContainerDialogFragment {
@@ -35,11 +38,15 @@ public class ListDialogFragment<T> extends ContainerDialogFragment {
     private View shadowUpView;
 
     protected boolean showButtons = false;
+    protected boolean autoDismiss = true;
 
     protected int bindItemLayoutId = R.layout._dialog_item_select;
 
     private IEasy.OnBindViewHolderListener<T> onBindViewHolderListener;
     protected IEasy.OnItemClickListener<T> onItemClickListener;
+
+    protected IDialog.OnButtonClickListener<ListDialogFragment<T>> negativeClickListener;
+    protected IDialog.OnButtonClickListener<ListDialogFragment<T>> positiveClickListener;
 
     protected int getItemRes() {
         return bindItemLayoutId;
@@ -138,16 +145,6 @@ public class ListDialogFragment<T> extends ContainerDialogFragment {
                         recyclerView.getViewTreeObserver()
                                 .removeOnPreDrawListener(this);
                         ListDialogFragment.super.doShowAnimation();
-//                        if (shadowBgAnimator != null) {
-//                            shadowBgAnimator.initAnimator();
-//                            shadowBgAnimator.animateShow();
-//                        }
-//
-//                        popupContentAnimator = getDialogAnimator((ViewGroup) getImplView().getChildAt(0));
-//                        if (popupContentAnimator != null) {
-//                            popupContentAnimator.initAnimator();
-//                            popupContentAnimator.animateShow();
-//                        }
                         postOnEnterAnimationEnd(() -> test(recyclerView));
                         return false;
                     }
@@ -184,11 +181,21 @@ public class ListDialogFragment<T> extends ContainerDialogFragment {
     }
 
     protected void onNegativeButtonClick(View view) {
-        dismiss();
+        if (negativeClickListener != null) {
+            negativeClickListener.onClick(this, IDialog.BUTTON_NEGATIVE);
+        }
+        if (autoDismiss) {
+            dismiss();
+        }
     }
 
     protected void onPositiveButtonClick(View view) {
-        dismiss();
+        if (positiveClickListener != null) {
+            positiveClickListener.onClick(this, IDialog.BUTTON_POSITIVE);
+        }
+        if (autoDismiss) {
+            dismiss();
+        }
     }
 
     public ListDialogFragment<T> setItemLayoutId(int itemLayoutId) {
@@ -198,6 +205,40 @@ public class ListDialogFragment<T> extends ContainerDialogFragment {
 
     public ListDialogFragment<T> setShowButtons(boolean showButtons) {
         this.showButtons = showButtons;
+        return this;
+    }
+
+    public ListDialogFragment<T> setPositiveButton(IDialog.OnButtonClickListener<ListDialogFragment<T>> listener) {
+        this.positiveClickListener = listener;
+        return this;
+    }
+
+    public ListDialogFragment<T> setPositiveButton(String btnStr, IDialog.OnButtonClickListener<ListDialogFragment<T>> listener) {
+        this.positiveText = btnStr;
+        this.positiveClickListener = listener;
+        return this;
+    }
+
+    public ListDialogFragment<T> setPositiveButton(int btnStrId, IDialog.OnButtonClickListener<ListDialogFragment<T>> listener) {
+        this.positiveText = ContextUtils.getApplicationContext().getString(btnStrId);
+        this.positiveClickListener = listener;
+        return this;
+    }
+
+    public ListDialogFragment<T> setNegativeButton(IDialog.OnButtonClickListener<ListDialogFragment<T>> listener) {
+        this.negativeClickListener = listener;
+        return this;
+    }
+
+    public ListDialogFragment<T> setNegativeButton(String btnStr, IDialog.OnButtonClickListener<ListDialogFragment<T>> listener) {
+        this.negativeText = btnStr;
+        this.negativeClickListener = listener;
+        return this;
+    }
+
+    public ListDialogFragment<T> setNegativeButton(int btnStrId, IDialog.OnButtonClickListener<ListDialogFragment<T>> listener) {
+        this.negativeText = ContextUtils.getApplicationContext().getString(btnStrId);
+        this.negativeClickListener = listener;
         return this;
     }
 
@@ -218,17 +259,25 @@ public class ListDialogFragment<T> extends ContainerDialogFragment {
 
     public ListDialogFragment<T> setData(List<T> data) {
         this.list.clear();
-        this.list.addAll(data);
-        return this;
+        return addData(data);
+    }
+
+    public ListDialogFragment<T> setData(T...datas) {
+        this.list.clear();
+        return addData(datas);
     }
 
     public ListDialogFragment<T> addData(List<T> data) {
-        this.list.clear();
         this.list.addAll(data);
         return this;
     }
 
-    public ListDialogFragment<T> setOnBindViewHolderListener(IEasy.OnBindViewHolderListener<T> onBindViewHolderListener) {
+    public ListDialogFragment<T> addData(T...datas) {
+        this.list.addAll(Arrays.asList(datas));
+        return this;
+    }
+
+    public ListDialogFragment<T> onBindViewHolder(IEasy.OnBindViewHolderListener<T> onBindViewHolderListener) {
         this.onBindViewHolderListener = onBindViewHolderListener;
         return this;
     }

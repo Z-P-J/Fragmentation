@@ -129,8 +129,7 @@ public abstract class ContainerDialogFragment extends BaseDialogFragment {
                 }
             });
         } else {
-//            ViewGroup centerPopupContainer = findViewById(R.id._dialog_card_view);
-            CardView cardView = findViewById(R.id.centerPopupContainer);
+            CardView cardView = findViewById(R.id._centerPopupContainer);
             if (getContentLayoutId() > 0) {
                 contentView = (ViewGroup) getLayoutInflater().inflate(getContentLayoutId(), cardView, false);
 
