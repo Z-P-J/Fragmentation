@@ -3,9 +3,7 @@ package com.zpj.fragmentation.dialog.animator;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.view.View;
 
-import com.zpj.fragmentation.dialog.config.DialogConfig;
 import com.zpj.fragmentation.dialog.enums.PopupAnimation;
-import com.zpj.utils.ScreenUtils;
 
 /**
  * Description: 平移动画
@@ -54,13 +52,13 @@ public class TranslateAlphaAnimator extends PopupAnimator {
     public void animateShow() {
         targetView.animate().translationX(defTranslationX).translationY(defTranslationY).alpha(1f)
                 .setInterpolator(new FastOutSlowInInterpolator())
-                .setDuration(DialogConfig.getAnimationDuration()).start();
+                .setDuration(getShowDuration()).start();
     }
 
     @Override
     public void animateDismiss() {
         targetView.animate().translationX(startTranslationX).translationY(startTranslationY).alpha(0f)
                 .setInterpolator(new FastOutSlowInInterpolator())
-                .setDuration(DialogConfig.getAnimationDuration()).start();
+                .setDuration(getDismissDuration()).start();
     }
 }

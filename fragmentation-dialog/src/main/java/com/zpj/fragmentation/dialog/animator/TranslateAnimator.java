@@ -3,7 +3,6 @@ package com.zpj.fragmentation.dialog.animator;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.view.View;
 
-import com.zpj.fragmentation.dialog.config.DialogConfig;
 import com.zpj.fragmentation.dialog.enums.PopupAnimation;
 
 /**
@@ -58,7 +57,7 @@ public class TranslateAnimator extends PopupAnimator {
     public void animateShow() {
         targetView.animate().translationX(initTranslationX).translationY(initTranslationY)
                 .setInterpolator(new FastOutSlowInInterpolator())
-                .setDuration(DialogConfig.getAnimationDuration()).start();
+                .setDuration(getShowDuration()).start();
     }
 
     @Override
@@ -81,6 +80,6 @@ public class TranslateAnimator extends PopupAnimator {
 
         targetView.animate().translationX(startTranslationX).translationY(startTranslationY)
                 .setInterpolator(new FastOutSlowInInterpolator())
-                .setDuration(DialogConfig.getAnimationDuration()).start();
+                .setDuration(getDismissDuration()).start();
     }
 }

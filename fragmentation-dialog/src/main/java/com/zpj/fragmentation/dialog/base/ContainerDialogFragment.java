@@ -75,6 +75,8 @@ public abstract class ContainerDialogFragment extends BaseDialogFragment {
 
         if (isDragDialog()) {
             SmartDragLayout bottomPopupContainer = (SmartDragLayout) getImplView();
+            bottomPopupContainer.setShowDuration(getShowAnimDuration());
+            bottomPopupContainer.setDismissDuration(getDismissAnimDuration());
             contentView = (ViewGroup) getLayoutInflater().inflate(getContentLayoutId(), null, false);
             if (getMarginTop() > 0 || getMarginBottom() > 0) {
                 FrameLayout flContainer = new FrameLayout(context);
@@ -109,7 +111,7 @@ public abstract class ContainerDialogFragment extends BaseDialogFragment {
             bottomPopupContainer.setOnCloseListener(new SmartDragLayout.OnCloseListener() {
                 @Override
                 public void onClose() {
-                    setFragmentAnimator(new DefaultNoAnimator());
+//                    setFragmentAnimator(new DefaultNoAnimator());
                     postOnEnterAnimationEnd(() -> {
                         ContainerDialogFragment.super.doDismissAnimation();
                         popThis();

@@ -4,7 +4,6 @@ import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 
-import com.zpj.fragmentation.dialog.config.DialogConfig;
 import com.zpj.fragmentation.dialog.enums.PopupAnimation;
 
 /**
@@ -87,7 +86,7 @@ public class ScaleAlphaAnimator extends PopupAnimator {
                 .scaleX(1f)
                 .scaleY(1f)
                 .alpha(1f)
-                .setDuration(DialogConfig.getAnimationDuration())
+                .setDuration(getShowDuration())
                 .setInterpolator(new OvershootInterpolator(tension))
                 .start();
     }
@@ -98,7 +97,7 @@ public class ScaleAlphaAnimator extends PopupAnimator {
                 .scaleX(0f)
                 .scaleY(0f)
                 .alpha(0f)
-                .setDuration(DialogConfig.getAnimationDuration())
+                .setDuration(getDismissDuration())
                 .setInterpolator(new FastOutSlowInInterpolator())
                 .start();
     }

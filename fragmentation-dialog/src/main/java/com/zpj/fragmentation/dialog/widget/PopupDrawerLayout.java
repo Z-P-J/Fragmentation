@@ -18,7 +18,6 @@ import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 
 import com.zpj.fragmentation.dialog.animator.ShadowBgAnimator;
-import com.zpj.fragmentation.dialog.config.DialogConfig;
 import com.zpj.fragmentation.dialog.enums.LayoutStatus;
 import com.zpj.fragmentation.dialog.enums.PopupPosition;
 import com.zpj.utils.StatusBarUtils;
@@ -270,7 +269,7 @@ public class PopupDrawerLayout extends FrameLayout {
                 paint = new Paint();
                 shadowRect = new Rect(0, 0, getMeasuredHeight(), StatusBarUtils.getStatusBarHeight(getContext()));
             }
-            paint.setColor((Integer) argbEvaluator.evaluate(fraction, defaultColor, DialogConfig.statusBarShadowColor));
+            paint.setColor((Integer) argbEvaluator.evaluate(fraction, defaultColor, Color.parseColor("#55000000")));
             canvas.drawRect(shadowRect, paint);
         }
     }

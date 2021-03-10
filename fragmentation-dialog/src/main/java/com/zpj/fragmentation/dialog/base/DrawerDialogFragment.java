@@ -54,7 +54,7 @@ public abstract class DrawerDialogFragment extends BaseDialogFragment {
             @Override
             public void onClose() {
 //                dismiss();
-                setFragmentAnimator(new DefaultNoAnimator());
+//                setFragmentAnimator(new DefaultNoAnimator());
                 postOnEnterAnimationEnd(() -> {
                     popThis();
                     onDismiss();

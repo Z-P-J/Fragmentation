@@ -6,7 +6,6 @@ import android.animation.ValueAnimator;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.view.View;
 
-import com.zpj.fragmentation.dialog.config.DialogConfig;
 import com.zpj.fragmentation.dialog.enums.PopupAnimation;
 
 /**
@@ -121,7 +120,7 @@ public class ScrollScaleAnimator extends PopupAnimator {
 //                }
             }
         });
-        animator.setDuration(DialogConfig.getAnimationDuration()).setInterpolator(new FastOutSlowInInterpolator());
+        animator.setDuration(getShowDuration()).setInterpolator(new FastOutSlowInInterpolator());
         animator.start();
     }
 
@@ -142,7 +141,7 @@ public class ScrollScaleAnimator extends PopupAnimator {
 //                if(targetView.getBackground()!=null)targetView.getBackground().setAlpha((int) (fraction*255));
             }
         });
-        animator.setDuration(DialogConfig.getAnimationDuration())
+        animator.setDuration(getDismissDuration())
                 .setInterpolator(new FastOutSlowInInterpolator());
         animator.start();
     }

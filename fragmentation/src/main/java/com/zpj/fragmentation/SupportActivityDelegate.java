@@ -242,12 +242,13 @@ public class SupportActivityDelegate {
      */
     public void start(ISupportFragment toFragment, @ISupportFragment.LaunchMode int launchMode) {
         int type;
-        if (toFragment instanceof AbstractDialogFragment) {
+        ISupportFragment topFragment = getTopFragment();
+        if (toFragment instanceof AbstractDialogFragment || topFragment instanceof AbstractDialogFragment) {
             type = TransactionDelegate.TYPE_ADD_WITHOUT_HIDE;
         } else {
             type = TransactionDelegate.TYPE_ADD;
         }
-        mTransactionDelegate.dispatchStartTransaction(getSupportFragmentManager(), getTopFragment(), toFragment, 0, launchMode, type);
+        mTransactionDelegate.dispatchStartTransaction(getSupportFragmentManager(), topFragment, toFragment, 0, launchMode, type);
     }
 
     /**
@@ -255,12 +256,13 @@ public class SupportActivityDelegate {
      */
     public void startForResult(ISupportFragment toFragment, int requestCode) {
         int type;
-        if (toFragment instanceof AbstractDialogFragment) {
+        ISupportFragment topFragment = getTopFragment();
+        if (toFragment instanceof AbstractDialogFragment || topFragment instanceof AbstractDialogFragment) {
             type = TransactionDelegate.TYPE_ADD_RESULT_WITHOUT_HIDE;
         } else {
             type = TransactionDelegate.TYPE_ADD_RESULT;
         }
-        mTransactionDelegate.dispatchStartTransaction(getSupportFragmentManager(), getTopFragment(), toFragment, requestCode, ISupportFragment.STANDARD, TransactionDelegate.TYPE_ADD_RESULT);
+        mTransactionDelegate.dispatchStartTransaction(getSupportFragmentManager(), topFragment, toFragment, requestCode, ISupportFragment.STANDARD, type);
     }
 
     /**

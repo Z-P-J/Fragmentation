@@ -13,7 +13,6 @@ import android.widget.FrameLayout;
 import android.widget.OverScroller;
 
 import com.zpj.fragmentation.dialog.animator.ShadowBgAnimator;
-import com.zpj.fragmentation.dialog.config.DialogConfig;
 import com.zpj.fragmentation.dialog.enums.LayoutStatus;
 import com.zpj.utils.ViewUtils;
 
@@ -22,6 +21,7 @@ import com.zpj.utils.ViewUtils;
  * Create by dance, at 2018/12/23
  */
 public class SmartDragLayout extends FrameLayout implements NestedScrollingParent {
+
     private static final String TAG = "SmartDragLayout";
     private View child;
     private View contentView;
@@ -34,6 +34,20 @@ public class SmartDragLayout extends FrameLayout implements NestedScrollingParen
     boolean hasShadowBg = true;
     boolean isUserClose = false;
     LayoutStatus status = LayoutStatus.Close;
+
+    protected long showDuration = 360;
+    protected long dismissDuration = 360;
+
+    public void setShowDuration(long showDuration) {
+        this.showDuration = showDuration;
+        bgAnimator.setShowDuration(showDuration);
+    }
+
+    public void setDismissDuration(long dismissDuration) {
+        this.dismissDuration = dismissDuration;
+        bgAnimator.setDismissDuration(dismissDuration);
+    }
+
     public SmartDragLayout(Context context) {
         this(context, null);
     }
@@ -147,7 +161,7 @@ public class SmartDragLayout extends FrameLayout implements NestedScrollingParen
         if (enableDrag) {
             int threshold = isScrollUp ? (maxY - minY) / 3 : (maxY - minY) * 2 / 3;
             int dy = (getScrollY() > threshold ? maxY : minY) - getScrollY();
-            scroller.startScroll(getScrollX(), getScrollY(), 0, dy, DialogConfig.getAnimationDuration());
+            scroller.startScroll(getScrollX(), getScrollY(), 0, dy, (int) (dy > 0 ? showDuration : dismissDuration));
             ViewCompat.postInvalidateOnAnimation(this);
         }
     }
@@ -196,7 +210,7 @@ public class SmartDragLayout extends FrameLayout implements NestedScrollingParen
         post(new Runnable() {
             @Override
             public void run() {
-                smoothScroll(maxY - getScrollY());
+                smoothScroll(maxY - getScrollY(), showDuration);
             }
         });
     }
@@ -207,16 +221,16 @@ public class SmartDragLayout extends FrameLayout implements NestedScrollingParen
         post(new Runnable() {
             @Override
             public void run() {
-                smoothScroll(minY - getScrollY());
+                smoothScroll(minY - getScrollY(), dismissDuration);
             }
         });
     }
 
-    public void smoothScroll(final int dy) {
+    public void smoothScroll(final int dy, final long duration) {
         post(new Runnable() {
             @Override
             public void run() {
-                scroller.startScroll(getScrollX(), getScrollY(), 0, dy, DialogConfig.getAnimationDuration());
+                scroller.startScroll(getScrollX(), getScrollY(), 0, dy, (int) duration);
                 ViewCompat.postInvalidateOnAnimation(SmartDragLayout.this);
             }
         });

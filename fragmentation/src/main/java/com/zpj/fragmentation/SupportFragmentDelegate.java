@@ -151,6 +151,7 @@ public class SupportFragmentDelegate {
             }
             return mAnimHelper.getNoneAnim();
         }
+        Log.d(TAG, "fragment=" + mSupportF);
         Log.d(TAG, "onCreateAnimation transit=" + transit + " enter=" + enter + " mRootStatus=" + mRootStatus);
         if (transit == FragmentTransaction.TRANSIT_FRAGMENT_OPEN) {
             if (enter) {
@@ -497,7 +498,7 @@ public class SupportFragmentDelegate {
      */
     public void start(final ISupportFragment toFragment, @ISupportFragment.LaunchMode int launchMode) {
         int type;
-        if (toFragment instanceof AbstractDialogFragment) {
+        if (toFragment instanceof AbstractDialogFragment || mSupportF instanceof AbstractDialogFragment) {
             type = TransactionDelegate.TYPE_ADD_WITHOUT_HIDE;
         } else {
             type = TransactionDelegate.TYPE_ADD;
@@ -511,7 +512,7 @@ public class SupportFragmentDelegate {
      */
     public void startForResult(ISupportFragment toFragment, int requestCode) {
         int type;
-        if (toFragment instanceof AbstractDialogFragment) {
+        if (toFragment instanceof AbstractDialogFragment || mSupportF instanceof AbstractDialogFragment) {
             type = TransactionDelegate.TYPE_ADD_RESULT_WITHOUT_HIDE;
         } else {
             type = TransactionDelegate.TYPE_ADD_RESULT;

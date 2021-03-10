@@ -10,10 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.zpj.fragmentation.SupportFragment;
-import com.zpj.fragmentation.anim.DialogFragmentAnimator;
+import com.zpj.fragmentation.anim.DefaultNoAnimator;
 import com.zpj.fragmentation.anim.FragmentAnimator;
 
 public abstract class AbstractDialogFragment extends SupportFragment {
+
+    protected long showAnimDuration = 360;
+    protected long dismissAnimDuration = 360;
 
     @LayoutRes
     protected abstract int getLayoutId();
@@ -35,25 +38,45 @@ public abstract class AbstractDialogFragment extends SupportFragment {
         return view;
     }
 
+    @Deprecated
+    @Override
+    public final void setFragmentAnimator(FragmentAnimator fragmentAnimator) {
+
+    }
+
     @Override
     public final FragmentAnimator getFragmentAnimator() {
-        return new DialogFragmentAnimator();
+        return onCreateFragmentAnimator();
     }
 
     @Override
     public final FragmentAnimator onCreateFragmentAnimator() {
-        return new DialogFragmentAnimator();
+        return new DefaultNoAnimator();
     }
 
     @Override
-    public void onSupportVisible() {
-        super.onSupportVisible();
+    public final void onEnterAnimationEnd(Bundle savedInstanceState) {
+        getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                onShowAnimationEnd(savedInstanceState);
+            }
+        }, getShowAnimDuration());
     }
 
-    @Override
-    public void onSupportInvisible() {
-        super.onSupportInvisible();
+    public void onShowAnimationEnd(Bundle savedInstanceState) {
+        super.onEnterAnimationEnd(savedInstanceState);
     }
+
+//    @Override
+//    public void onSupportVisible() {
+//        super.onSupportVisible();
+//    }
+//
+//    @Override
+//    public void onSupportInvisible() {
+//        super.onSupportInvisible();
+//    }
 
     @Override
     public final boolean onBackPressedSupport() {
@@ -62,6 +85,20 @@ public abstract class AbstractDialogFragment extends SupportFragment {
         }
         dismiss();
         return true;
+    }
+
+    public long getShowAnimDuration() {
+        if (showAnimDuration < 0) {
+            return 0;
+        }
+        return showAnimDuration;
+    }
+
+    public long getDismissAnimDuration() {
+        if (dismissAnimDuration < 0) {
+            return 0;
+        }
+        return dismissAnimDuration;
     }
 
     public abstract void dismiss();

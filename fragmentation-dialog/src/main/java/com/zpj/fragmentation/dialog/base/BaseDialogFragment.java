@@ -17,7 +17,6 @@ import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.zpj.fragmentation.ISupportFragment;
 import com.zpj.fragmentation.SupportActivity;
 import com.zpj.fragmentation.SupportFragment;
 import com.zpj.fragmentation.dialog.AbstractDialogFragment;
@@ -245,14 +244,14 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
 
     public void doShowAnimation() {
         popupContentAnimator = getDialogAnimator(implView);
-        if (shadowBgAnimator != null) {
-            shadowBgAnimator.initAnimator();
-            shadowBgAnimator.animateShow();
-        }
-
         if (popupContentAnimator != null) {
             popupContentAnimator.initAnimator();
             popupContentAnimator.animateShow();
+        }
+
+        if (shadowBgAnimator != null) {
+            shadowBgAnimator.initAnimator();
+            shadowBgAnimator.animateShow();
         }
     }
 
@@ -265,83 +264,22 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
         }
     }
 
-//    @Override
-//    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
-//        Toast.makeText(context, "onCreateAnimation enter=" + enter + " ", Toast.LENGTH_SHORT).show();
-//        if (!enter) {
-//            doDismissAnimation();
-//        }
-//        return super.onCreateAnimation(transit, enter, nextAnim);
-//    }
-
     public void dismiss() {
         postOnEnterAnimationEnd(() -> {
             if (!isDismissing) {
                 isDismissing = true;
                 doDismissAnimation();
-                BaseDialogFragment.super.popThis();
+
                 onDismiss();
+                getHandler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        BaseDialogFragment.super.popThis();
+                    }
+                }, getDismissAnimDuration());
             }
         });
-
-//        if (!isDismissing) {
-//            isDismissing = true;
-//            doDismissAnimation();
-//            super.popThis();
-//            onDismiss();
-////            postDelayed(new Runnable() {
-////                @Override
-////                public void run() {
-////                    onDismiss();
-////                }
-////            }, 250);
-//
-////            postDelayed(() -> {
-////                BaseDialogFragment.super.popThis();
-////                onDismiss();
-////            }, XPopup.getAnimationDuration());
-//        }
     }
-
-//    public void dismissWithStart(ISupportFragment fragment) {
-//        if (!isDismissing) {
-//            isDismissing = true;
-////            doDismissAnimation();
-//            if (implView != null) {
-//
-//                implView.animate()
-//                        .alpha(0)
-//                        .setDuration(90)
-//                        .setInterpolator(new DecelerateInterpolator(2f))
-//                        .start();
-//            }
-//            if (shadowBgAnimator != null) {
-//                shadowBgAnimator.animateDismiss();
-//            }
-//            super.startWithPop(fragment);
-//            onDismiss();
-//        }
-//    }
-
-//    public void showFromHide() {
-//
-//    }
-//
-//    public void hide() {
-//        doDismissAnimation();
-//        FragmentManager manager = getFragmentManager();
-//        if (manager != null) {
-//            manager.beginTransaction()
-//                    .hide(this)
-//                    .commit();
-//        }
-//        postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                onHide();
-//            }
-//        }, 250);
-//    }
 
     protected void onDismiss() {
 //        isDismissing = false;
@@ -392,6 +330,16 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
 
     protected ViewGroup getImplView() {
         return implView;
+    }
+
+    public BaseDialogFragment setShowAnimDuration(long duration) {
+        this.showAnimDuration = duration;
+        return this;
+    }
+
+    public BaseDialogFragment setDismissAnimDuration(long duration) {
+        this.dismissAnimDuration = duration;
+        return this;
     }
 
     public BaseDialogFragment setDialogBackground(Drawable bgDrawable) {

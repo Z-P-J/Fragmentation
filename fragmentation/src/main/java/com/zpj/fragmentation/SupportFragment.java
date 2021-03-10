@@ -45,6 +45,11 @@ public class SupportFragment extends Fragment implements ISupportFragment {
 //        mEnterAnimationEndActionQueue = new BlockActionQueue(handler);
 //    }
 
+
+    public Handler getHandler() {
+        return handler;
+    }
+
     @Override
     public SupportFragmentDelegate getSupportDelegate() {
         return mDelegate;

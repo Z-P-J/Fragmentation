@@ -22,7 +22,6 @@ public class TestDialogFragment extends CardDialogFragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, "TestDialogFragment", Toast.LENGTH_SHORT).show();
-//                pop();
                 start(new MainFragment());
             }
         });

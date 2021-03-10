@@ -20,7 +20,7 @@ android {
 //        artifactId = 'Fragmentation'
 //        userOrg = 'z-p-j'
 //        groupId = 'com.zpj.widget'
-//        publishVersion = '1.1.0'
+//        publishVersion = '1.1.1'
 //        desc = 'A powerful library that manage Fragment for Android.'
 //        website = 'https://github.com/Z-P-J/Fragmentation'
 //        licences = ['Apache-2.0']

@@ -48,8 +48,6 @@ import java.util.List;
 public class ImageViewerDialogFragment<T> extends BaseDialogFragment
         implements OnDragChangeListener {
 
-    protected static final int DEFAULT_ANIM_DURATION = 360;
-
 //    private final BlockActionQueue actionQueue = new BlockActionQueue();
 
     protected FrameLayout container;
@@ -169,7 +167,7 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
 //            doAfterShow();
 //            if (customView != null)
 //                customView.setAlpha(1f);
-            animateShadowBg(bgColor, new UpdateListener() {
+            animateShadowBg(bgColor, getShowAnimDuration(), new UpdateListener() {
                 @Override
                 public void onUpdate(float value) {
                     pager.setScaleX(value);
@@ -199,7 +197,7 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
                     itemView.showPlaceholder(srcView.getDrawable());
                 }
                 TransitionManager.beginDelayedTransition((ViewGroup) snapshotView.getParent(), new TransitionSet()
-                        .setDuration(DEFAULT_ANIM_DURATION)
+                        .setDuration(getShowAnimDuration())
                         .addTransition(new ChangeBounds())
                         .addTransition(new ChangeTransform())
                         .addTransition(new ChangeImageTransform())
@@ -224,7 +222,7 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
                 setWidthHeight(snapshotView, photoViewContainer.getWidth(), photoViewContainer.getHeight());
 
                 // do shadow anim.
-                animateShadowBg(bgColor, new UpdateListener() {
+                animateShadowBg(bgColor, getShowAnimDuration(), new UpdateListener() {
                     @Override
                     public void onUpdate(float value) {
                         if (customView != null) {
@@ -283,7 +281,7 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
         void onEnd();
     }
 
-    private void animateShadowBg(final int endColor, UpdateListener listener) {
+    private void animateShadowBg(final int endColor, long duration, UpdateListener listener) {
         int start = backgroundColor;
         ValueAnimator animator = ValueAnimator.ofFloat(0, 1f);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -304,7 +302,7 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
             }
         });
 //        XPopup.getAnimationDuration()
-        animator.setDuration(DEFAULT_ANIM_DURATION)
+        animator.setDuration(duration)
                 .setInterpolator(new LinearInterpolator());
         animator.start();
     }
@@ -337,7 +335,7 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
             } else {
                 startAlpha = customView.getAlpha();
             }
-            animateShadowBg(Color.TRANSPARENT, new UpdateListener() {
+            animateShadowBg(Color.TRANSPARENT, getDismissAnimDuration(), new UpdateListener() {
                 @Override
                 public void onUpdate(float value) {
                     pager.setScaleX((1 - value) * startScaleX);
@@ -367,7 +365,7 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
         photoViewContainer.isReleasing = true;
         Log.d("ImageViewerPopup", "snapshotView.getImageMatrix()=" + snapshotView.getImageMatrix());
         TransitionManager.beginDelayedTransition((ViewGroup) snapshotView.getParent(), new TransitionSet()
-                .setDuration(DEFAULT_ANIM_DURATION)
+                .setDuration(getDismissAnimDuration())
                 .addTransition(new ChangeBounds())
                 .addTransition(new ChangeTransform())
                 .addTransition(new ChangeImageTransform())
@@ -396,7 +394,7 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
         setWidthHeight(snapshotView, rect.width(), rect.height());
 
         // do shadow anim.
-        animateShadowBg(Color.TRANSPARENT, new UpdateListener() {
+        animateShadowBg(Color.TRANSPARENT, getDismissAnimDuration(), new UpdateListener() {
             @Override
             public void onUpdate(float value) {
                 if (customView != null) {

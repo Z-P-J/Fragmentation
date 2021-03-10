@@ -7,8 +7,6 @@ import android.graphics.Color;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.view.View;
 
-import com.zpj.fragmentation.dialog.config.DialogConfig;
-
 /**
  * Description: 背景Shadow动画器，负责执行半透明的渐入渐出动画
  * Create by dance, at 2018/12/9
@@ -43,7 +41,7 @@ public class ShadowBgAnimator extends PopupAnimator {
             }
         });
         animator.setInterpolator(new FastOutSlowInInterpolator());
-        animator.setDuration(isZeroDuration ? 0 : DialogConfig.getAnimationDuration()).start();
+        animator.setDuration(isZeroDuration ? 0 : getShowDuration()).start();
     }
 
     @Override
@@ -56,7 +54,7 @@ public class ShadowBgAnimator extends PopupAnimator {
             }
         });
         animator.setInterpolator(new FastOutSlowInInterpolator());
-        animator.setDuration(isZeroDuration ? 0 : DialogConfig.getAnimationDuration()).start();
+        animator.setDuration(isZeroDuration ? 0 : getDismissDuration()).start();
     }
 
     public void animateDismiss(Runnable runnable) {
@@ -89,7 +87,7 @@ public class ShadowBgAnimator extends PopupAnimator {
             }
         });
         animator.setInterpolator(new FastOutSlowInInterpolator());
-        animator.setDuration(isZeroDuration ? 0 : DialogConfig.getAnimationDuration()).start();
+        animator.setDuration(isZeroDuration ? 0 : getDismissDuration()).start();
     }
 
     public int calculateBgColor(float fraction) {
