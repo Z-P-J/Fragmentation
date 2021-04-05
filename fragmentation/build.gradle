@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
-//apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'com.github.dcendents.android-maven'
+group='com.github.Z-P-J'
 
 android {
     compileSdkVersion 28
@@ -7,6 +8,7 @@ android {
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 28
+        versionName "1.1.2"
 
         consumerProguardFiles 'proguard-rules.pro'
     }
@@ -15,16 +17,6 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
-//    publish {
-//        artifactId = 'Fragmentation'
-//        userOrg = 'z-p-j'
-//        groupId = 'com.zpj.widget'
-//        publishVersion = '1.1.1'
-//        desc = 'A powerful library that manage Fragment for Android.'
-//        website = 'https://github.com/Z-P-J/Fragmentation'
-//        licences = ['Apache-2.0']
-//    }
 
 }
 

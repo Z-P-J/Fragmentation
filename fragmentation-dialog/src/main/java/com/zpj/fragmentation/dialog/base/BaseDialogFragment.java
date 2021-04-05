@@ -194,7 +194,7 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
 
     @Override
     public void onDestroy() {
-        if (preFragment != null) {
+        if (preFragment != null && preFragment == getPreFragment()) {
             preFragment.onResume();
         }
         this.isDismissing = false;
@@ -203,7 +203,7 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
 
     @Override
     protected boolean onBackPressed() {
-        return false;
+        return !cancelable;
     }
 
     @Override
