@@ -14,14 +14,14 @@ import com.zpj.fragmentation.anim.DefaultVerticalAnimator;
 import com.zpj.fragmentation.anim.FragmentAnimator;
 import com.zpj.fragmentation.debug.DebugStackDelegate;
 import com.zpj.fragmentation.dialog.AbstractDialogFragment;
-import com.zpj.fragmentation.queue.Action;
 
 /*
 * Modified by Z-P-J
 * */
 public class SupportActivityDelegate {
-    private ISupportActivity mSupport;
-    private FragmentActivity mActivity;
+
+    private final ISupportActivity mSupport;
+    private final FragmentActivity mActivity;
 
     boolean mPopMultipleNoAnim = false;
     boolean mFragmentClickable = true;
@@ -29,7 +29,7 @@ public class SupportActivityDelegate {
     private TransactionDelegate mTransactionDelegate;
     private FragmentAnimator mFragmentAnimator;
     private int mDefaultFragmentBackground = 0;
-    private DebugStackDelegate mDebugStackDelegate;
+    private final DebugStackDelegate mDebugStackDelegate;
 
     public SupportActivityDelegate(ISupportActivity support) {
         if (!(support instanceof FragmentActivity))
@@ -153,20 +153,21 @@ public class SupportActivityDelegate {
      * 不建议复写该方法,请使用 {@link #onBackPressedSupport} 代替
      */
     public void onBackPressed() {
-        mTransactionDelegate.mActionQueue.enqueue(new Action(Action.ACTION_BACK) {
-            @Override
-            public void run() {
-                if (!mFragmentClickable) {
-                    mFragmentClickable = true;
-                }
+//        mTransactionDelegate.mActionQueue.enqueue(new Action(Action.ACTION_BACK) {
+//            @Override
+//            public void run() {
+//
+//            }
+//        });
+        if (!mFragmentClickable) {
+            mFragmentClickable = true;
+        }
 
-                // 获取activeFragment:即从栈顶开始 状态为show的那个Fragment
-                ISupportFragment activeFragment = SupportHelper.getActiveFragment(getSupportFragmentManager());
-                if (mTransactionDelegate.dispatchBackPressedEvent(activeFragment)) return;
+        // 获取activeFragment:即从栈顶开始 状态为show的那个Fragment
+        ISupportFragment activeFragment = SupportHelper.getActiveFragment(getSupportFragmentManager());
+        if (mTransactionDelegate.dispatchBackPressedEvent(activeFragment)) return;
 
-                mSupport.onBackPressedSupport();
-            }
-        });
+        mSupport.onBackPressedSupport();
     }
 
     /**

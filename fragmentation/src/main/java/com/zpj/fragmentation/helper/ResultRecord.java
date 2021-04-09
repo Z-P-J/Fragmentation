@@ -1,4 +1,4 @@
-package com.zpj.fragmentation.helper.internal;
+package com.zpj.fragmentation.helper;
 
 import android.os.Bundle;
 import android.os.Parcel;
@@ -10,6 +10,7 @@ import android.os.Parcelable;
  * Created by YoKeyword on 16/6/2.
  */
 public final class ResultRecord implements Parcelable {
+
     public int requestCode;
     public int resultCode = 0;
     public Bundle resultBundle;

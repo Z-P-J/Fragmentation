@@ -9,7 +9,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
 
-import com.zpj.fragmentation.helper.internal.TransactionRecord;
+import com.zpj.fragmentation.helper.TransactionRecord;
 
 import java.util.ArrayList;
 

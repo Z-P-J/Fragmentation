@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.animation.Animation;
 
 import com.zpj.fragmentation.anim.FragmentAnimator;
-import com.zpj.fragmentation.queue.BlockActionQueue;
+import com.zpj.fragmentation.helper.BlockActionQueue;
 import com.zpj.utils.StatusBarUtils;
 
 /**
@@ -29,8 +29,6 @@ public class SupportFragment extends Fragment implements ISupportFragment {
     protected final SupportFragmentDelegate mDelegate = new SupportFragmentDelegate(this);
 
     private final Handler handler = new Handler(Looper.getMainLooper());
-    //    protected final BlockActionQueue mSupportVisibleActionQueue = new BlockActionQueue(handler);
-//    protected final BlockActionQueue mEnterAnimationEndActionQueue = new BlockActionQueue(handler);
     protected final BlockActionQueue mSupportVisibleActionQueue = new BlockActionQueue(handler);
     protected final BlockActionQueue mEnterAnimationEndActionQueue = new BlockActionQueue(handler);
 
@@ -38,12 +36,6 @@ public class SupportFragment extends Fragment implements ISupportFragment {
     protected SupportActivity _mActivity;
 
     protected View view;
-
-//    public SupportFragment() {
-//
-//        mSupportVisibleActionQueue = new BlockActionQueue(handler);
-//        mEnterAnimationEndActionQueue = new BlockActionQueue(handler);
-//    }
 
 
     public Handler getHandler() {

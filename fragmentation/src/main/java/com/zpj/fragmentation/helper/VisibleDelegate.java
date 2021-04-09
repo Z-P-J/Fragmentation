@@ -1,4 +1,4 @@
-package com.zpj.fragmentation.helper.internal;
+package com.zpj.fragmentation.helper;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +17,7 @@ import java.util.List;
  */
 
 public class VisibleDelegate {
+
     private static final String FRAGMENTATION_STATE_SAVE_IS_INVISIBLE_WHEN_LEAVE = "fragmentation_invisible_when_leave";
     private static final String FRAGMENTATION_STATE_SAVE_COMPAT_REPLACE = "fragmentation_compat_replace";
 
@@ -31,8 +32,8 @@ public class VisibleDelegate {
     private Handler mHandler;
     private Bundle mSaveInstanceState;
 
-    private ISupportFragment mSupportF;
-    private Fragment mFragment;
+    private final ISupportFragment mSupportF;
+    private final Fragment mFragment;
 
     public VisibleDelegate(ISupportFragment fragment) {
         this.mSupportF = fragment;

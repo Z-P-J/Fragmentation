@@ -1,4 +1,4 @@
-package com.zpj.fragmentation.helper.internal;
+package com.zpj.fragmentation.helper;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
@@ -13,10 +13,11 @@ import com.zpj.fragmentation.anim.FragmentAnimator;
  * @Hide Created by YoKeyword on 16/7/26.
  */
 public final class AnimatorHelper {
+
     private Animation noneAnim, noneAnimFixed;
     public Animation enterAnim, exitAnim, popEnterAnim, popExitAnim;
 
-    private Context context;
+    private final Context context;
     private FragmentAnimator fragmentAnimator;
 
     public AnimatorHelper(Context context, FragmentAnimator fragmentAnimator) {

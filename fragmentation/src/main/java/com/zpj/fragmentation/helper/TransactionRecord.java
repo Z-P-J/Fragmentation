@@ -1,4 +1,4 @@
-package com.zpj.fragmentation.helper.internal;
+package com.zpj.fragmentation.helper;
 
 import android.view.View;
 
@@ -8,6 +8,7 @@ import java.util.ArrayList;
  * @hide Created by YoKey on 16/11/25.
  */
 public final class TransactionRecord {
+
     public String tag;
     public int targetFragmentEnter = Integer.MIN_VALUE;
     public int currentFragmentPopExit = Integer.MIN_VALUE;
@@ -25,4 +26,5 @@ public final class TransactionRecord {
             this.sharedName = sharedName;
         }
     }
+
 }

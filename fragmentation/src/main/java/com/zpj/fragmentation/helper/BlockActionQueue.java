@@ -1,4 +1,4 @@
-package com.zpj.fragmentation.queue;
+package com.zpj.fragmentation.helper;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -23,8 +23,12 @@ public class BlockActionQueue {
 
     private final Handler mHandler;
 
-    public BlockActionQueue() {
-        this(new Handler(Looper.getMainLooper()));
+    public abstract static class Action {
+
+        public long delay = 0;
+
+        public abstract void run();
+
     }
 
     public BlockActionQueue(Handler handler) {
@@ -70,15 +74,7 @@ public class BlockActionQueue {
     }
 
     public void enqueue(final Action action) {
-        if (isThrottleBACK(action)) return;
-
-        if (start.get() && action.action == Action.ACTION_LOAD && mQueue.isEmpty()
-                && Thread.currentThread() == Looper.getMainLooper().getThread()) {
-            action.run();
-            return;
-        }
         mHandler.post(() -> {
-//            enqueueAction(action);
             mQueue.add(action);
             Log.d(TAG, "size=" + mQueue.size());
             if (mQueue.size() == 1) {
@@ -87,49 +83,15 @@ public class BlockActionQueue {
         });
     }
 
-//    private void enqueueAction(Action action) {
-//        mQueue.add(action);
-//        Log.d(TAG, "size=" + mQueue.size());
-//        if (mQueue.size() == 1) {
-//            handleAction();
-//        }
-//    }
-
     private void handleAction() {
         if (!start.get() || mQueue.isEmpty()) return;
-        Log.d(TAG, "handleAction");
 
         final Action action = mQueue.peek();
         mHandler.postDelayed(() -> {
             action.run();
-//            executeNextAction(action);
-            if (action.action == Action.ACTION_POP) {
-                ISupportFragment top = SupportHelper.getBackStackTopFragment(action.fragmentManager);
-                action.duration = top == null ? Action.DEFAULT_POP_TIME : top.getSupportDelegate().getExitAnimDuration();
-            }
             mQueue.poll();
             handleAction();
         }, action.delay);
     }
 
-//    private void executeNextAction(Action action) {
-//        if (action.action == Action.ACTION_POP) {
-//            ISupportFragment top = SupportHelper.getBackStackTopFragment(action.fragmentManager);
-//            action.duration = top == null ? Action.DEFAULT_POP_TIME : top.getSupportDelegate().getExitAnimDuration();
-//        }
-//        RxHandler.post(() -> {
-//            mQueue.poll();
-//            handleAction();
-//        }, action.duration);
-//    }
-
-    private boolean isThrottleBACK(Action action) {
-        if (action.action == Action.ACTION_BACK) {
-            Action head = mQueue.peek();
-            if (head != null && head.action == Action.ACTION_POP) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

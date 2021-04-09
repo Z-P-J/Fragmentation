@@ -18,10 +18,10 @@ import android.view.animation.AnimationUtils;
 
 import com.zpj.fragmentation.anim.FragmentAnimator;
 import com.zpj.fragmentation.dialog.AbstractDialogFragment;
-import com.zpj.fragmentation.helper.internal.AnimatorHelper;
-import com.zpj.fragmentation.helper.internal.ResultRecord;
-import com.zpj.fragmentation.helper.internal.TransactionRecord;
-import com.zpj.fragmentation.helper.internal.VisibleDelegate;
+import com.zpj.fragmentation.helper.AnimatorHelper;
+import com.zpj.fragmentation.helper.ResultRecord;
+import com.zpj.fragmentation.helper.TransactionRecord;
+import com.zpj.fragmentation.helper.VisibleDelegate;
 
 /*
 * Modified by Z-P-J
