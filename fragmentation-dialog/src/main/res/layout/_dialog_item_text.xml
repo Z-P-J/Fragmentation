@@ -2,12 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minWidth="160dp"
     android:background="?android:attr/selectableItemBackground"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingTop="12dp"
-    android:paddingBottom="12dp">
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
 
     <ImageView
         android:id="@+id/iv_image"
@@ -19,9 +18,8 @@
 
     <TextView
         android:id="@+id/tv_text"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:ellipsize="end"
         android:lines="1"
         android:textSize="14sp"
@@ -30,13 +28,13 @@
         android:text="text"
         />
 
-    <com.zpj.fragmentation.dialog.widget.CheckView
-        android:id="@+id/check_view"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_gravity="end"
-        android:visibility="invisible"
-        android:layout_marginEnd="16dp"
-        />
+<!--    <com.zpj.fragmentation.dialog.widget.CheckView-->
+<!--        android:id="@+id/check_view"-->
+<!--        android:layout_width="24dp"-->
+<!--        android:layout_height="24dp"-->
+<!--        android:layout_gravity="end"-->
+<!--        android:visibility="invisible"-->
+<!--        android:layout_marginEnd="16dp"-->
+<!--        />-->
 
 </LinearLayout>

@@ -20,6 +20,4 @@ public interface ISupport<T> {
 
     void setFragmentAnimator(FragmentAnimator fragmentAnimator);
 
-//    boolean onBackPressedSupport();
-
 }

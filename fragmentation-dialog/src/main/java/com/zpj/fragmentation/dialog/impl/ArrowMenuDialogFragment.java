@@ -1,42 +1,28 @@
 package com.zpj.fragmentation.dialog.impl;
 
 import android.annotation.SuppressLint;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.PorterDuff;
-import android.graphics.Rect;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
 import android.support.annotation.ArrayRes;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.view.menu.MenuBuilder;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.lihang.ShadowLayout;
-import com.zpj.fragmentation.dialog.R;
 import com.zpj.fragmentation.dialog.base.ArrowDialogFragment;
 import com.zpj.fragmentation.dialog.model.OptionMenu;
 import com.zpj.fragmentation.dialog.utils.DialogThemeUtils;
 import com.zpj.fragmentation.dialog.widget.OptionMenuView;
 import com.zpj.fragmentation.dialog.widget.PopHorizontalScrollView;
 import com.zpj.fragmentation.dialog.widget.PopVerticalScrollView;
-import com.zpj.utils.ColorUtils;
 import com.zpj.utils.ContextUtils;
 import com.zpj.utils.ScreenUtils;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArrowMenuDialogFragment extends ArrowDialogFragment {
+public class ArrowMenuDialogFragment extends ArrowDialogFragment<ArrowMenuDialogFragment> {
 
     private int menuRes = 0;
 
@@ -46,7 +32,13 @@ public class ArrowMenuDialogFragment extends ArrowDialogFragment {
 
     private OnItemClickListener onItemClickListener;
 
+    private int minWidth;
+
     private boolean showDivider = true;
+
+    public interface OnItemClickListener {
+        void onItemClick(int position, OptionMenu menu);
+    }
 
     @Override
     protected final int getContentLayoutId() {
@@ -60,7 +52,10 @@ public class ArrowMenuDialogFragment extends ArrowDialogFragment {
 
         OptionMenuView mOptionMenuView = new OptionMenuView(context);
         if (mOrientation == LinearLayout.VERTICAL) {
-            mOptionMenuView.setMinimumWidth((int) (ScreenUtils.getScreenWidth(context) / 2.8));
+            if (minWidth <= 0) {
+                minWidth = ScreenUtils.dp2pxInt(160);
+            }
+            mOptionMenuView.setMinimumWidth(minWidth);
         }
         mOptionMenuView.setOrientation(mOrientation);
         if (showDivider) {
@@ -103,6 +98,7 @@ public class ArrowMenuDialogFragment extends ArrowDialogFragment {
         }
 
 
+
     }
 
     private ViewGroup getScrollView(int orientation) {
@@ -123,6 +119,11 @@ public class ArrowMenuDialogFragment extends ArrowDialogFragment {
 
     //----------------------------------setter----------------------------------
 
+
+    public ArrowMenuDialogFragment setMinWidth(int minWidth) {
+        this.minWidth = minWidth;
+        return this;
+    }
 
     public ArrowMenuDialogFragment setShowDivider(boolean showDivider) {
         this.showDivider = showDivider;

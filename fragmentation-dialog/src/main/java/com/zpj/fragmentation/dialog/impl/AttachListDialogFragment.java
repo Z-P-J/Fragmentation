@@ -12,18 +12,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lihang.ShadowLayout;
+import com.zpj.fragmentation.dialog.IDialog;
 import com.zpj.fragmentation.dialog.R;
 import com.zpj.fragmentation.dialog.animator.PopupAnimator;
 import com.zpj.fragmentation.dialog.base.AttachDialogFragment;
 import com.zpj.fragmentation.dialog.utils.DialogThemeUtils;
 import com.zpj.recyclerview.EasyRecyclerView;
+import com.zpj.utils.ScreenUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class AttachListDialogFragment<T> extends AttachDialogFragment {
+public class AttachListDialogFragment<T> extends AttachDialogFragment<AttachListDialogFragment<T>> {
 
     protected RecyclerView recyclerView;
     protected int bindLayoutId;
@@ -31,12 +33,20 @@ public class AttachListDialogFragment<T> extends AttachDialogFragment {
     protected int tintColor = Color.TRANSPARENT;
     protected int textColor = Color.TRANSPARENT;
 
-    private IconCallback<T> iconCallback;
-    private TitleCallback<T> titleCallback;
+    private float cornerRadius;
+
+    private IDialog.ViewBinder<ImageView, T> iconCallback;
+    private IDialog.ViewBinder<TextView, T> titleCallback;
+
+//    private int minWidth;
 
 
     private final List<T> items = new ArrayList<>();
     private final List<Integer> iconIds = new ArrayList<>();
+
+    public AttachListDialogFragment() {
+        cornerRadius = ScreenUtils.dp2px(8);
+    }
 
     @Override
     protected int getContentLayoutId() {
@@ -59,9 +69,16 @@ public class AttachListDialogFragment<T> extends AttachDialogFragment {
     @Override
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
         super.initView(view, savedInstanceState);
+        if (maxWidth <= 0) {
+//            minWidth = ScreenUtils.getScreenWidth(context) / 2;
+            maxWidth = ScreenUtils.dp2pxInt(180);
+        }
         int color = DialogThemeUtils.getDialogBackgroundColor(context);
         ShadowLayout shadowLayout = findViewById(R.id.shadow_layout);
         shadowLayout.setmShadowColor(Color.DKGRAY);
+        shadowLayout.setmCornerRadius((int) cornerRadius);
+        CardView cardView = findViewById(R.id.cv_container);
+        cardView.setRadius(cornerRadius);
         try {
             Field mBackGroundColor = ShadowLayout.class.getDeclaredField("mBackGroundColor");
             mBackGroundColor.setAccessible(true);
@@ -76,10 +93,12 @@ public class AttachListDialogFragment<T> extends AttachDialogFragment {
         }
 
         recyclerView = findViewById(R.id._dialog_recycler_View);
+        recyclerView.setMinimumWidth(maxWidth);
         EasyRecyclerView<T> easyRecyclerView = new EasyRecyclerView<>(recyclerView);
         easyRecyclerView.setData(items)
                 .setItemRes(bindItemLayoutId == 0 ? R.layout._dialog_item_text : bindItemLayoutId)
                 .onBindViewHolder((holder, list, position, payloads) -> {
+//                    holder.getItemView().setMinimumWidth(maxWidth);
                     TextView tvText = holder.getView(R.id.tv_text);
                     tvText.setTextColor(textColor);
 
@@ -103,12 +122,12 @@ public class AttachListDialogFragment<T> extends AttachDialogFragment {
                         } else {
                             ivImage.setColorFilter(tintColor);
                         }
-                        iconCallback.onGetIcon(ivImage, list.get(position), position);
+                        iconCallback.onBindView(ivImage, list.get(position), position);
                     }
                     if (titleCallback == null) {
                         tvText.setText(list.get(position).toString());
                     } else {
-                        titleCallback.onGetTitle(tvText, list.get(position), position);
+                        titleCallback.onBindView(tvText, list.get(position), position);
                     }
 
                 })
@@ -119,6 +138,11 @@ public class AttachListDialogFragment<T> extends AttachDialogFragment {
                 })
                 .build();
     }
+
+//    public AttachListDialogFragment<T> setMinWidth(int minWidth) {
+//        this.minWidth = minWidth;
+//        return this;
+//    }
 
     /**
      * 传入自定义的布局，对布局中的id有要求
@@ -151,6 +175,15 @@ public class AttachListDialogFragment<T> extends AttachDialogFragment {
 //        popupInfo.touchPoint = new PointF(x, y);
 //        show();
 //    }
+
+    public AttachListDialogFragment<T> setCornerRadius(float cornerRadius) {
+        this.cornerRadius = cornerRadius;
+        return this;
+    }
+
+    public AttachListDialogFragment<T> setCornerRadiusDp(float cornerRadiusDp) {
+        return setCornerRadius(ScreenUtils.dp2px(cornerRadiusDp));
+    }
 
     public AttachListDialogFragment<T> setTextColor(int textColor) {
         this.textColor = textColor;
@@ -226,26 +259,18 @@ public class AttachListDialogFragment<T> extends AttachDialogFragment {
         return this;
     }
 
-    public AttachListDialogFragment<T> setIconCallback(IconCallback<T> iconCallback) {
+    public AttachListDialogFragment<T> onBindIcon(IDialog.ViewBinder<ImageView, T> iconCallback) {
         this.iconCallback = iconCallback;
         return this;
     }
 
-    public AttachListDialogFragment<T> setTitleCallback(TitleCallback<T> titleCallback) {
+    public AttachListDialogFragment<T> onBindTitle(IDialog.ViewBinder<TextView, T> titleCallback) {
         this.titleCallback = titleCallback;
         return this;
     }
 
     public interface OnSelectListener<T> {
         void onSelect(AttachListDialogFragment<T> fragment, int position, T text);
-    }
-
-    public interface IconCallback<T> {
-        void onGetIcon(ImageView icon, T item, int position);
-    }
-
-    public interface TitleCallback<T> {
-        void onGetTitle(TextView titleView, T item, int position);
     }
 
 }

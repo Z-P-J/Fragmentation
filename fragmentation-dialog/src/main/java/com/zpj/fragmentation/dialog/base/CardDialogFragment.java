@@ -8,7 +8,7 @@ import android.view.View;
 
 import com.zpj.fragmentation.dialog.R;
 
-public abstract class CardDialogFragment extends ContainerDialogFragment {
+public abstract class CardDialogFragment<T extends CardDialogFragment<T>> extends ContainerDialogFragment<T> {
 
     private boolean transparent = false;
 
@@ -28,8 +28,8 @@ public abstract class CardDialogFragment extends ContainerDialogFragment {
         }
     }
 
-    public CardDialogFragment setTransparentBackground(boolean transparent) {
+    public T setTransparentBackground(boolean transparent) {
         this.transparent = transparent;
-        return this;
+        return self();
     }
 }

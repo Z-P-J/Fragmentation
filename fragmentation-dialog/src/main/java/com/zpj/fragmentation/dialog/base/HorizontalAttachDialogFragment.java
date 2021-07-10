@@ -14,7 +14,8 @@ import com.zpj.utils.ScreenUtils;
  * 支持通过popupPosition()方法手动指定想要出现在目标的左边还是右边，但是对Top和Bottom则不生效。
  * Create by lxj, at 2019/3/13
  */
-public abstract class HorizontalAttachPopup extends AttachDialogFragment {
+public abstract class HorizontalAttachDialogFragment<T extends HorizontalAttachDialogFragment<T>>
+        extends AttachDialogFragment<T> {
 
     @Override
     protected PopupAnimator getDialogAnimator(ViewGroup contentView) {

@@ -16,10 +16,10 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.zpj.fragmentation.BaseFragment;
+import com.zpj.fragmentation.SimpleFragment;
 import com.zpj.fragmentation.demo.R;
 import com.zpj.fragmentation.dialog.IDialog;
-import com.zpj.fragmentation.dialog.impl.AlertDialogFragment;
+import com.zpj.fragmentation.dialog.ZDialog;
 import com.zpj.fragmentation.dialog.impl.ArrowMenuDialogFragment;
 import com.zpj.fragmentation.dialog.impl.AttachListDialogFragment;
 import com.zpj.fragmentation.dialog.impl.BottomDragListDialogFragment;
@@ -27,7 +27,6 @@ import com.zpj.fragmentation.dialog.impl.CheckDialogFragment;
 import com.zpj.fragmentation.dialog.impl.ImageViewerDialogFragment;
 import com.zpj.fragmentation.dialog.impl.InputDialogFragment;
 import com.zpj.fragmentation.dialog.impl.LoadingDialogFragment;
-import com.zpj.fragmentation.dialog.impl.SelectDialogFragment;
 import com.zpj.fragmentation.dialog.impl.SimpleSelectDialogFragment;
 import com.zpj.fragmentation.dialog.utils.DialogThemeUtils;
 import com.zpj.recyclerview.EasyViewHolder;
@@ -38,7 +37,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainFragment extends BaseFragment {
+public class MainFragment extends SimpleFragment {
 
     @Override
     protected int getLayoutId() {
@@ -86,13 +85,13 @@ public class MainFragment extends BaseFragment {
         findViewById(R.id.btn_test_center).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialogFragment()
+                ZDialog.alert()
                         .setTitle("内存使用情况")
                         .setContent(R.string.sign_in_success)
 //                        .setAutoDismiss(false)
-                        .setPositiveButton(new IDialog.OnButtonClickListener<AlertDialogFragment>() {
+                        .setPositiveButton(new IDialog.OnButtonClickListener<ZDialog.AlertDialogImpl>() {
                             @Override
-                            public void onClick(AlertDialogFragment fragment, int which) {
+                            public void onClick(ZDialog.AlertDialogImpl fragment, int which) {
                                 fragment.start(new TestDialogFragment());
                             }
                         })
@@ -103,13 +102,13 @@ public class MainFragment extends BaseFragment {
         findViewById(R.id.btn_test_center_custom).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialogFragment()
+                ZDialog.alert()
                         .setTitle("内存使用情况")
                         .setContent(R.string.sign_in_success)
 //                        .setAutoDismiss(false)
-                        .setPositiveButton(new IDialog.OnButtonClickListener<AlertDialogFragment>() {
+                        .setPositiveButton(new IDialog.OnButtonClickListener<ZDialog.AlertDialogImpl>() {
                             @Override
-                            public void onClick(AlertDialogFragment fragment, int which) {
+                            public void onClick(ZDialog.AlertDialogImpl fragment, int which) {
                                 fragment.start(new TestDialogFragment());
                             }
                         })
@@ -124,7 +123,7 @@ public class MainFragment extends BaseFragment {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        new AlertDialogFragment()
+                        ZDialog.alert()
                                 .setTitle("内存使用情况")
                                 .setContent(R.string.large_text)
                                 .show(MainFragment.this);
@@ -155,7 +154,7 @@ public class MainFragment extends BaseFragment {
 //                    .setGravity(Gravity.BOTTOM)
 //                    .show(MainFragment.this);
 
-            new SelectDialogFragment<String>()
+            ZDialog.select()
                     .onBindTitle(new IDialog.ViewBinder<TextView, String>() {
                         @Override
                         public void onBindView(TextView titleView, String item, int position) {
@@ -179,7 +178,7 @@ public class MainFragment extends BaseFragment {
             for (int i = 0; i < 50; i++) {
                 list.add(String.valueOf(System.currentTimeMillis() * Math.random()));
             }
-            new SelectDialogFragment<String>()
+            ZDialog.select()
                     .onBindTitle(new IDialog.ViewBinder<TextView, String>() {
                         @Override
                         public void onBindView(TextView titleView, String item, int position) {
@@ -192,9 +191,9 @@ public class MainFragment extends BaseFragment {
                             subtitleView.setText(String.valueOf(position));
                         }
                     })
-                    .onSingleSelect(new SelectDialogFragment.OnSingleSelectListener<String>() {
+                    .onSingleSelect(new IDialog.OnSingleSelectListener<String, ZDialog.SelectDialogImpl<String>>() {
                         @Override
-                        public void onSelect(SelectDialogFragment<String> dialog, int position, String item) {
+                        public void onSelect(ZDialog.SelectDialogImpl<String> dialog, int position, String item) {
                             Toast.makeText(context, item, Toast.LENGTH_SHORT).show();
                         }
                     })
@@ -209,7 +208,7 @@ public class MainFragment extends BaseFragment {
             for (int i = 0; i < 50; i++) {
                 list.add(String.valueOf(System.currentTimeMillis() * Math.random()));
             }
-            new SelectDialogFragment<String>()
+            ZDialog.select()
                     .onBindTitle(new IDialog.ViewBinder<TextView, String>() {
                         @Override
                         public void onBindView(TextView titleView, String item, int position) {
@@ -222,9 +221,9 @@ public class MainFragment extends BaseFragment {
                             subtitleView.setText(String.valueOf(position));
                         }
                     })
-                    .onMultiSelect(new SelectDialogFragment.OnMultiSelectListener<String>() {
+                    .onMultiSelect(new IDialog.OnMultiSelectListener<String, ZDialog.SelectDialogImpl<String>>() {
                         @Override
-                        public void onSelect(SelectDialogFragment<String> dialog, List<Integer> selected, List<String> list) {
+                        public void onSelect(ZDialog.SelectDialogImpl<String> dialog, List<Integer> selected, List<String> list) {
                             Toast.makeText(context, Arrays.toString(list.toArray()), Toast.LENGTH_SHORT).show();
                         }
                     })

@@ -5,18 +5,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import com.zpj.fragmentation.BaseFragment;
+import com.zpj.fragmentation.SimpleFragment;
 import com.zpj.fragmentation.SupportFragment;
 import com.zpj.fragmentation.demo.R;
 import com.zpj.fragmentation.demo.demo_zhihu.MainActivity;
@@ -26,10 +18,16 @@ import com.zpj.fragmentation.demo.demo_zhihu.event.TabSelectedEvent;
 import com.zpj.fragmentation.demo.demo_zhihu.listener.OnItemClickListener;
 import com.zpj.fragmentation.demo.demo_zhihu.ui.fragment.second.child.DetailFragment;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by YoKeyword on 16/6/3.
  */
-public class FirstPagerFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class FirstPagerFragment extends SimpleFragment implements SwipeRefreshLayout.OnRefreshListener {
     private RecyclerView mRecy;
     private SwipeRefreshLayout mRefreshLayout;
     private HomeAdapter mAdapter;

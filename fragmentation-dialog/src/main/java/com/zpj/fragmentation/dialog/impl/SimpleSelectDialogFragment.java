@@ -9,7 +9,7 @@ import com.zpj.fragmentation.dialog.IDialog;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SimpleSelectDialogFragment extends SelectDialogFragment<String> {
+public class SimpleSelectDialogFragment extends SelectDialogFragment<String, SimpleSelectDialogFragment> {
 
     private final List<String> subTitles = new ArrayList<>();
     private final List<Integer> iconIds = new ArrayList<>();

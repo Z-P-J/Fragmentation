@@ -2,15 +2,14 @@ package com.zpj.fragmentation.demo.demo_zhihu.base;
 
 import android.content.Context;
 
-import com.zpj.fragmentation.BaseFragment;
-import com.zpj.fragmentation.SupportFragment;
+import com.zpj.fragmentation.SimpleFragment;
 import com.zpj.fragmentation.demo.demo_zhihu.ui.fragment.first.ZhihuFirstFragment;
 
 /**
  * 懒加载
  * Created by YoKeyword on 16/6/5.
  */
-public abstract class BaseMainFragment extends BaseFragment {
+public abstract class BaseMainFragment extends SimpleFragment {
     protected OnBackToFirstListener _mBackToFirstListener;
 
     @Override

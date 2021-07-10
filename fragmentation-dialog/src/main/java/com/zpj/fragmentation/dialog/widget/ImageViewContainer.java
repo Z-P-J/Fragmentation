@@ -6,24 +6,28 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.zpj.fragmentation.dialog.interfaces.IProgressViewHolder;
 
 public class ImageViewContainer extends FrameLayout {
 
     private final SubsamplingScaleImageView imageView;
-    private final ProgressBar progressBar;
     private final ImageView placeholder;
+
+    private View progressView;
 
 //    private GifImageView gifImageView;
 
     private boolean isGif;
+
+    private IProgressViewHolder progressViewHolder;
 
     public ImageViewContainer(@NonNull Context context) {
         this(context, null);
@@ -43,11 +47,22 @@ public class ImageViewContainer extends FrameLayout {
         placeholder.setScaleType(ImageView.ScaleType.FIT_CENTER);
         addView(placeholder, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-        progressBar = new ProgressBar(context);
-        progressBar.setMax(100);
-        LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.gravity = Gravity.CENTER;
-        addView(progressBar, params);
+//        ProgressBar progressBar = new ProgressBar(context);
+//        progressBar.setMax(100);
+//        LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//        params.gravity = Gravity.CENTER;
+//        addView(progressBar, params);
+//        progressView = progressBar;
+    }
+
+    public void setProgressViewHolder(IProgressViewHolder progressViewHolder) {
+        this.progressViewHolder = progressViewHolder;
+        if (progressViewHolder != null) {
+            progressView = progressViewHolder.createProgressView(getContext());
+            LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.gravity = Gravity.CENTER;
+            addView(progressView, params);
+        }
     }
 
     public void showPlaceholder(Drawable drawable) {
@@ -81,24 +96,31 @@ public class ImageViewContainer extends FrameLayout {
         return imageView;
     }
 
-    public ProgressBar getProgressBar() {
-        return progressBar;
-    }
+//    public ProgressBar getProgressBar() {
+//        return progressBar;
+//    }
 
     public void setProgress(float progress) {
-        progressBar.setProgress((int) progress);
+        if (progressViewHolder != null) {
+            progressViewHolder.onProgressChanged(progressView, progress);
+        }
+//        progressBar.setProgress((int) progress);
     }
 
     public void onLoadFinished() {
-        progressBar.setVisibility(GONE);
+        if (progressView != null) {
+            progressView.setVisibility(GONE);
+        }
         if (!isGif) {
             placeholder.setVisibility(GONE);
         }
-
     }
 
     public void showProgressBar() {
-        progressBar.setVisibility(VISIBLE);
+//        progressBar.setVisibility(VISIBLE);
+        if (progressView != null) {
+            progressView.setVisibility(VISIBLE);
+        }
     }
 
 }

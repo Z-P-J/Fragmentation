@@ -7,8 +7,6 @@ import android.support.annotation.StringRes;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewTreeObserver;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,7 +17,7 @@ import com.zpj.utils.ContextUtils;
 import com.zpj.utils.KeyboardObserver;
 import com.zpj.utils.ScreenUtils;
 
-public class InputDialogFragment extends AlertDialogFragment implements View.OnClickListener {
+public class InputDialogFragment extends AlertDialogFragment<InputDialogFragment> implements View.OnClickListener {
 
     private boolean autoShowKeyboard = true;
     private boolean emptyable = false;

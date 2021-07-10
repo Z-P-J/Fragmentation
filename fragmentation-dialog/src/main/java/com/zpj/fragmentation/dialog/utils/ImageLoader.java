@@ -4,7 +4,7 @@ import android.graphics.drawable.Drawable;
 
 import com.zpj.fragmentation.dialog.widget.ImageViewContainer;
 
-public interface ImageLoad<T> {
+public interface ImageLoader<T> {
     /**
      * 加载图片
      *

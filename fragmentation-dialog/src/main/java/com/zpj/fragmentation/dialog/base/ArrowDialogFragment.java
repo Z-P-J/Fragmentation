@@ -1,5 +1,6 @@
 package com.zpj.fragmentation.dialog.base;
 
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -15,16 +16,19 @@ import com.zpj.fragmentation.dialog.R;
 import com.zpj.fragmentation.dialog.animator.PopupAnimator;
 import com.zpj.fragmentation.dialog.animator.ScaleAlphaAnimator;
 import com.zpj.fragmentation.dialog.enums.PopupPosition;
+import com.zpj.fragmentation.dialog.impl.AttachListDialogFragment;
 import com.zpj.fragmentation.dialog.model.OptionMenu;
 import com.zpj.fragmentation.dialog.widget.PopLayout;
 import com.zpj.utils.ScreenUtils;
 
-public abstract class ArrowDialogFragment extends BaseDialogFragment {
+public abstract class ArrowDialogFragment<T extends ArrowDialogFragment<T>> extends BaseDialogFragment<T> {
 
     private static final String TAG = "ArrowDialogFragment";
 
     protected int defaultOffsetY = 0;
     protected int defaultOffsetX = 0;
+
+    private float cornerRadius;
 
     protected boolean isCenterHorizontal = false;
 
@@ -35,9 +39,11 @@ public abstract class ArrowDialogFragment extends BaseDialogFragment {
 
     protected PopLayout mPopLayout;
 
-
-
     private ViewGroup contentView;
+
+    public ArrowDialogFragment() {
+        cornerRadius = ScreenUtils.dp2px(8);
+    }
 
 
     @Override
@@ -69,6 +75,7 @@ public abstract class ArrowDialogFragment extends BaseDialogFragment {
         getImplView().setAlpha(0f);
 
         mPopLayout = findViewById(R.id.arrowPopupContainer);
+        mPopLayout.setRadiusSize((int) cornerRadius);
 
         if (getContentLayoutId() > 0) {
             contentView = (ViewGroup) getLayoutInflater().inflate(getContentLayoutId(), mPopLayout, false);
@@ -192,14 +199,15 @@ public abstract class ArrowDialogFragment extends BaseDialogFragment {
         float x = screenLocation[0] + xOff;
         float y = screenLocation[1] + anchor.getMeasuredHeight() + yOff;
         Log.d(TAG, "x=" + x + " y=" + y);
-        getImplView().post(() -> {
-            getImplView().setTranslationX(x);
-            getImplView().setTranslationY(y);
-            getImplView().setAlpha(1f);
-            popupContentAnimator = new ScaleAlphaAnimator(getImplView(), pivotX, pivotY);
-            popupContentAnimator.initAnimator();
-            popupContentAnimator.animateShow();
-        });
+//        getImplView().post(() -> {
+//
+//        });
+        getImplView().setTranslationX(x);
+        getImplView().setTranslationY(y);
+        getImplView().setAlpha(1f);
+        popupContentAnimator = new ScaleAlphaAnimator(getImplView(), pivotX, pivotY);
+        popupContentAnimator.initAnimator();
+        popupContentAnimator.animateShow();
     }
 
 //    private void show(View anchor, float xOff, float yOff, int mode) {
@@ -307,172 +315,68 @@ public abstract class ArrowDialogFragment extends BaseDialogFragment {
         return contentView;
     }
 
-    public ArrowDialogFragment setAttachView(View attachView) {
+    public final T show(View view) {
+        setAttachView(view);
+        return show(view.getContext());
+    }
+
+    public T setCornerRadius(float cornerRadius) {
+        this.cornerRadius = cornerRadius;
+        if (mPopLayout != null) {
+            mPopLayout.setRadiusSize((int) cornerRadius);
+        }
+        return self();
+    }
+
+    public T setCornerRadiusDp(float cornerRadiusDp) {
+        return setCornerRadius(ScreenUtils.dp2px(cornerRadiusDp));
+    }
+
+    public T setAttachView(View attachView) {
         this.attachView = attachView;
-        return this;
+        return self();
     }
 
-    public ArrowDialogFragment setTouchPoint(PointF touchPoint) {
+    public T attachViewCenter(View attachView) {
+        int[] locations = new int[2];
+        attachView.getLocationOnScreen(locations);
+        return setTouchPoint(locations[0] + attachView.getMeasuredWidth() / 2f,
+                locations[1] + attachView.getMeasuredHeight() / 2f);
+    }
+
+    public T setTouchPoint(PointF touchPoint) {
         this.touchPoint = touchPoint;
-        return this;
+        return self();
     }
 
-    public ArrowDialogFragment setTouchPoint(float x, float y) {
+    public T setTouchPoint(Point point) {
+        this.touchPoint = new PointF(point);
+        return self();
+    }
+
+    public T setTouchPoint(float x, float y) {
         this.touchPoint = new PointF(x, y);
-        ;
-        return this;
+        return self();
     }
 
-    public ArrowDialogFragment setCenterHorizontal(boolean centerHorizontal) {
+    public T setCenterHorizontal(boolean centerHorizontal) {
         isCenterHorizontal = centerHorizontal;
-        return this;
+        return self();
     }
 
-    public ArrowDialogFragment setPopupPosition(PopupPosition popupPosition) {
+    public T setPopupPosition(PopupPosition popupPosition) {
         this.popupPosition = popupPosition;
-        return this;
+        return self();
     }
 
-    public ArrowDialogFragment setDefaultOffsetX(int defaultOffsetX) {
+    public T setDefaultOffsetX(int defaultOffsetX) {
         this.defaultOffsetX = defaultOffsetX;
-        return this;
+        return self();
     }
 
-    public ArrowDialogFragment setDefaultOffsetY(int defaultOffsetY) {
+    public T setDefaultOffsetY(int defaultOffsetY) {
         this.defaultOffsetY = defaultOffsetY;
-        return this;
-    }
-
-//    public static class TranslateSelfAnimator extends PopupAnimator {
-//        //动画起始坐标
-//        private float startTranslationX, startTranslationY;
-//        private int oldWidth, oldHeight;
-//        private float initTranslationX, initTranslationY;
-//        private boolean hasInitDefTranslation = false;
-//
-//        public TranslateSelfAnimator(View target, PopupAnimation popupAnimation) {
-//            super(target, popupAnimation);
-//        }
-//
-//        @Override
-//        public void initAnimator() {
-//            if(!hasInitDefTranslation){
-//                initTranslationX = targetView.getTranslationX();
-//                initTranslationY = targetView.getTranslationY();
-//                hasInitDefTranslation = true;
-//            }
-//            targetView.setAlpha(0);
-//            // 设置起始坐标
-//            applyTranslation();
-//            startTranslationX = targetView.getTranslationX();
-//            startTranslationY = targetView.getTranslationY();
-//
-//            oldWidth = targetView.getMeasuredWidth();
-//            oldHeight = targetView.getMeasuredHeight();
-//        }
-//
-//        private void applyTranslation() {
-//            switch (popupAnimation) {
-//                case TranslateFromLeft:
-//                    targetView.setTranslationX(targetView.getTranslationX() - targetView.getMeasuredWidth());
-//                    break;
-//                case TranslateFromTop:
-//                    targetView.setTranslationY(targetView.getTranslationY() - targetView.getMeasuredHeight());
-//                    break;
-//                case TranslateFromRight:
-//                    targetView.setTranslationX(targetView.getTranslationX() + targetView.getMeasuredWidth());
-//                    break;
-//                case TranslateFromBottom:
-//                    targetView.setTranslationY(targetView.getTranslationY() + targetView.getMeasuredHeight());
-//                    break;
-//            }
-//        }
-//
-//        @Override
-//        public void animateShow() {
-//            targetView.animate()
-//                    .translationX(initTranslationX)
-//                    .translationY(initTranslationY)
-//                    .alpha(1f)
-//                    .setInterpolator(new FastOutSlowInInterpolator())
-//                    .setDuration(XPopup.getAnimationDuration())
-//                    .start();
-//        }
-//
-//        @Override
-//        public void animateDismiss() {
-//            //执行消失动画的时候，宽高可能改变了，所以需要修正动画的起始值
-//            switch (popupAnimation) {
-//                case TranslateFromLeft:
-//                    startTranslationX -= targetView.getMeasuredWidth() - oldWidth;
-//                    break;
-//                case TranslateFromTop:
-//                    startTranslationY -= targetView.getMeasuredHeight() - oldHeight;
-//                    break;
-//                case TranslateFromRight:
-//                    startTranslationX += targetView.getMeasuredWidth() - oldWidth;
-//                    break;
-//                case TranslateFromBottom:
-//                    startTranslationY += targetView.getMeasuredHeight() - oldHeight;
-//                    break;
-//            }
-//
-//            targetView.animate()
-//                    .translationX(startTranslationX)
-//                    .translationY(startTranslationY)
-//                    .alpha(0f)
-//                    .setInterpolator(new FastOutSlowInInterpolator())
-//                    .setDuration(XPopup.getAnimationDuration())
-//                    .start();
-//        }
-//    }
-
-//    public static class ScaleAnimator extends PopupAnimator {
-//
-//        private float pivotX;
-//        private float pivotY;
-//
-//        public ScaleAnimator(View target, float pivotX, float pivotY) {
-//            super(target, null);
-//            this.pivotX = pivotX;
-//            this.pivotY = pivotY;
-//        }
-//
-//        @Override
-//        public void initAnimator() {
-//            targetView.setScaleX(0f);
-//            targetView.setScaleY(0f);
-//            targetView.setAlpha(0);
-//
-//            // 设置动画参考点
-//            targetView.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    targetView.setPivotX(pivotX);
-//                    targetView.setPivotY(pivotY);
-//                }
-//            });
-//        }
-//
-//        @Override
-//        public void animateShow() {
-//            targetView.animate().scaleX(1f).scaleY(1f).alpha(1f)
-//                    .setDuration(XPopup.getAnimationDuration())
-//                    .setInterpolator(new OvershootInterpolator(1f))
-//                    .start();
-//        }
-//
-//        @Override
-//        public void animateDismiss() {
-//            targetView.animate().scaleX(0f).scaleY(0f).alpha(0f).setDuration(XPopup.getAnimationDuration())
-//                    .setInterpolator(new FastOutSlowInInterpolator()).start();
-//        }
-//
-//    }
-
-    public interface OnItemClickListener {
-
-        void onItemClick(int position, OptionMenu menu);
+        return self();
     }
 
 }

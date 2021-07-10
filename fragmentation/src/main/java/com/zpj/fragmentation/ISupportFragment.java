@@ -14,7 +14,6 @@ import java.lang.annotation.RetentionPolicy;
  * Created by YoKey on 17/6/23.
  * Modified by Z-P-J
  */
-
 public interface ISupportFragment extends ISupport<SupportFragmentDelegate> {
     // LaunchMode
     int STANDARD = 0;
@@ -27,18 +26,8 @@ public interface ISupportFragment extends ISupport<SupportFragmentDelegate> {
 
     @IntDef({STANDARD, SINGLETOP, SINGLETASK})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface LaunchMode {
+    @interface LaunchMode {
     }
-
-//    SupportFragmentDelegate getSupportDelegate();
-//
-//    ExtraTransaction extraTransaction();
-//
-//    void enqueueAction(Runnable runnable);
-//
-//    void post(Runnable runnable);
-//
-//    void postDelayed(Runnable runnable, long delay);
 
     void onEnterAnimationEnd(@Nullable Bundle savedInstanceState);
 
@@ -54,10 +43,6 @@ public interface ISupportFragment extends ISupport<SupportFragmentDelegate> {
 
     FragmentAnimator onCreateFragmentAnimator();
 
-//    FragmentAnimator getFragmentAnimator();
-//
-//    void setFragmentAnimator(FragmentAnimator fragmentAnimator);
-
     void setFragmentResult(int resultCode, Bundle bundle);
 
     void onFragmentResult(int requestCode, int resultCode, Bundle data);
@@ -69,9 +54,5 @@ public interface ISupportFragment extends ISupport<SupportFragmentDelegate> {
     boolean onBackPressedSupport();
 
     @LaunchMode int getLaunchMode();
-
-//    Handler getHandler();
-
-
 
 }

@@ -24,13 +24,14 @@ import java.util.regex.Pattern;
  * Created by liuting on 17/6/1.
  */
 
-public class MyImageLoad<T> {
+public class MyImageLoader<T> implements ImageLoader<T> {
     private static final Pattern webPattern = Pattern.compile("http[s]*://[[[^/:]&&[a-zA-Z_0-9]]\\.]+(:\\d+)?(/[a-zA-Z_0-9]+)*(/[a-zA-Z_0-9]*([a-zA-Z_0-9]+\\.[a-zA-Z_0-9]+)*)?(\\?(&?[a-zA-Z_0-9]+=[%[a-zA-Z_0-9]-]*)*)*(#[[a-zA-Z_0-9]|-]+)?(.jpg|.png|.gif|.jpeg)?");
     private static final String ASSET_PATH_SEGMENT = "android_asset";
-    private static final HashMap<String, ImageLoad.LoadCallback> loadCallbackMap = new HashMap<>();
+    private static final HashMap<String, ImageLoader.LoadCallback> loadCallbackMap = new HashMap<>();
     private static final HashMap<String, OkHttpImageLoad.ImageDownLoadListener> imageDownLoadListenerMap = new HashMap<>();
 
-    public void loadImage(final T url, final ImageLoad.LoadCallback callback, final ImageViewContainer imageView, final String unique) {
+    @Override
+    public void loadImage(final T url, final ImageLoader.LoadCallback callback, final ImageViewContainer imageView, final String unique) {
         addLoadCallback(unique, callback);
         String link = url.toString();
         Uri uri = Uri.parse(link);
@@ -53,7 +54,7 @@ public class MyImageLoad<T> {
     /**
      * 从网络加载图片
      */
-    private void loadImageFromNet(final String url, final String unique, final ImageViewContainer imageView) {
+    protected void loadImageFromNet(final String url, final String unique, final ImageViewContainer imageView) {
         OkHttpImageLoad.ImageDownLoadListener loadListener = new OkHttpImageLoad.ImageDownLoadListener() {
             @Override
             public void inProgress(float progress, long total) {
@@ -146,7 +147,7 @@ public class MyImageLoad<T> {
 
     }
 
-    public static void addLoadCallback(String unique, ImageLoad.LoadCallback callback) {
+    public static void addLoadCallback(String unique, ImageLoader.LoadCallback callback) {
         loadCallbackMap.put(unique, callback);
     }
 
@@ -155,20 +156,20 @@ public class MyImageLoad<T> {
     }
 
     public static void onFinishLoad(String unique, Drawable drawable) {
-        ImageLoad.LoadCallback loadCallback = loadCallbackMap.remove(unique);
+        ImageLoader.LoadCallback loadCallback = loadCallbackMap.remove(unique);
         if (loadCallback != null) {
             loadCallback.loadFinish(drawable);
         }
     }
 
     public static void onProgress(String unique, float progress) {
-        ImageLoad.LoadCallback loadCallback = loadCallbackMap.get(unique);
+        ImageLoader.LoadCallback loadCallback = loadCallbackMap.get(unique);
         if (loadCallback != null) {
             loadCallback.progress(progress);
         }
     }
 
-
+    @Override
     public boolean isCached(T url) {
         String link = url.toString();
         if (isLocalUri(Uri.parse(link).getScheme())) {
@@ -179,6 +180,7 @@ public class MyImageLoad<T> {
 //        return false;
     }
 
+    @Override
     public void cancel(T url, String unique) {
         removeLoadCallback(unique);
         String link = url.toString();

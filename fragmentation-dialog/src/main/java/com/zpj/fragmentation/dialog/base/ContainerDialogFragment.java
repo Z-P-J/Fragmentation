@@ -21,16 +21,19 @@ import com.zpj.utils.ScreenUtils;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
-public abstract class ContainerDialogFragment extends BaseDialogFragment {
+public abstract class ContainerDialogFragment<T extends ContainerDialogFragment<T>> extends BaseDialogFragment<T> {
 
     protected ViewGroup contentView;
+
+    private float cornerRadius;
 
     public ContainerDialogFragment() {
         setMaxWidth(MATCH_PARENT);
         if (!isDragDialog()) {
             setMarginHorizontal((int) (ScreenUtils.getScreenWidth() * 0.08f));
-            setMarginVertical((int) (ScreenUtils.getScreenHeight() * 0.08f));
+            setMarginVertical((int) (ScreenUtils.getScreenHeight() * 0.12f));
         }
+        cornerRadius = ScreenUtils.dp2px(8);
     }
 
     protected abstract boolean isDragDialog();
@@ -88,13 +91,13 @@ public abstract class ContainerDialogFragment extends BaseDialogFragment {
 
             if (bgDrawable != null) {
                 contentView.setBackground(bgDrawable);
-            } else {
+            } else if (contentView.getBackground() == null) {
 //                contentView.setBackground(builder.setBgColor(DialogThemeUtils.getDialogBackgroundColor(context)).builder());
                 GradientDrawable drawable = new GradientDrawable();
                 drawable.setColor(DialogThemeUtils.getDialogBackgroundColor(context));
                 drawable.setShape(GradientDrawable.RECTANGLE);
-                int size = ScreenUtils.dp2pxInt(8);
-                drawable.setCornerRadii(new float[]{ size, size, size, size, 0, 0, 0, 0 });
+//                int size = ScreenUtils.dp2pxInt(8);
+                drawable.setCornerRadii(new float[]{ cornerRadius, cornerRadius, cornerRadius, cornerRadius, 0, 0, 0, 0 });
                 contentView.setBackground(drawable);
 //                contentView.setBackground(DialogThemeUtils.getBottomDialogBackground(context));
             }
@@ -111,8 +114,11 @@ public abstract class ContainerDialogFragment extends BaseDialogFragment {
             bottomPopupContainer.setOnCloseListener(new SmartDragLayout.OnCloseListener() {
                 @Override
                 public void onClose() {
-//                    setFragmentAnimator(new DefaultNoAnimator());
                     postOnEnterAnimationEnd(() -> {
+                        if (isDismissing) {
+                            return;
+                        }
+                        isDismissing = true;
                         ContainerDialogFragment.super.doDismissAnimation();
                         popThis();
                         onDismiss();
@@ -143,9 +149,9 @@ public abstract class ContainerDialogFragment extends BaseDialogFragment {
                     cardView.setCardBackgroundColor(Color.TRANSPARENT);
                 } else {
 //                    contentView.setBackground(DialogThemeUtils.getCenterDialogBackground(context));
-                    int dp8 = ScreenUtils.dp2pxInt(8);
-                    cardView.setCardElevation(dp8 / 2f);
-                    cardView.setRadius(dp8);
+//                    int dp8 = ScreenUtils.dp2pxInt(8);
+                    cardView.setCardElevation(ScreenUtils.dp2px(4));
+                    cardView.setRadius(cornerRadius);
                     cardView.setCardBackgroundColor(DialogThemeUtils.getDialogBackgroundColor(context));
                 }
                 cardView.addView(contentView);
@@ -175,6 +181,15 @@ public abstract class ContainerDialogFragment extends BaseDialogFragment {
         if (isDragDialog() && getImplView() instanceof SmartDragLayout) {
             ((SmartDragLayout) getImplView()).close();
         }
+    }
+
+    public T setCornerRadius(float cornerRadius) {
+        this.cornerRadius = cornerRadius;
+        return self();
+    }
+
+    public T setCornerRadiusDp(float cornerRadiusDp) {
+        return setCornerRadius(ScreenUtils.dp2px(cornerRadiusDp));
     }
 
 }

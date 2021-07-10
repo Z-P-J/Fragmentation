@@ -10,13 +10,22 @@ import com.zpj.utils.ContextUtils;
 import com.zpj.utils.FileUtils;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigInteger;
+import java.net.ConnectException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -30,7 +39,7 @@ public class OkHttpImageLoad {
     private static String IMAGE_CACHE_PATH;
 
     private volatile static OkHttpImageLoad mInstance;
-    private final HashMap<String, Builder> map = new LinkedHashMap<>();
+    private final ConcurrentHashMap<String, Builder> map = new ConcurrentHashMap<>();
     private final Handler handler;
 
     private OkHttpImageLoad() {
@@ -212,22 +221,59 @@ public class OkHttpImageLoad {
             currentState = State.DOWNLOADING;
 
             thread = new Thread(() -> {
+
                 try {
-                    File file = Glide.with(ContextUtils.getApplicationContext())
-                            .asFile()
-//                                .downloadOnly()
-                            .load(url)
-                            .submit()
-                            .get();
+                    URL link = new URL(url);
+                    HttpURLConnection connection = (HttpURLConnection) link.openConnection();
+                    int count = 0;
+                    while (connection.getResponseCode() / 100 == 3) {
+                        if (count > 20) {
+                            downloadFail(new ConnectException("too many redirect connection!"));
+                            return;
+                        }
+                        connection = (HttpURLConnection) new URL(connection.getHeaderField("location")).openConnection();
+                        count++;
+                    }
+                    if (connection.getResponseCode() / 100 != 2) {
+                        downloadFail(new ConnectException("fail to open connection!"));
+                        return;
+                    }
+                    long totalSize = Long.parseLong(connection.getHeaderField("content-length"));
+                    InputStream is = connection.getInputStream();
                     String key = generate(url);
                     String destUrl = getImageCachePath() + "/" + key;
-                    File newFile = new File(destUrl);
-                    FileUtils.copyFileFast(file, newFile);
+                    OutputStream os = new FileOutputStream(destUrl);
+
+                    byte[] bytes = new byte[1024];
+                    int len = 0;
+                    long progress = 0;
+                    while ((len = is.read(bytes)) != -1) {
+                        os.write(bytes, 0, len);
+                        progress += len;
+                        refreshProgress((float) progress / totalSize, totalSize);
+                    }
                     downloadSuccess();
-                } catch (Exception e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                     downloadFail(e);
                 }
+
+//                try {
+//                    File file = Glide.with(ContextUtils.getApplicationContext())
+//                            .asFile()
+////                                .downloadOnly()
+//                            .load(url)
+//                            .submit()
+//                            .get();
+//                    String key = generate(url);
+//                    String destUrl = getImageCachePath() + "/" + key;
+//                    File newFile = new File(destUrl);
+//                    FileUtils.copyFileFast(file, newFile);
+//                    downloadSuccess();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    downloadFail(e);
+//                }
             });
             thread.start();
         }

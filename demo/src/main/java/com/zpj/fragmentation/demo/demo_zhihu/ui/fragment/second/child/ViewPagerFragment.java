@@ -4,19 +4,16 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
-import com.zpj.fragmentation.BaseFragment;
-import com.zpj.fragmentation.SupportFragment;
+import com.zpj.fragmentation.SimpleFragment;
 import com.zpj.fragmentation.demo.R;
 import com.zpj.fragmentation.demo.demo_zhihu.adapter.ZhihuPagerFragmentAdapter;
 
 /**
  * Created by YoKeyword on 16/6/5.
  */
-public class ViewPagerFragment extends BaseFragment {
+public class ViewPagerFragment extends SimpleFragment {
     private TabLayout mTab;
     private ViewPager mViewPager;
 

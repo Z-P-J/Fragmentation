@@ -3,8 +3,9 @@
 [![Download](https://api.bintray.com/packages/yokeyword/maven/Fragmentation/images/download.svg) ](https://bintray.com/yokeyword/maven/Fragmentation/_latestVersion)
 [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
-# Fragmentation
+# ZFragmentation
 A powerful library that manage Fragment for Android!
+本项目fork于[Fragmentation框架](https://github.com/YoKeyword/Fragmentation)，综合了几个module的代码，修改了包名，优化滑动返回，解决某些情况下的打开fragment延迟问题。除此之外，还新增了postOnEnterAnimationEnd和postOnSupportVisible方法，让你提前加载数据，待fragment动画结束或可见时显示数据，解决加载数据卡顿问题。
 
 ### [English README.md](https://github.com/Z-P-J/Fragmentation/blob/master/README_EN.md)
 
@@ -54,7 +55,7 @@ A powerful library that manage Fragment for Android!
 **1. 项目下app的build.gradle中依赖：**
 ````gradle
 // appcompat-v7包是必须的
-compile 'com.zpj.widget:Fragmentation:1.0.0'
+compile 'com.github.Z-P-J:Fragmentation:1.0.0'
 ````
 
 **2. Activity `extends` SupportActivity或者 `implements` ISupportActivity：(实现方式可参考[MySupportActivity](https://github.com/Z-P-J/Fragmentation/blob/master/demo/src/main/java/com/zpj/fragmentation/demo/demo_flow/base/MySupportActivity.java))**
@@ -81,6 +82,19 @@ public class MainActivity extends SupportActivity {
 ````
 
 **3. Fragment `extends` SupportFragment或者 `implements` ISupportFragment：(实现方式可参考[MySupportFragment](https://github.com/Z-P-J/Fragmentation/blob/master/demo/src/main/java/com/zpj/fragmentation/demo/demo_flow/base/MySupportFragment.java))：**
+````java
+// v1.0.0开始，不强制继承SupportFragment，可使用接口＋委托形式来实现自己的SupportFragment
+public class HomeFragment extends SupportFragment {
+
+    private void xxx() {
+        // 启动新的Fragment, 另有start(fragment,SINGTASK)、startForResult、startWithPop等启动方法
+        start(DetailFragment.newInstance(HomeBean));
+        // ... 其他pop, find, 设置动画等等API, 请自行查看WIKI
+    }
+}
+````
+
+**4. Fragment `extends` SupportFragment或者 `implements` ISupportFragment：(实现方式可参考[MySupportFragment](https://github.com/Z-P-J/Fragmentation/blob/master/demo/src/main/java/com/zpj/fragmentation/demo/demo_flow/base/MySupportFragment.java))：**
 ````java
 // v1.0.0开始，不强制继承SupportFragment，可使用接口＋委托形式来实现自己的SupportFragment
 public class HomeFragment extends SupportFragment {

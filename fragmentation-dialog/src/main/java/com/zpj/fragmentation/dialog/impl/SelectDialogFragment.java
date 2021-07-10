@@ -19,28 +19,8 @@ import com.zpj.widget.checkbox.SmoothCheckBox;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SelectDialogFragment<T> extends ListDialogFragment<T>
+public class SelectDialogFragment<T, S extends SelectDialogFragment<T, S>> extends ListDialogFragment<T, S>
         implements IEasy.OnBindViewHolderListener<T> {
-
-    public interface OnMultiSelectListener<T> {
-        void onSelect(SelectDialogFragment<T> dialog, List<Integer> selected, List<T> list);
-    }
-
-    public interface OnSingleSelectListener<T> {
-        void onSelect(SelectDialogFragment<T> dialog, int position, T item);
-    }
-
-//    public interface IconCallback<T> {
-//        void onSetIcon(ImageView icon, T item, int position);
-//    }
-//
-//    public interface TitleCallback<T> {
-//        void onSetTitle(TextView titleView, T item, int position);
-//    }
-//
-//    public interface SubtitleCallback<T> {
-//        void onSetSubtitle(TextView subtitleView, T item, int position);
-//    }
 
     private final List<Integer> selectedList = new ArrayList<>();
 
@@ -50,8 +30,8 @@ public class SelectDialogFragment<T> extends ListDialogFragment<T>
     private boolean isMultiple = false;
 
 
-    private OnSingleSelectListener<T> onSingleSelectListener;
-    private OnMultiSelectListener<T> onMultiSelectListener;
+    private IDialog.OnSingleSelectListener<T, S> onSingleSelectListener;
+    private IDialog.OnMultiSelectListener<T, S> onMultiSelectListener;
     private IDialog.ViewBinder<ImageView, T> iconCallback;
     private IDialog.ViewBinder<TextView, T> titleCallback;
     private IDialog.ViewBinder<TextView, T> subtitleCallback;
@@ -103,9 +83,9 @@ public class SelectDialogFragment<T> extends ListDialogFragment<T>
     protected void onPositiveButtonClick(View view) {
         if (isSelectMode) {
             if (isMultiple && onMultiSelectListener != null) {
-                onMultiSelectListener.onSelect(this, selectedList, list);
+                onMultiSelectListener.onSelect(self(), selectedList, list);
             } else if (!isMultiple && onSingleSelectListener != null) {
-                onSingleSelectListener.onSelect(this, selectedList.get(0), list.get(selectedList.get(0)));
+                onSingleSelectListener.onSelect(self(), selectedList.get(0), list.get(selectedList.get(0)));
             }
         }
         if (showButtons) {
@@ -184,57 +164,57 @@ public class SelectDialogFragment<T> extends ListDialogFragment<T>
         }
     }
 
-    public SelectDialogFragment<T> setAutoDismiss(boolean autoDismiss) {
+    public S setAutoDismiss(boolean autoDismiss) {
         this.autoDismiss = autoDismiss;
-        return this;
+        return self();
     }
 
-    public SelectDialogFragment<T> setMultiple(boolean isMultiple) {
+    public S setMultiple(boolean isMultiple) {
         this.isMultiple = isMultiple;
-        return this;
+        return self();
     }
 
-    public SelectDialogFragment<T> setSelected(int[] selected) {
+    public S setSelected(int[] selected) {
         for (int position : selected) {
             onSelected(position);
         }
         if (selected.length > 1) {
             isMultiple = true;
         }
-        return this;
+        return self();
     }
 
-    public SelectDialogFragment<T> setSelected(int selected) {
+    public S setSelected(int selected) {
         onSelected(selected);
-        return this;
+        return self();
     }
 
-    public SelectDialogFragment<T> onSingleSelect(OnSingleSelectListener<T> onSingleSelectListener) {
+    public S onSingleSelect(IDialog.OnSingleSelectListener<T, S> onSingleSelectListener) {
         isMultiple = false;
         this.onSingleSelectListener = onSingleSelectListener;
-        return this;
+        return self();
     }
 
-    public SelectDialogFragment<T> onMultiSelect(OnMultiSelectListener<T> onMultiSelectListener) {
+    public S onMultiSelect(IDialog.OnMultiSelectListener<T, S> onMultiSelectListener) {
         isMultiple = true;
         showButtons = true;
         this.onMultiSelectListener = onMultiSelectListener;
-        return this;
+        return self();
     }
 
-    public SelectDialogFragment<T> onBindIcon(IDialog.ViewBinder<ImageView, T> iconCallback) {
+    public S onBindIcon(IDialog.ViewBinder<ImageView, T> iconCallback) {
         this.iconCallback = iconCallback;
-        return this;
+        return self();
     }
 
-    public SelectDialogFragment<T> onBindTitle(IDialog.ViewBinder<TextView, T> titleCallback) {
+    public S onBindTitle(IDialog.ViewBinder<TextView, T> titleCallback) {
         this.titleCallback = titleCallback;
-        return this;
+        return self();
     }
 
-    public SelectDialogFragment<T> onBindSubtitle(IDialog.ViewBinder<TextView, T> subtitleCallback) {
+    public S onBindSubtitle(IDialog.ViewBinder<TextView, T> subtitleCallback) {
         this.subtitleCallback = subtitleCallback;
-        return this;
+        return self();
     }
 
 

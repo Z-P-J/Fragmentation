@@ -17,6 +17,7 @@ import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.zpj.fragmentation.ISupportFragment;
 import com.zpj.fragmentation.SupportActivity;
 import com.zpj.fragmentation.SupportFragment;
 import com.zpj.fragmentation.dialog.AbstractDialogFragment;
@@ -30,7 +31,7 @@ import com.zpj.utils.ScreenUtils;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
-public abstract class BaseDialogFragment extends AbstractDialogFragment {
+public abstract class BaseDialogFragment<T extends BaseDialogFragment<T>> extends AbstractDialogFragment {
 
     protected PopupAnimator popupContentAnimator;
     protected PopupAnimator shadowBgAnimator;
@@ -38,20 +39,21 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
     private FrameLayout rootView;
     private ViewGroup implView;
 
-    private boolean isDismissing;
+    protected boolean isDismissing;
 
+    protected boolean interceptTouch = true;
     protected boolean cancelable = true;
     protected boolean cancelableInTouchOutside = true;
 
     private int gravity = Gravity.CENTER;
 
-    private int maxWidth = WRAP_CONTENT;
-    private int maxHeight = WRAP_CONTENT;
-    private int marginStart, marginTop, marginEnd, marginBottom;
+    protected int maxWidth = WRAP_CONTENT;
+    protected int maxHeight = WRAP_CONTENT;
+    protected int marginStart, marginTop, marginEnd, marginBottom;
 
     protected IDialog.OnDismissListener onDismissListener;
 
-    private Fragment preFragment;
+    private ISupportFragment preFragment;
 
     protected Drawable bgDrawable;
 
@@ -70,26 +72,14 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
 
     @Override
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
-        preFragment = (Fragment) getPreFragment();
+        preFragment = getPreFragment();
         FrameLayout flContainer = findViewById(R.id._dialog_fl_container);
         this.rootView = flContainer;
 
-        rootView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!cancelable || !cancelableInTouchOutside) {
-                    return;
-                }
-                dismiss();
-            }
-        });
+        if (interceptTouch) {
+            interceptTouch();
+        }
 
-        rootView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                return true;
-            }
-        });
 
         implView = (ViewGroup) getLayoutInflater().inflate(getImplLayoutId(), flContainer, false);
         flContainer.addView(implView);
@@ -114,26 +104,6 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
         view.setClickable(true);
     }
 
-//    @Override
-//    public void onEnterAnimationEnd(Bundle savedInstanceState) {
-//        super.onEnterAnimationEnd(savedInstanceState);
-//        rootView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (!cancelable || !cancelableInTouchOutside) {
-//                    return;
-//                }
-//                pop();
-//            }
-//        });
-//        rootView.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v) {
-//                return true;
-//            }
-//        });
-//    }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -144,28 +114,12 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
                     public void onGlobalLayout() {
                         getRootView().getViewTreeObserver().removeOnGlobalLayoutListener(this);
                         doShowAnimation();
-                        if (preFragment != null) {
-                            preFragment.onPause();
-                        }
+//                        if (preFragment != null) {
+//                            preFragment.onPause();
+//                        }
                     }
                 });
     }
-
-//    @Override
-//    public void onSupportVisible() {
-//        super.onSupportVisible();
-//        if (preFragment != null) {
-//            preFragment.onSupportVisible();
-//        }
-//    }
-
-//    @Override
-//    public void onSupportInvisible() {
-//        super.onSupportInvisible();
-//        if (preFragment != null) {
-//            preFragment.onSupportInvisible();
-//        }
-//    }
 
     @Override
     public void onStart() {
@@ -194,9 +148,10 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
 
     @Override
     public void onDestroy() {
-        if (preFragment != null && preFragment == getPreFragment()) {
-            preFragment.onResume();
+        if (preFragment != null && preFragment == getTopFragment()) {
+            preFragment.onSupportVisible();
         }
+        preFragment = null;
         this.isDismissing = false;
         super.onDestroy();
     }
@@ -214,13 +169,17 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
         dismiss();
     }
 
-    public BaseDialogFragment show(SupportFragment fragment) {
-        onBeforeShow();
-        fragment.start(this);
-        return this;
+    protected T self() {
+        return (T) this;
     }
 
-    public BaseDialogFragment show(Context context) {
+    public T show(SupportFragment fragment) {
+        onBeforeShow();
+        fragment.start(this);
+        return self();
+    }
+
+    public T show(Context context) {
         onBeforeShow();
         Activity activity = ContextUtils.getActivity(context);
         if (activity instanceof SupportActivity) {
@@ -233,13 +192,13 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
         } else {
             Toast.makeText(context, "启动DialogFragment失败", Toast.LENGTH_SHORT).show();
         }
-        return this;
+        return self();
     }
 
-    public BaseDialogFragment show(SupportActivity activity) {
+    public T show(SupportActivity activity) {
         onBeforeShow();
         activity.start(this);
-        return this;
+        return self();
     }
 
     public void doShowAnimation() {
@@ -332,27 +291,27 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
         return implView;
     }
 
-    public BaseDialogFragment setShowAnimDuration(long duration) {
+    public T setShowAnimDuration(long duration) {
         this.showAnimDuration = duration;
-        return this;
+        return self();
     }
 
-    public BaseDialogFragment setDismissAnimDuration(long duration) {
+    public T setDismissAnimDuration(long duration) {
         this.dismissAnimDuration = duration;
-        return this;
+        return self();
     }
 
-    public BaseDialogFragment setDialogBackground(Drawable bgDrawable) {
+    public T setDialogBackground(Drawable bgDrawable) {
         this.bgDrawable = bgDrawable;
-        return this;
+        return self();
     }
 
-    public BaseDialogFragment setGravity(int gravity) {
+    public T setGravity(int gravity) {
         this.gravity = gravity;
-        return this;
+        return self();
     }
 
-    public BaseDialogFragment setMaxWidth(int maxWidth) {
+    public T setMaxWidth(int maxWidth) {
         if (maxWidth == WRAP_CONTENT || maxWidth == MATCH_PARENT) {
             this.maxWidth = maxWidth;
         } else if (maxWidth >= 0) {
@@ -363,10 +322,10 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
                 setMarginEnd(margin);
             }
         }
-        return this;
+        return self();
     }
 
-    public BaseDialogFragment setMaxHeight(int maxHeight) {
+    public T setMaxHeight(int maxHeight) {
         if (maxHeight == WRAP_CONTENT || maxHeight == MATCH_PARENT) {
             this.maxHeight = maxHeight;
         } else if (maxHeight >= 0) {
@@ -377,54 +336,88 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
                 setMarginBottom(margin);
             }
         }
-        return this;
+        return self();
     }
 
-    public BaseDialogFragment setMarginStart(int marginStart) {
+    public T setMarginStart(int marginStart) {
         this.marginStart = marginStart;
-        return this;
+        return self();
     }
 
-    public BaseDialogFragment setMarginTop(int marginTop) {
+    public T setMarginTop(int marginTop) {
         this.marginTop = marginTop;
-        return this;
+        return self();
     }
 
-    public BaseDialogFragment setMarginEnd(int marginEnd) {
+    public T setMarginEnd(int marginEnd) {
         this.marginEnd = marginEnd;
-        return this;
+        return self();
     }
 
-    public BaseDialogFragment setMarginBottom(int marginBottom) {
+    public T setMarginBottom(int marginBottom) {
         this.marginBottom = marginBottom;
-        return this;
+        return self();
     }
 
-    public BaseDialogFragment setMarginHorizontal(int margin) {
+    public T setMarginHorizontal(int margin) {
         setMarginStart(margin);
         setMarginEnd(margin);
-        return this;
+        return self();
     }
 
-    public BaseDialogFragment setMarginVertical(int margin) {
+    public T setMarginVertical(int margin) {
         setMarginTop(margin);
         setMarginBottom(margin);
-        return this;
+        return self();
     }
 
-    public BaseDialogFragment setCancelable(boolean cancelable) {
+    public T setInterceptTouch(boolean interceptTouch) {
+        this.interceptTouch = interceptTouch;
+        if (rootView != null) {
+            if (interceptTouch) {
+                interceptTouch();
+            } else {
+                rootView.setOnClickListener(null);
+                rootView.setOnLongClickListener(null);
+                rootView.setClickable(false);
+                rootView.setLongClickable(false);
+            }
+        }
+        return self();
+    }
+
+    private void interceptTouch() {
+        rootView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!cancelable || !cancelableInTouchOutside) {
+                    return;
+                }
+                dismiss();
+            }
+        });
+
+        rootView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return true;
+            }
+        });
+    }
+
+    public T setCancelable(boolean cancelable) {
         this.cancelable = cancelable;
-        return this;
+        return self();
     }
 
-    public BaseDialogFragment setCancelableInTouchOutside(boolean cancelableInTouchOutside) {
+    public T setCancelableInTouchOutside(boolean cancelableInTouchOutside) {
         this.cancelableInTouchOutside = cancelableInTouchOutside;
-        return this;
+        return self();
     }
 
-    public BaseDialogFragment setOnDismissListener(IDialog.OnDismissListener onDismissListener) {
+    public T setOnDismissListener(IDialog.OnDismissListener onDismissListener) {
         this.onDismissListener = onDismissListener;
-        return this;
+        return self();
     }
 
 //    public BaseDialogFragment setBackgroundDrawable(Drawable drawable) {

@@ -2,6 +2,7 @@ package com.zpj.fragmentation.dialog.impl;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Rect;
@@ -21,41 +22,39 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.zpj.fragmentation.dialog.R;
 import com.zpj.fragmentation.dialog.animator.PopupAnimator;
 import com.zpj.fragmentation.dialog.base.BaseDialogFragment;
+import com.zpj.fragmentation.dialog.interfaces.IProgressViewHolder;
 import com.zpj.fragmentation.dialog.interfaces.OnDragChangeListener;
-import com.zpj.fragmentation.dialog.utils.ImageLoad;
-import com.zpj.fragmentation.dialog.utils.MyImageLoad;
+import com.zpj.fragmentation.dialog.utils.ImageLoader;
+import com.zpj.fragmentation.dialog.utils.MyImageLoader;
 import com.zpj.fragmentation.dialog.widget.HackyViewPager;
 import com.zpj.fragmentation.dialog.widget.ImageViewContainer;
 import com.zpj.fragmentation.dialog.widget.PhotoViewContainer;
 import com.zpj.fragmentation.dialog.widget.PlaceholderImageView;
-import com.zpj.utils.ScreenUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class ImageViewerDialogFragment<T> extends BaseDialogFragment
+public class ImageViewerDialogFragment<T> extends BaseDialogFragment<ImageViewerDialogFragment<T>>
         implements OnDragChangeListener {
-
-//    private final BlockActionQueue actionQueue = new BlockActionQueue();
 
     protected FrameLayout container;
     protected PhotoViewContainer photoViewContainer;
     protected HackyViewPager pager;
     protected ArgbEvaluator argbEvaluator = new ArgbEvaluator();
     protected final List<T> urls = new ArrayList<>();
-    protected MyImageLoad<T> loader = new MyImageLoad<>();
+    protected ImageLoader<T> loader = new MyImageLoader<>();
     protected OnSrcViewUpdateListener<T> srcViewUpdateListener;
     protected int position;
     protected Rect rect = null;
@@ -68,6 +67,20 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
     protected boolean isInfinite = false;//是否需要无限滚动
     protected View customView;
     protected int bgColor = Color.rgb(32, 36, 46);//弹窗的背景颜色，可以自定义
+
+    protected IProgressViewHolder<? extends View> progressViewHolder = new IProgressViewHolder<ProgressBar>() {
+        @Override
+        public ProgressBar createProgressView(Context context) {
+            ProgressBar progressBar = new ProgressBar(context);
+            progressBar.setMax(100);
+            return progressBar;
+        }
+
+        @Override
+        public void onProgressChanged(ProgressBar progressView, float progress) {
+            progressView.setProgress((int) progress * 100);
+        }
+    };
 
     private int backgroundColor = Color.TRANSPARENT;
 
@@ -102,6 +115,7 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
     @Override
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
         super.initView(view, savedInstanceState);
+
         photoViewContainer = findViewById(R.id.photoViewContainer);
 
         container = findViewById(R.id._image_viewer_dialog_fl_container);
@@ -246,7 +260,10 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
     protected void loadNewUrl(int position, T url) {
         ImageViewContainer ivContainer = pager.findViewWithTag(position);
         ivContainer.showProgressBar();
-        loader.loadImage(url, new ImageLoad.LoadCallback() {
+        if (loader == null) {
+            loader = new MyImageLoader<>();
+        }
+        loader.loadImage(url, new ImageLoader.LoadCallback() {
             @Override
             public void progress(float progress) {
                 ivContainer.setProgress(progress);
@@ -407,18 +424,6 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
 
             }
         });
-//        if (customView != null)
-//            customView.animate()
-//                    .alpha(0f)
-//                    .setDuration(DEFAULT_ANIM_DURATION)
-//                    .setListener(new AnimatorListenerAdapter() {
-//                        @Override
-//                        public void onAnimationEnd(Animator animation) {
-//                            super.onAnimationEnd(animation);
-//                            if (customView != null) customView.setVisibility(View.INVISIBLE);
-//                        }
-//                    })
-//                    .start();
     }
 
     @Override
@@ -427,34 +432,15 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
         return true;
     }
 
-//    @Override
-//    public void dismiss() {
-//        if (srcViewUpdateListener != null) {
-//            srcViewUpdateListener.onSrcViewUpdate(ImageViewerDialogFragment3.this, position);
-//        }
-//        if (srcView != null) {
-//            //snapshotView拥有当前pager中photoView的样子(matrix)
-////            PhotoView current = (PhotoView) pager.getChildAt(pager.getCurrentItem());
-////            XPhotoView current = pager.findViewWithTag(pager.getCurrentItem());
-////            if (current != null) {
-////                Matrix matrix = new Matrix();
-////                current.getSuppMatrix(matrix);
-////                snapshotView.setSuppMatrix(matrix);
-////            }
-//            ImageViewContainer current = pager.findViewWithTag(pager.getCurrentItem());
-//            if (current != null) {
-//                Matrix matrix = current.getPhotoView().getSupportMatrix();
-//                if (matrix != null) {
-//                    snapshotView.setSupportMatrix(matrix);
-//                }
-//
-//            }
-////            setSrcView(srcView, position);
-//        }
-//        doDismissAnimation();
-//        pop();
-//        getSupportDelegate().pop();
-//    }
+    public ImageViewerDialogFragment<T> setImageLoader(ImageLoader<T> loader) {
+        this.loader = loader;
+        return this;
+    }
+
+    public ImageViewerDialogFragment<T> setProgressViewHolder(IProgressViewHolder<? extends View> progressViewHolder) {
+        this.progressViewHolder = progressViewHolder;
+        return this;
+    }
 
     public ImageViewerDialogFragment<T> setImageUrls(List<T> urls) {
         this.urls.addAll(urls);
@@ -560,6 +546,7 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
         @Override
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
             final ImageViewContainer ivContainer = new ImageViewContainer(container.getContext());
+            ivContainer.setProgressViewHolder(progressViewHolder);
             ivContainer.setTag(position);
             // call LoadImageListener
             ivContainer.showProgressBar();
@@ -579,7 +566,10 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
 //                    }, ivContainer.getPhotoView(), String.valueOf(ivContainer.hashCode()));
 //                }
 //            });
-            loader.loadImage(urls.get(position), new ImageLoad.LoadCallback() {
+            if (loader == null) {
+                loader = new MyImageLoader<>();
+            }
+            loader.loadImage(urls.get(position), new ImageLoader.LoadCallback() {
                 @Override
                 public void progress(float progress) {
                     ivContainer.setProgress(progress);

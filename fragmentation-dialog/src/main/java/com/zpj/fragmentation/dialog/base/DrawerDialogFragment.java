@@ -13,7 +13,7 @@ import com.zpj.fragmentation.dialog.animator.PopupAnimator;
 import com.zpj.fragmentation.dialog.enums.PopupPosition;
 import com.zpj.fragmentation.dialog.widget.PopupDrawerLayout;
 
-public abstract class DrawerDialogFragment extends BaseDialogFragment {
+public abstract class DrawerDialogFragment<T extends DrawerDialogFragment<T>> extends BaseDialogFragment<T> {
 
 
     protected PopupPosition popupPosition = PopupPosition.Left;
@@ -96,18 +96,18 @@ public abstract class DrawerDialogFragment extends BaseDialogFragment {
         drawerLayout.close();
     }
 
-    public DrawerDialogFragment setEnableShadow(boolean enableShadow) {
+    public T setEnableShadow(boolean enableShadow) {
         this.enableShadow = enableShadow;
-        return this;
+        return self();
     }
 
-    public DrawerDialogFragment setDrawStatusBarShadow(boolean drawStatusBarShadow) {
+    public T setDrawStatusBarShadow(boolean drawStatusBarShadow) {
         isDrawStatusBarShadow = drawStatusBarShadow;
-        return this;
+        return self();
     }
 
-    public DrawerDialogFragment setPopupPosition(PopupPosition popupPosition) {
+    public T setPopupPosition(PopupPosition popupPosition) {
         this.popupPosition = popupPosition;
-        return this;
+        return self();
     }
 }

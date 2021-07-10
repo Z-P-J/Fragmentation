@@ -10,9 +10,7 @@ import com.zpj.fragmentation.dialog.enums.PopupAnimation;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
-public abstract class FullScreenDialogFragment extends BaseDialogFragment {
-
-//    protected abstract int getContentLayoutId();
+public abstract class FullScreenDialogFragment extends BaseDialogFragment<FullScreenDialogFragment> {
 
     @Override
     protected PopupAnimator getDialogAnimator(ViewGroup contentView) {
@@ -24,11 +22,6 @@ public abstract class FullScreenDialogFragment extends BaseDialogFragment {
         return null;
     }
 
-//    @Override
-//    protected void initView(View view, @Nullable Bundle savedInstanceState) {
-//        super.initView(view, savedInstanceState);
-//    }
-
     @Override
     protected void initLayoutParams(ViewGroup view) {
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) view.getLayoutParams();
@@ -38,15 +31,5 @@ public abstract class FullScreenDialogFragment extends BaseDialogFragment {
         view.setFocusable(true);
         view.setClickable(true);
     }
-
-//    @Override
-//    public int getMarginBottom() {
-//        return 0;
-//    }
-//
-//    @Override
-//    public int getMarginEnd() {
-//        return 0;
-//    }
 
 }

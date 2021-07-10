@@ -11,7 +11,7 @@ import com.zpj.fragmentation.dialog.utils.DialogThemeUtils;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
-public class LoadingDialogFragment extends CardDialogFragment {
+public class LoadingDialogFragment extends CardDialogFragment<LoadingDialogFragment> {
 
     private TextView tvTitle;
 

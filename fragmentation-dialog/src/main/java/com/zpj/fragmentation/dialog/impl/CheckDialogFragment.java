@@ -10,7 +10,7 @@ import com.zpj.fragmentation.dialog.R;
 import com.zpj.fragmentation.dialog.utils.DialogThemeUtils;
 import com.zpj.widget.checkbox.SmoothCheckBox;
 
-public class CheckDialogFragment extends AlertDialogFragment {
+public class CheckDialogFragment extends AlertDialogFragment<CheckDialogFragment> {
 
     private SmoothCheckBox checkBox;
     private TextView tvTitle;

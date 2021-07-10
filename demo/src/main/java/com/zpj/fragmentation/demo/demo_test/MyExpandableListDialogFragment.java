@@ -17,7 +17,7 @@ import com.zpj.recyclerview.MultiRecyclerViewWrapper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyExpandableListDialogFragment extends ListDialogFragment<MultiData<?>> {
+public class MyExpandableListDialogFragment extends ListDialogFragment<MultiData<?>, MyExpandableListDialogFragment> {
 
     private View anchorView;
 

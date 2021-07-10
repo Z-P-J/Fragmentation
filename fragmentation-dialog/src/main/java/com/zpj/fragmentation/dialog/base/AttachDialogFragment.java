@@ -1,5 +1,6 @@
 package com.zpj.fragmentation.dialog.base;
 
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -11,7 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 
+import com.zpj.fragmentation.SupportFragment;
 import com.zpj.fragmentation.dialog.R;
 import com.zpj.fragmentation.dialog.animator.PopupAnimator;
 import com.zpj.fragmentation.dialog.animator.ScrollScaleAnimator;
@@ -20,7 +23,9 @@ import com.zpj.fragmentation.dialog.enums.PopupPosition;
 import com.zpj.fragmentation.dialog.widget.PartShadowContainer;
 import com.zpj.utils.ScreenUtils;
 
-public abstract class AttachDialogFragment extends BaseDialogFragment {
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+
+public abstract class AttachDialogFragment<T extends AttachDialogFragment<T>> extends BaseDialogFragment<T> {
 
     private static final String TAG = "AttachDialogFragment";
 
@@ -78,18 +83,18 @@ public abstract class AttachDialogFragment extends BaseDialogFragment {
     }
 
     @Override
+    protected void initLayoutParams(ViewGroup view) {
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
+        params.height = WRAP_CONTENT;
+        params.width = WRAP_CONTENT;
+        view.setFocusableInTouchMode(true);
+        view.setFocusable(true);
+        view.setClickable(true);
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-//        contentView
-//                .getViewTreeObserver()
-//                .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//                    @Override
-//                    public void onGlobalLayout() {
-//                        contentView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-//                        doAttach();
-//                    }
-//                });
         contentView
                 .getViewTreeObserver()
                 .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
@@ -132,6 +137,19 @@ public abstract class AttachDialogFragment extends BaseDialogFragment {
         int height = getImplView().getMeasuredHeight();
         Log.d(TAG, "width=" + width + " height=" + height);
 
+        ViewGroup.LayoutParams params = getImplView().getLayoutParams();
+        if (getMaxHeight() > 0 && getMaxHeight() < height) {
+            height = getMaxHeight();
+            params.height = height;
+        }
+        if (getMaxWidth() > 0 && getMaxWidth() < width) {
+            width = getMaxWidth();
+            params.width = width;
+        }
+        getImplView().setLayoutParams(params);
+        Log.d(TAG, "width=" + width + " height=" + height);
+
+
         //0. 判断是依附于某个点还是某个View
         if (touchPoint != null) {
 
@@ -160,52 +178,47 @@ public abstract class AttachDialogFragment extends BaseDialogFragment {
             //修正高度，弹窗的高有可能超出window区域
             if (isShowUpToTarget()) {
                 if (getImplView().getMeasuredHeight() > touchPoint.y) {
-                    ViewGroup.LayoutParams params = getImplView().getLayoutParams();
-                    params.height = (int) (touchPoint.y - ScreenUtils.getStatusBarHeight(context));
+                    height = (int) (touchPoint.y - ScreenUtils.getStatusBarHeight(context));
+                    params.height = height;
                     getImplView().setLayoutParams(params);
                 }
             } else {
                 if (getImplView().getMeasuredHeight() + touchPoint.y > windowHeight) {
-                    ViewGroup.LayoutParams params = getImplView().getLayoutParams();
-                    params.height = (int) (windowHeight - touchPoint.y);
+                    height = (int) (windowHeight - touchPoint.y);
+                    params.height = height;
                     getImplView().setLayoutParams(params);
                 }
             }
 
-            getImplView().post(new Runnable() {
-                @Override
-                public void run() {
-                    translationX = (isShowLeft ? touchPoint.x : maxX) + (isShowLeft ? defaultOffsetX : -defaultOffsetX);
-                    if (isCenterHorizontal) {
-                        //水平居中
-                        if (isShowLeft)
-                            translationX -= width / 2f;
-                        else
-                            translationX += height / 2f;
-                    }
-                    if (isShowUpToTarget()) {
-                        // 应显示在point上方
-                        // translationX: 在左边就和atView左边对齐，在右边就和其右边对齐
-                        translationY = touchPoint.y - height - defaultOffsetY;
-                    } else {
-                        translationY = touchPoint.y + defaultOffsetY;
-                    }
+            translationX = (isShowLeft ? touchPoint.x : maxX) + (isShowLeft ? defaultOffsetX : -defaultOffsetX);
+            if (isCenterHorizontal) {
+                //水平居中
+                if (isShowLeft)
+                    translationX -= width / 2f;
+                else
+                    translationX += width / 2f;
+            }
+            if (isShowUpToTarget()) {
+                // 应显示在point上方
+                // translationX: 在左边就和atView左边对齐，在右边就和其右边对齐
+                translationY = touchPoint.y - height - defaultOffsetY;
+            } else {
+                translationY = touchPoint.y + defaultOffsetY;
+            }
 
-                    translationY -= offset;
+            translationY -= offset;
 
-                    Log.d(TAG, "translationX=" + translationX + " translationY=" + translationY);
+            Log.d(TAG, "translationX=" + translationX + " translationY=" + translationY);
 
-                    getImplView().setTranslationX(translationX);
-                    getImplView().setTranslationY(translationY);
+            getImplView().setTranslationX(translationX);
+            getImplView().setTranslationY(translationY);
 
-                    popupContentAnimator = getDialogAnimator((ViewGroup) getImplView());
-                    if (popupContentAnimator != null) {
-                        popupContentAnimator.initAnimator();
-                        popupContentAnimator.animateShow();
-                    }
-                    getImplView().setAlpha(1f);
-                }
-            });
+            popupContentAnimator = getDialogAnimator((ViewGroup) getImplView());
+            if (popupContentAnimator != null) {
+                popupContentAnimator.initAnimator();
+                popupContentAnimator.animateShow();
+            }
+            getImplView().setAlpha(1f);
 
         } else {
             // 依附于指定View
@@ -234,46 +247,43 @@ public abstract class AttachDialogFragment extends BaseDialogFragment {
             //修正高度，弹窗的高有可能超出window区域
             if (isShowUpToTarget()) {
                 if (height > rect.top) {
-                    ViewGroup.LayoutParams params = getImplView().getLayoutParams();
-                    params.height = rect.top - ScreenUtils.getStatusBarHeight(context);
+                    height = rect.top - ScreenUtils.getStatusBarHeight(context);
+                    params.height = height;
                     getImplView().setLayoutParams(params);
                 }
             } else {
                 if (getImplView().getMeasuredHeight() + rect.bottom > windowHeight) {
-                    ViewGroup.LayoutParams params = getImplView().getLayoutParams();
-                    params.height = windowHeight - rect.bottom;
+                    height = windowHeight - rect.bottom;
+                    params.height = height;
                     getImplView().setLayoutParams(params);
                 }
             }
 
-            getImplView().post(new Runnable() {
-                @Override
-                public void run() {
-                    translationX = (isShowLeft ? rect.left : maxX) + (isShowLeft ? defaultOffsetX : -defaultOffsetX);
-                    if (isCenterHorizontal) {
-                        //水平居中
-                        if (isShowLeft)
-                            translationX += (rect.width() - width) / 2f;
-                        else
-                            translationX -= (rect.width() - width) / 2f;
-                    }
-                    if (isShowUpToTarget()) {
-                        //说明上面的空间比较大，应显示在atView上方
-                        // translationX: 在左边就和atView左边对齐，在右边就和其右边对齐
+            translationX = (isShowLeft ? rect.left : maxX) + (isShowLeft ? defaultOffsetX : -defaultOffsetX);
+            if (isCenterHorizontal) {
+                //水平居中
+                if (isShowLeft)
+                    translationX += (rect.width() - width) / 2f;
+                else
+                    translationX -= (rect.width() - width) / 2f;
+            }
+            if (isShowUpToTarget()) {
+                //说明上面的空间比较大，应显示在atView上方
+                // translationX: 在左边就和atView左边对齐，在右边就和其右边对齐
 //                        translationY = rect.top + rect.height() - height - defaultOffsetY;
-                        translationY = rect.top - height - defaultOffsetY;
-                        if (atViewGravity == AtViewGravity.TOP) {
-                            translationY += rect.height();
-                        }
-                    } else {
+                translationY = rect.top - height - defaultOffsetY;
+                if (atViewGravity == AtViewGravity.TOP) {
+                    translationY += rect.height();
+                }
+            } else {
 //                        translationY = rect.bottom - rect.height() + defaultOffsetY;
-                        translationY = rect.bottom + defaultOffsetY;
-                        if (atViewGravity == AtViewGravity.TOP) {
-                            translationY -= rect.height();
-                        }
-                    }
+                translationY = rect.bottom + defaultOffsetY;
+                if (atViewGravity == AtViewGravity.TOP) {
+                    translationY -= rect.height();
+                }
+            }
 
-                    translationY -= offset;
+            translationY -= offset;
 
 //                    translationY -= ScreenUtils.getStatusBarHeight(context);
 
@@ -285,21 +295,19 @@ public abstract class AttachDialogFragment extends BaseDialogFragment {
 //                        translationY -= ScreenUtils.getStatusBarHeight(context);
 //                    }
 
-                    Log.d(TAG, "translationX=" + translationX + " translationY=" + translationY);
+            Log.d(TAG, "translationX=" + translationX + " translationY=" + translationY);
 
 
-                    getImplView().setTranslationX(translationX);
-                    getImplView().setTranslationY(translationY);
+            getImplView().setTranslationX(translationX);
+            getImplView().setTranslationY(translationY);
 
 
-                    popupContentAnimator = getDialogAnimator((ViewGroup) getImplView());
-                    if (popupContentAnimator != null) {
-                        popupContentAnimator.initAnimator();
-                        popupContentAnimator.animateShow();
-                    }
-                    getImplView().setAlpha(1f);
-                }
-            });
+            popupContentAnimator = getDialogAnimator((ViewGroup) getImplView());
+            if (popupContentAnimator != null) {
+                popupContentAnimator.initAnimator();
+                popupContentAnimator.animateShow();
+            }
+            getImplView().setAlpha(1f);
 
         }
     }
@@ -334,51 +342,61 @@ public abstract class AttachDialogFragment extends BaseDialogFragment {
         return contentView;
     }
 
-    public AttachDialogFragment setAttachView(View attachView) {
-        this.attachView = attachView;
-        return this;
+    public final T show(View view) {
+        setAttachView(view);
+        return show(view.getContext());
     }
 
-    public AttachDialogFragment attachViewCenter(View attachView) {
+    public T setAttachView(View attachView) {
+        this.attachView = attachView;
+        return self();
+    }
+
+    public T attachViewCenter(View attachView) {
         int[] locations = new int[2];
         attachView.getLocationOnScreen(locations);
         return setTouchPoint(locations[0] + attachView.getMeasuredWidth() / 2f,
                 locations[1] + attachView.getMeasuredHeight() / 2f);
     }
 
-    public AttachDialogFragment setTouchPoint(PointF touchPoint) {
+    public T setTouchPoint(PointF touchPoint) {
         this.touchPoint = touchPoint;
-        return this;
+        return self();
     }
 
-    public AttachDialogFragment setTouchPoint(float x, float y) {
+    public T setTouchPoint(Point point) {
+        this.touchPoint = new PointF(point);
+        return self();
+    }
+
+    public T setTouchPoint(float x, float y) {
         this.touchPoint = new PointF(x, y);;
-        return this;
+        return self();
     }
 
-    public AttachDialogFragment setCenterHorizontal(boolean centerHorizontal) {
+    public T setCenterHorizontal(boolean centerHorizontal) {
         isCenterHorizontal = centerHorizontal;
-        return this;
+        return self();
     }
 
-    public AttachDialogFragment setPopupPosition(PopupPosition popupPosition) {
+    public T setPopupPosition(PopupPosition popupPosition) {
         this.popupPosition = popupPosition;
-        return this;
+        return self();
     }
 
-    public AttachDialogFragment setDefaultOffsetX(int defaultOffsetX) {
+    public T setDefaultOffsetX(int defaultOffsetX) {
         this.defaultOffsetX = defaultOffsetX;
-        return this;
+        return self();
     }
 
-    public AttachDialogFragment setDefaultOffsetY(int defaultOffsetY) {
+    public T setDefaultOffsetY(int defaultOffsetY) {
         this.defaultOffsetY = defaultOffsetY;
-        return this;
+        return self();
     }
 
-    public AttachDialogFragment setAtViewGravity(AtViewGravity atViewGravity) {
+    public T setAtViewGravity(AtViewGravity atViewGravity) {
         this.atViewGravity = atViewGravity;
-        return this;
+        return self();
     }
 
 }
